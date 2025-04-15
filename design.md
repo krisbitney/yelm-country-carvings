@@ -3,6 +3,7 @@
 ## Technical guidelines
 - Write reusable React components to stay organized and ensure maintainability
 - Use Tailwind CSS
+- Use TypeScript
 
 ## Overall Design Philosophy
 **Theme**: Rustic, handcrafted, natural, warm, friendly, grounded, authentic, trusted. Evokes the feeling of wood, nature, and skilled craftsmanship.
