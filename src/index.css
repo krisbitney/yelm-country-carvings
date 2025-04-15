@@ -6,7 +6,7 @@
   --color-primary-2: #A07E5D; /* Warm Timber */
   --color-secondary: #4A6151; /* Forest Canopy Green */
   --color-accent: #B87351;    /* Muted Terracotta/Clay */
-  --color-neutral-1: #F5F1EM; /* Natural Linen */
+  --color-neutral-1: #F5F1E9; /* Natural Linen */
   --color-neutral-2: #3E3C3B; /* Charcoal Ink */
 
   /* Typography */
@@ -28,4 +28,15 @@ html, body {
   padding: 0;
   border: 0;
   vertical-align: baseline;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zoomInOut {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
 }
