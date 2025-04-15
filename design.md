@@ -1,5 +1,9 @@
 # Yelm Country Carvings Landing Page Design
 
+## Technical guidelines
+- Write reusable React components to stay organized and ensure maintainability
+- Use Tailwind CSS
+
 ## Overall Design Philosophy
 **Theme**: Rustic, handcrafted, natural, warm, friendly, grounded, authentic, trusted. Evokes the feeling of wood, nature, and skilled craftsmanship.
 - **Color Palette**: Strictly adhere to the provided palette:

@@ -1,17 +1,13 @@
-:root {
-  color-scheme: light dark;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import "tailwindcss";
 
+@theme {
   /* Color Palette */
-  --primary-1: #6B4F41; /* Rich Wood Brown */
-  --primary-2: #A07E5D; /* Warm Timber */
-  --secondary: #4A6151; /* Forest Canopy Green */
-  --accent: #B87351;    /* Muted Terracotta/Clay */
-  --neutral-1: #F5F1EM; /* Natural Linen */
-  --neutral-2: #3E3C3B; /* Charcoal Ink */
+  --color-primary-1: #6B4F41; /* Rich Wood Brown */
+  --color-primary-2: #A07E5D; /* Warm Timber */
+  --color-secondary: #4A6151; /* Forest Canopy Green */
+  --color-accent: #B87351;    /* Muted Terracotta/Clay */
+  --color-neutral-1: #F5F1EM; /* Natural Linen */
+  --color-neutral-2: #3E3C3B; /* Charcoal Ink */
 
   /* Typography */
   --font-heading: 'Cinzel', serif;
@@ -19,103 +15,17 @@
   --font-decorative: 'Playfair Display', serif;
 }
 
+:root {
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   border: 0;
   vertical-align: baseline;
-}
-
-body {
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.6;
-  background-color: var(--neutral-1);
-  color: var(--neutral-2);
-}
-
-/*
-// To use this font, create a css class fitting this template.
-// <weight>: Use a value from 400 to 900
-// <uniquifier>: Use a unique and descriptive class name
-
-.cinzel-<uniquifier> {
-  font-family: "Cinzel", serif;
-  font-optical-sizing: auto;
-  font-weight: <weight>;
-  font-style: normal;
-}
-*/
-
-/*
-// To use this font, create a css class fitting this template.
-// <weight>: Use a value from 400 to 900
-// <uniquifier>: Use a unique and descriptive class name
-
-.playfair-display-<uniquifier> {
-  font-family: "Playfair Display", serif;
-  font-optical-sizing: auto;
-  font-weight: <weight>;
-  font-style: normal;
-}
-*/
-
-.lato-thin {
-  font-family: "Lato", sans-serif;
-  font-weight: 100;
-  font-style: normal;
-}
-
-.lato-light {
-  font-family: "Lato", sans-serif;
-  font-weight: 300;
-  font-style: normal;
-}
-
-.lato-regular {
-  font-family: "Lato", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.lato-bold {
-  font-family: "Lato", sans-serif;
-  font-weight: 700;
-  font-style: normal;
-}
-
-.lato-black {
-  font-family: "Lato", sans-serif;
-  font-weight: 900;
-  font-style: normal;
-}
-
-.lato-thin-italic {
-  font-family: "Lato", sans-serif;
-  font-weight: 100;
-  font-style: italic;
-}
-
-.lato-light-italic {
-  font-family: "Lato", sans-serif;
-  font-weight: 300;
-  font-style: italic;
-}
-
-.lato-regular-italic {
-  font-family: "Lato", sans-serif;
-  font-weight: 400;
-  font-style: italic;
-}
-
-.lato-bold-italic {
-  font-family: "Lato", sans-serif;
-  font-weight: 700;
-  font-style: italic;
-}
-
-.lato-black-italic {
-  font-family: "Lato", sans-serif;
-  font-weight: 900;
-  font-style: italic;
 }
