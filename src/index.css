@@ -4,6 +4,34 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Color Palette */
+  --primary-1: #6B4F41; /* Rich Wood Brown */
+  --primary-2: #A07E5D; /* Warm Timber */
+  --secondary: #4A6151; /* Forest Canopy Green */
+  --accent: #B87351;    /* Muted Terracotta/Clay */
+  --neutral-1: #F5F1EM; /* Natural Linen */
+  --neutral-2: #3E3C3B; /* Charcoal Ink */
+
+  /* Typography */
+  --font-heading: 'Cinzel', serif;
+  --font-body: 'Lato', sans-serif;
+  --font-decorative: 'Playfair Display', serif;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  background-color: var(--neutral-1);
+  color: var(--neutral-2);
 }
 
 /*

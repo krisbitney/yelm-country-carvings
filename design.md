@@ -7,7 +7,7 @@
     - Primary 2: `#A07E5D` (Warm Timber) – buttons, borders
     - Secondary: `#4A6151` (Forest Canopy Green) – links, highlights, callouts
     - Accent: `#B87351` (Muted Terracotta/Clay) – hover effects, transitions, primary CTAs
-    - Neutral 1: `#F5F1E M` (Natural Linen) – body background
+    - Neutral 1: `#F5F1EM` (Natural Linen) – body background
     - Neutral 2: `#3E3C3B` (Charcoal Ink) – body and header text
 - **Typography**:
     - Headings (H1, H2): **Cinzel** (bold, rustic) in `#6B4F41` or `#3E3C3B`
@@ -16,6 +16,16 @@
 - **Textures**: Subtle wood grain textures in section backgrounds (e.g., hero, about, footer). Ensure textures are light and desaturated for readability.
 - **Imagery & Media**: High-quality photos and dynamic media (videos, slideshows) of carvings, the creation process, and the workshop.
 - **Layout**: Clean, organized with clear visual hierarchy. Use asymmetrical elements (e.g., overlapping images) for visual interest. Ensure responsiveness across devices.
+
+## Color Palette
+| Color                  | Web Use                                                                                                                               |
+|------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| Rich Wood Brown        | Main headings, backgrounds for specific sections, footers, possibly primary button backgrounds (with light text).                     |
+| Warm Timber            | Secondary backgrounds, dividers, card backgrounds showcasing products, subtle texture elements.                                     |
+| Forest Canopy Green    | Accent areas, borders, iconography, perhaps secondary buttons or hover states. Use moderately to avoid overpowering the wood tones. |
+| Muted Terracotta/Clay  | Crucial for Calls-to-Action (CTAs) like "Buy Now," "View Details," "Contact Us" buttons. Also for highlights, important links, or small decorative elements. Use sparingly for maximum impact. |
+| Natural Linen          | Main background color for content areas to ensure high readability.                                                                 |
+| Charcoal Ink           | Main body text, detailed descriptions. Provides excellent contrast against the Natural Linen background.                               |
 
 ## Landing Page Sections Breakdown
 
