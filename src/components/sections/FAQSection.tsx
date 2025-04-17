@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import woodTextureDivider from '../../assets/wood-texture-divider.jpg';
 
 interface FAQ {
   id: number;
@@ -52,19 +53,11 @@ const FAQSection: React.FC<FAQSectionProps> = () => {
     );
   };
 
-  // State for search query
-  const [searchQuery, setSearchQuery] = useState('');
-
-  // Filter FAQs based on search query
-  const filteredFAQs = faqs.filter(faq => 
-    faq.question.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
-    <section id="faq" className="py-16 bg-[#F5F1E9]">
+    <section id="faq" className="pt-0 pb-16 bg-[#F5F1E9]">
       {/* Wood Texture Divider - Top */}
-      <div className="h-6 w-full wood-texture opacity-20 mb-12"></div>
+      <img src={woodTextureDivider} alt="Wood Texture Divider" className="w-full h-6 opacity-20" />
 
       <div className="container mx-auto px-4">
         {/* Section Heading */}
@@ -84,32 +77,11 @@ const FAQSection: React.FC<FAQSectionProps> = () => {
           </h2>
         </div>
 
-        {/* Search Bar */}
-        <div className="max-w-2xl mx-auto mb-8">
-          <div className="relative">
-            <input 
-              type="text" 
-              placeholder="Search questions..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-3 pl-10 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
-            />
-            <svg 
-              className="absolute left-3 top-3.5 w-5 h-5 text-[#6B4F41]" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
-        </div>
 
         {/* FAQ Accordion */}
         <div className="max-w-3xl mx-auto">
-          {filteredFAQs.length > 0 ? (
-            <div className="space-y-4">
-              {filteredFAQs.map(faq => (
+          <div className="space-y-4">
+              {faqs.map(faq => (
                 <div 
                   key={faq.id} 
                   className="border border-[#A07E5D] rounded-md overflow-hidden"
@@ -146,11 +118,6 @@ const FAQSection: React.FC<FAQSectionProps> = () => {
                 </div>
               ))}
             </div>
-          ) : (
-            <div className="text-center py-8">
-              <p className="font-['Lato'] text-[#3E3C3B]">No questions found matching your search.</p>
-            </div>
-          )}
 
           {/* "Still Have Questions?" Link */}
           <div className="text-center mt-12">

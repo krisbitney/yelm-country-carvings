@@ -1,5 +1,5 @@
 import React from 'react';
-import backgroundImage from '../../assets/logo_with_wood_background.png';
+import backgroundImage from '../../assets/logo_with_wood_background_wide.jpg';
 
 interface HeroSectionProps {
   // Add any props if needed
@@ -19,34 +19,18 @@ const HeroSection: React.FC<HeroSectionProps> = () => {
         ></div>
       </div>
 
-      {/* Content Container */}
-      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        {/* Headline */}
-        <h1 
-          className="font-['Cinzel'] font-bold text-4xl md:text-5xl lg:text-6xl text-[#F5F1E9] mb-4 drop-shadow-lg"
-          style={{ textShadow: '2px 2px 4px rgba(62, 60, 59, 0.5)' }}
-        >
-          Yelm Country Carvings
-        </h1>
-
-        {/* Subtitle with animation */}
-        <p 
-          className="font-['Lato'] text-xl md:text-2xl text-[#F5F1E9] mb-8 opacity-0 animate-fadeIn"
-          style={{ 
-            textShadow: '1px 1px 2px rgba(62, 60, 59, 0.5)',
-            animation: 'fadeIn 1s ease-in forwards 0.5s'
-          }}
-        >
-          Creating Happy Chainsaw Carved Friends for Everyone
-        </p>
-
+      {/* Content Container - Positioned lower on the page */}
+      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-24 md:mt-32 lg:mt-40">
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-center gap-6">
           {/* Primary CTA Button */}
           <a 
             href="#process" 
-            className="px-6 py-3 bg-[#B87351] text-[#F5F1E9] font-['Lato'] font-bold rounded-md shadow-md hover:bg-[#A07E5D] transition-colors duration-300"
-            style={{ animation: 'pulse 2s infinite' }}
+            className="px-8 py-4 bg-[#B87351] text-[#F5F1E9] text-lg font-['Lato'] font-bold rounded-lg border-2 border-[#F5F1E9] shadow-lg hover:bg-[#A07E5D] hover:scale-105 transition-all duration-300"
+            style={{ 
+              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+              textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)'
+            }}
           >
             Explore Our Creations
           </a>
@@ -54,7 +38,11 @@ const HeroSection: React.FC<HeroSectionProps> = () => {
           {/* Secondary CTA Button */}
           <a 
             href="#contact" 
-            className="px-6 py-3 bg-[#A07E5D] text-[#F5F1E9] font-['Lato'] font-bold rounded-md shadow-md hover:bg-[#B87351] transition-colors duration-300"
+            className="px-8 py-4 bg-[#A07E5D] text-[#F5F1E9] text-lg font-['Lato'] font-bold rounded-lg border-2 border-[#F5F1E9] shadow-lg hover:bg-[#B87351] hover:scale-105 transition-all duration-300"
+            style={{ 
+              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+              textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)'
+            }}
           >
             Get a Custom Quote
           </a>

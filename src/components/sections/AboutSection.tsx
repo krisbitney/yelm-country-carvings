@@ -1,5 +1,6 @@
 import React from 'react';
 import logoImage from '../../assets/logo.png';
+import woodTextureDivider from '../../assets/wood-texture-divider.jpg';
 
 interface AboutSectionProps {
   // Add any props if needed
@@ -7,40 +8,10 @@ interface AboutSectionProps {
 
 const AboutSection: React.FC<AboutSectionProps> = () => {
   return (
-    <section id="about" className="py-16 bg-[#F5F1E9]">
-      {/* Wood Texture Divider - Top */}
-      <div className="h-6 w-full wood-texture opacity-20 mb-12"></div>
-
+    <section id="about" className="pt-0 pb-16 bg-[#F5F1E9]">
       <div className="container mx-auto px-4">
         {/* Section Heading */}
         <div className="text-center mb-12">
-          {/* Chainsaw Icon */}
-          <svg 
-            className="w-12 h-12 mx-auto mb-4 text-[#6B4F41]" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M2 8L18 8"></path>
-            <path d="M2 12L18 12"></path>
-            <path d="M18 8L18 12"></path>
-            <path d="M2 8L2 12"></path>
-            <path d="M18 10L22 10"></path>
-            <path d="M21 6L21 14"></path>
-            <path d="M22 7L22 13"></path>
-            <path d="M10 12L10 16"></path>
-            <path d="M14 12L14 16"></path>
-            <path d="M6 12L6 16"></path>
-            <circle cx="4" cy="16" r="1"></circle>
-            <circle cx="8" cy="16" r="1"></circle>
-            <circle cx="12" cy="16" r="1"></circle>
-            <circle cx="16" cy="16" r="1"></circle>
-          </svg>
-
           <h2 className="font-['Cinzel'] text-3xl md:text-4xl font-bold text-[#6B4F41]">
             About Yelm Country Carvings
           </h2>
@@ -104,7 +75,7 @@ const AboutSection: React.FC<AboutSectionProps> = () => {
       </div>
 
       {/* Wood Texture Divider - Bottom */}
-      <div className="h-6 w-full wood-texture opacity-20 mt-12"></div>
+      <img src={woodTextureDivider} alt="Wood Texture Divider" className="w-full h-6 opacity-20" />
     </section>
   );
 };

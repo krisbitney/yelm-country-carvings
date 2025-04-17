@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import woodTextureDivider from '../../assets/wood-texture-divider.jpg';
 
 interface ContactSectionProps {
   // Add any props if needed
@@ -75,9 +76,9 @@ const ContactSection: React.FC<ContactSectionProps> = () => {
   };
 
   return (
-    <section id="contact" className="py-16 bg-[#F5F1E9]">
+    <section id="contact" className="pt-0 pb-16 bg-[#F5F1E9]">
       {/* Wood Texture Divider - Top */}
-      <div className="h-6 w-full wood-texture opacity-20 mb-12"></div>
+      <img src={woodTextureDivider} alt="Wood Texture Divider" className="w-full h-6 opacity-20" />
 
       <div className="container mx-auto px-4">
         {/* Section Heading */}
