@@ -1,5 +1,5 @@
 import React from 'react';
-import backgroundImage from '../../assets/logo_with_wood_background_wide.jpg';
+import backgroundImage from '../../assets/logo_with_wood_background_16x9.png';
 
 interface HeroSectionProps {
   // Add any props if needed

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import woodTextureDivider from '../../assets/wood-texture-divider.jpg';
 
 interface Event {
   id: number;
@@ -64,8 +63,6 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
 
   return (
     <section id="events" className="pt-0 pb-16 bg-[#F5F1E9]">
-      {/* Wood Texture Divider - Top */}
-      <img src={woodTextureDivider} alt="Wood Texture Divider" className="w-full h-6 opacity-20" />
 
       <div className="container mx-auto px-4">
         {/* Section Heading */}

@@ -1,6 +1,5 @@
 import React from 'react';
 import logoImage from '../../assets/logo.png';
-import woodTextureDivider from '../../assets/wood-texture-divider.jpg';
 
 interface AboutSectionProps {
   // Add any props if needed
@@ -74,8 +73,6 @@ const AboutSection: React.FC<AboutSectionProps> = () => {
         </div>
       </div>
 
-      {/* Wood Texture Divider - Bottom */}
-      <img src={woodTextureDivider} alt="Wood Texture Divider" className="w-full h-6 opacity-20" />
     </section>
   );
 };

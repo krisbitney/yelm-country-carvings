@@ -83,7 +83,7 @@ const ProcessSection: React.FC<ProcessSectionProps> = () => {
   };
 
   return (
-    <section id="process" className="py-16 relative wood-texture">
+    <section id="process" className="py-16 relative">
       {/* Semi-transparent overlay to ensure text readability */}
       <div className="absolute inset-0 bg-[#A07E5D] opacity-80"></div>
 
