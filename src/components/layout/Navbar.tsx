@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Logo from './Logo';
 
-interface NavbarProps {
-  // Add any props if needed
-}
-
-const Navbar: React.FC<NavbarProps> = () => {
+const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 

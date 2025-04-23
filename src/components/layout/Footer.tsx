@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-interface FooterProps {
-  // Add any props if needed
-}
-
-const Footer: React.FC<FooterProps> = () => {
+const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   // State for back to top button visibility
@@ -79,7 +75,7 @@ const Footer: React.FC<FooterProps> = () => {
               </li>
               <li className="transform hover:translate-x-1 transition-transform duration-300">
                 <a 
-                  href="#terms" 
+                  href="#faq" 
                   className="font-['Lato'] text-[#F5F1E9] hover:text-[#B87351] transition-all duration-300 border-b border-transparent hover:border-[#B87351] pb-1 inline-block"
                 >
                   Terms & Privacy

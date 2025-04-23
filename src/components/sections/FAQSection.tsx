@@ -54,7 +54,7 @@ const FAQSection: React.FC<FAQSectionProps> = () => {
 
 
   return (
-    <section id="faq" className="pt-0 pb-16 bg-[#F5F1E9]">
+    <section id="faq" className="pt-16 pb-16 bg-[#F5F1E9]">
 
       <div className="container mx-auto px-4">
         {/* Section Heading */}
