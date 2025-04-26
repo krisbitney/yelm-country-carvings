@@ -14,31 +14,31 @@ interface EventsSectionProps {
 }
 
 const EventsSection: React.FC<EventsSectionProps> = () => {
-  // Sample events data - in a real implementation, these would come from a CMS or props
+  // Events data
   const events: Event[] = [
     {
       id: 1,
-      title: 'Yelm Farmers Market',
-      date: 'June 15, 2023',
-      location: 'Yelm Community Center',
-      description: 'Come see our latest carvings and watch live demonstrations throughout the day. Special discounts available for market attendees!',
-      image: '/src/assets/event-1.jpg' // Placeholder path
+      title: 'Eatonville Art and Music Festival',
+      date: 'August 2-4, 2024',
+      location: 'Eatonville, WA',
+      description: 'Join us at the Eatonville Art and Music Festival where we\'ll be showcasing our latest carvings and offering live demonstrations throughout the event.',
+      image: 'src/assets/img/events/eatonville_art_and_music_festival_2024_1.webp'
     },
     {
       id: 2,
-      title: 'Northwest Chainsaw Carving Exhibition',
-      date: 'July 8-10, 2023',
-      location: 'Olympia Fairgrounds',
-      description: 'We\'ll be showcasing our finest work alongside other talented carvers from across the Pacific Northwest. Vote for your favorite pieces!',
-      image: '/src/assets/event-2.jpg' // Placeholder path
+      title: 'Lake Lawrence Holiday Bazaar',
+      date: 'November 9-10, 2024',
+      location: 'Lake Lawrence, WA',
+      description: 'Visit our booth at the Lake Lawrence Holiday Bazaar to find unique hand-carved gifts for the holiday season. Special festival discounts available!',
+      image: 'src/assets/img/events/lake_lawrence_holiday_bazaar_2024_1.webp'
     },
     {
       id: 3,
-      title: 'Workshop Open House',
-      date: 'August 20, 2023',
-      location: 'Yelm Country Carvings Workshop',
-      description: 'Tour our workshop, meet the carver, and see works in progress. Refreshments provided. RSVP required as space is limited.',
-      image: '/src/assets/event-3.jpg' // Placeholder path
+      title: 'Meeker Days',
+      date: 'June 13-15, 2025',
+      location: 'Puyallup, WA',
+      description: 'We\'re excited to participate in Meeker Days, one of the largest street festivals in the Pacific Northwest. Stop by to see our latest creations and watch live carving demonstrations.',
+      image: 'src/assets/img/events/meeker_days_2025.webp'
     }
   ];
 
@@ -82,11 +82,12 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
                 className="bg-[#F5F1E9] border border-[#A07E5D] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
               >
                 {/* Event Image */}
-                <div className="h-48 bg-[#A07E5D] bg-opacity-20 relative">
-                  {/* Placeholder for event image */}
-                  <div className="absolute inset-0 flex items-center justify-center text-[#3E3C3B]">
-                    Event Image Placeholder
-                  </div>
+                <div className="h-48 bg-[#A07E5D] bg-opacity-20 relative overflow-hidden">
+                  <img 
+                    src={event.image} 
+                    alt={event.title} 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
 
                 {/* Event Content */}
