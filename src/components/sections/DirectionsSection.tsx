@@ -8,7 +8,7 @@ const DirectionsSection: React.FC<DirectionsSectionProps> = () => {
   // Function to handle "Get Directions" button click
   const handleGetDirections = () => {
     // Open Google Maps with the address pre-filled
-    window.open('https://www.google.com/maps/search/?api=1&query=16120+State+Route+507+SE+Yelm+WA+98597', '_blank');
+    window.open('https://www.google.com/maps/search/?api=1&query=19438+Cook+Road+Southeast+Yelm+Washington+98597+United+States', '_blank');
   };
 
   return (
@@ -53,11 +53,12 @@ const DirectionsSection: React.FC<DirectionsSectionProps> = () => {
             <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41] mb-4">Our Location</h3>
             <address className="not-italic font-['Lato'] text-lg text-[#3E3C3B] mb-4">
               <p className="font-bold">Yelm Country Carvings</p>
-              <p>16120 State Route 507 SE</p>
-              <p>Yelm, WA 98597</p>
+              <p>19438 Cook Road Southeast</p>
+              <p>Yelm, Washington 98597</p>
+              <p>United States</p>
               <p className="mt-4">
-                <a href="tel:+13605551234" className="text-[#B87351] hover:underline">
-                  (360) 555-1234
+                <a href="tel:+12532789814" className="text-[#B87351] hover:underline">
+                  (253) 278-9814
                 </a>
               </p>
             </address>
@@ -89,13 +90,13 @@ const DirectionsSection: React.FC<DirectionsSectionProps> = () => {
             <div className="font-['Lato'] text-lg text-[#3E3C3B]">
               <div className="grid grid-cols-2 gap-2">
                 <div className="font-bold">Monday - Friday:</div>
-                <div>9:00 AM - 5:00 PM</div>
+                <div>By Appointment</div>
 
                 <div className="font-bold">Saturday:</div>
                 <div>10:00 AM - 4:00 PM</div>
 
                 <div className="font-bold">Sunday:</div>
-                <div>Closed</div>
+                <div>10:00 AM - 4:00 PM</div>
               </div>
               <p className="mt-4 text-[#B87351] font-semibold">
                 * Custom appointments available upon request
@@ -109,14 +110,14 @@ const DirectionsSection: React.FC<DirectionsSectionProps> = () => {
           {/* Google Maps iframe */}
           <div className="aspect-w-16 aspect-h-9">
             <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2724.2108553401394!2d-122.6047235!3d46.9421499!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5491a1f3b4b5b8a9%3A0x2c0e5b5e75c3b8b0!2s16120%20State%20Route%20507%20SE%2C%20Yelm%2C%20WA%2098597!5e0!3m2!1sen!2sus!4v1625152486789!5m2!1sen!2sus" 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2724.2108553401394!2d-122.6047235!3d46.9421499!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0:0x0!2zNDfCsDA1JzMxLjgiTiAxMjLCsDM2JzE3LjAiVw!5e0!3m2!1sen!2sus!4v1625152486789!5m2!1sen!2sus" 
               width="100%" 
               height="100%" 
               style={{ border: 0 }} 
               allowFullScreen={true} 
               loading="lazy" 
               referrerPolicy="no-referrer-when-downgrade"
-              title="Yelm Country Carvings Location"
+              title="Yelm Country Carvings Location - 19438 Cook Road Southeast, Yelm, Washington 98597"
               className="absolute inset-0"
             ></iframe>
           </div>

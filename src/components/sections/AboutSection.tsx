@@ -1,4 +1,7 @@
 import React from 'react';
+import tracieAndBill from '../../assets/img/tracie_bill.webp';
+import tree from '../../assets/img/tree.webp';
+import snowman from '../../assets/img/snowman.webp';
 
 const AboutSection: React.FC = () => {
   return (
@@ -15,37 +18,49 @@ const AboutSection: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Card 1: Our Story */}
           <div className="bg-[#F5F1E9] border-2 border-[#A07E5D] rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
-            <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4">Our Story</h3>
+            <div className="mb-4 overflow-hidden rounded-full w-24 h-24 mx-auto">
+              {/* Tree image */}
+              <img 
+                src={tree} 
+                alt="Cedar Tree" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4 text-center">Our Materials</h3>
             <p className="font-['Lato'] text-[#3E3C3B]">
-              Yelm Country Carvings began with a passion for transforming raw timber into works of art. 
-              Since 2005, we've been creating unique chainsaw carvings that bring joy and character to homes, 
-              businesses, and public spaces throughout the Pacific Northwest.
+              I only use cedar for my carvings. They are all stained with an oil based stain and coated with either polyurethane for a shiny finish or spar urethane for a more natural finish to withstand the cold and the heat.
             </p>
           </div>
 
           {/* Card 2: Quality Craftsmanship */}
           <div className="bg-[#F5F1E9] border-2 border-[#A07E5D] rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
-            <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4">Quality Craftsmanship</h3>
+            <div className="mb-4 overflow-hidden rounded-full w-24 h-24 mx-auto">
+              {/* Tree image */}
+              <img
+                src={snowman}
+                alt="Snowman Carving"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4 text-center">Quality Craftsmanship</h3>
             <p className="font-['Lato'] text-[#3E3C3B]">
-              Every carving is created with meticulous attention to detail and a commitment to excellence. 
-              We use only premium, locally-sourced timber and finish each piece to withstand the elements 
-              while maintaining its natural beauty for years to come.
+              I love creating pieces that make people smile. I do my own versions of items - bears, sasquatchs, turtles, frogs, orcas, sailors, snails, elephants, and more - all sizes and affordable for all budgets. The first carving I did was of a very large Snowman. I think he is adorable.
             </p>
           </div>
 
           {/* Card 3: Meet the Carver */}
           <div className="bg-[#F5F1E9] border-2 border-[#A07E5D] rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
-            <div className="mb-4 overflow-hidden rounded-full w-24 h-24 mx-auto bg-[#6B4F41] flex items-center justify-center">
-              {/* Carver's icon */}
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-[#F5F1E9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
+            <div className="mb-4 overflow-hidden rounded-full w-24 h-24 mx-auto">
+              {/* Carver's image */}
+              <img 
+                src={tracieAndBill} 
+                alt="Tracie and Bill" 
+                className="w-full h-full object-cover"
+              />
             </div>
             <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4 text-center">Meet the Carver</h3>
             <p className="font-['Lato'] text-[#3E3C3B]">
-              Our master carver and founder brings over 20 years of woodworking experience to each creation. 
-              With a unique vision and skilled hands, we transform ordinary logs into extraordinary characters that capture 
-              the imagination and warm the heart.
+              At Yelm Country Carvings, my goal is to create chainsaw carvings that are affordable and make peope happy. This is a hobby I started with the support of my husband who built me a wonderful workshop. He is my inspiration.
             </p>
           </div>
         </div>

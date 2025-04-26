@@ -3,7 +3,7 @@ import backgroundImage from '../../assets/logo_with_wood_background_wide.jpg';
 
 const HeroSection: React.FC = () => {
   return (
-    <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative w-full h-screen flex items-center overflow-hidden">
       {/* Background Slideshow */}
       <div className="absolute inset-0 bg-[#A07E5D] bg-opacity-80 overflow-hidden">
         <div 
@@ -15,11 +15,42 @@ const HeroSection: React.FC = () => {
         ></div>
       </div>
 
-      {/* Content Container - Positioned lower on the page */}
-      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-24 md:mt-32 lg:mt-40">
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row justify-center gap-6">
-          {/* Primary CTA Button */}
+      {/* Mobile Layout - Flex column with buttons at opposite ends */}
+      <div className="md:hidden relative z-10 w-full flex flex-col justify-between h-3/4 px-4 py-12">
+        {/* Primary CTA Button - Top */}
+        <div className="flex justify-start mt-16">
+          <a 
+            href="#process" 
+            className="px-6 py-3 bg-[#B87351] text-[#F5F1E9] text-base font-['Lato'] font-bold rounded-lg border-2 border-[#F5F1E9] shadow-lg hover:bg-[#A07E5D] hover:scale-105 transition-all duration-300"
+            style={{ 
+              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+              textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)'
+            }}
+          >
+            Explore Our Creations
+          </a>
+        </div>
+
+        {/* Secondary CTA Button - Bottom */}
+        <div className="flex justify-end mb-16">
+          <a 
+            href="#contact" 
+            className="px-6 py-3 bg-[#A07E5D] text-[#F5F1E9] text-base font-['Lato'] font-bold rounded-lg border-2 border-[#F5F1E9] shadow-lg hover:bg-[#B87351] hover:scale-105 transition-all duration-300"
+            style={{ 
+              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+              textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)'
+            }}
+          >
+            Get a Custom Quote
+          </a>
+        </div>
+      </div>
+
+      {/* Desktop Layout */}
+      {/* Left Side Content (25%) */}
+      <div className="hidden md:block relative z-10 w-1/4 px-4 mt-24 md:mt-32 lg:mt-40 ml-4 md:ml-8 lg:ml-12">
+        {/* Primary CTA Button */}
+        <div className="flex justify-start">
           <a 
             href="#process" 
             className="px-8 py-4 bg-[#B87351] text-[#F5F1E9] text-lg font-['Lato'] font-bold rounded-lg border-2 border-[#F5F1E9] shadow-lg hover:bg-[#A07E5D] hover:scale-105 transition-all duration-300"
@@ -30,8 +61,16 @@ const HeroSection: React.FC = () => {
           >
             Explore Our Creations
           </a>
+        </div>
+      </div>
 
-          {/* Secondary CTA Button */}
+      {/* Empty Middle Section (50%) */}
+      <div className="hidden md:block w-1/2"></div>
+
+      {/* Right Side Content (25%) */}
+      <div className="hidden md:block relative z-10 w-1/4 px-4 mt-24 md:mt-32 lg:mt-40 mr-4 md:mr-8 lg:mr-12">
+        {/* Secondary CTA Button */}
+        <div className="flex justify-end">
           <a 
             href="#contact" 
             className="px-8 py-4 bg-[#A07E5D] text-[#F5F1E9] text-lg font-['Lato'] font-bold rounded-lg border-2 border-[#F5F1E9] shadow-lg hover:bg-[#B87351] hover:scale-105 transition-all duration-300"
@@ -45,7 +84,7 @@ const HeroSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Optional: Scroll Down Indicator */}
+      {/* Scroll Down Indicator - Centered at the bottom */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
         <svg 
           xmlns="http://www.w3.org/2000/svg" 

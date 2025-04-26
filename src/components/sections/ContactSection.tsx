@@ -30,21 +30,72 @@ const ContactSection: React.FC<ContactSectionProps> = () => {
     }));
   };
 
-  // Handle file upload
+  // Handle file upload with security validation
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        setFormStatus({
+          submitted: true,
+          success: false,
+          message: 'Please upload only image files (JPEG, PNG, WEBP).'
+        });
+        // Reset the file input
+        e.target.value = '';
+        return;
+      }
+
+      // Validate file size (limit to 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (file.size > maxSize) {
+        setFormStatus({
+          submitted: true,
+          success: false,
+          message: 'File size exceeds 5MB limit. Please upload a smaller image.'
+        });
+        // Reset the file input
+        e.target.value = '';
+        return;
+      }
+
+      // File passed validation, update state
       setFormData(prev => ({
         ...prev,
-        file: e.target.files![0]
+        file: file
       }));
+
+      // Clear any previous error messages
+      if (formStatus.submitted && !formStatus.success) {
+        setFormStatus({
+          submitted: false,
+          success: false,
+          message: ''
+        });
+      }
     }
   };
 
+  // Email validation function
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // Phone validation function (optional field)
+  const isValidPhone = (phone: string): boolean => {
+    if (!phone) return true; // Phone is optional
+    const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    return phoneRegex.test(phone);
+  };
+
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate form (basic validation)
+    // Validate form (enhanced validation)
     if (!formData.name || !formData.email || !formData.message) {
       setFormStatus({
         submitted: true,
@@ -54,24 +105,79 @@ const ContactSection: React.FC<ContactSectionProps> = () => {
       return;
     }
 
-    // In a real implementation, this would send the form data to a server
-    console.log('Form submitted:', formData);
+    // Validate email format
+    if (!isValidEmail(formData.email)) {
+      setFormStatus({
+        submitted: true,
+        success: false,
+        message: 'Please enter a valid email address.'
+      });
+      return;
+    }
 
-    // Simulate successful submission
-    setFormStatus({
-      submitted: true,
-      success: true,
-      message: 'Thank you for your message! We\'ll get back to you soon.'
-    });
+    // Validate phone format if provided
+    if (formData.phone && !isValidPhone(formData.phone)) {
+      setFormStatus({
+        submitted: true,
+        success: false,
+        message: 'Please enter a valid phone number.'
+      });
+      return;
+    }
 
-    // Reset form after successful submission
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      message: '',
-      file: null,
-    });
+    try {
+      // Create form data to send
+      const emailFormData = new FormData();
+      emailFormData.append('to', 'tlzumach@hotmail.com');
+      emailFormData.append('from', formData.email);
+      emailFormData.append('subject', `Contact Form Submission from ${formData.name}`);
+      emailFormData.append('name', formData.name);
+      emailFormData.append('email', formData.email);
+      emailFormData.append('phone', formData.phone || 'Not provided');
+      emailFormData.append('message', formData.message);
+
+      // Append file if exists
+      if (formData.file) {
+        emailFormData.append('file', formData.file);
+      }
+
+      // In a real implementation, this would send the form data to a server
+      // For example:
+      // const response = await fetch('/api/send-email', {
+      //   method: 'POST',
+      //   body: emailFormData,
+      // });
+      // 
+      // if (!response.ok) {
+      //   throw new Error('Failed to send email');
+      // }
+
+      // For now, log the form data and simulate successful submission
+      console.log('Form submitted:', formData);
+
+      // Simulate successful submission
+      setFormStatus({
+        submitted: true,
+        success: true,
+        message: 'Thank you for your message! We\'ll get back to you soon.'
+      });
+
+      // Reset form after successful submission
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        message: '',
+        file: null,
+      });
+    } catch (error) {
+      console.error('Error sending form:', error);
+      setFormStatus({
+        submitted: true,
+        success: false,
+        message: 'There was an error sending your message. Please try again later.'
+      });
+    }
   };
 
   return (
@@ -108,9 +214,9 @@ const ContactSection: React.FC<ContactSectionProps> = () => {
                 </svg>
                 <div>
                   <h4 className="font-['Lato'] font-bold text-[#3E3C3B]">Hours</h4>
-                  <p className="font-['Lato'] text-[#3E3C3B]">Monday - Friday: 9am - 5pm</p>
+                  <p className="font-['Lato'] text-[#3E3C3B]">Monday - Friday: By Appointment</p>
                   <p className="font-['Lato'] text-[#3E3C3B]">Saturday: 10am - 4pm</p>
-                  <p className="font-['Lato'] text-[#3E3C3B]">Sunday: Closed</p>
+                  <p className="font-['Lato'] text-[#3E3C3B]">Sunday: 10am - 4pm</p>
                 </div>
               </div>
 
@@ -122,8 +228,9 @@ const ContactSection: React.FC<ContactSectionProps> = () => {
                 </svg>
                 <div>
                   <h4 className="font-['Lato'] font-bold text-[#3E3C3B]">Address</h4>
-                  <p className="font-['Lato'] text-[#3E3C3B]">123 Carving Lane</p>
-                  <p className="font-['Lato'] text-[#3E3C3B]">Yelm, WA 98597</p>
+                  <p className="font-['Lato'] text-[#3E3C3B]">19438 Cook Road Southeast</p>
+                  <p className="font-['Lato'] text-[#3E3C3B]">Yelm, Washington 98597</p>
+                  <p className="font-['Lato'] text-[#3E3C3B]">United States</p>
                 </div>
               </div>
 
@@ -134,7 +241,7 @@ const ContactSection: React.FC<ContactSectionProps> = () => {
                 </svg>
                 <div>
                   <h4 className="font-['Lato'] font-bold text-[#3E3C3B]">Phone</h4>
-                  <a href="tel:+15551234567" className="font-['Lato'] text-[#4A6151] hover:text-[#B87351] transition-colors duration-300">(555) 123-4567</a>
+                  <a href="tel:+12532789814" className="font-['Lato'] text-[#4A6151] hover:text-[#B87351] transition-colors duration-300">(253) 278-9814</a>
                 </div>
               </div>
 
@@ -145,7 +252,7 @@ const ContactSection: React.FC<ContactSectionProps> = () => {
                 </svg>
                 <div>
                   <h4 className="font-['Lato'] font-bold text-[#3E3C3B]">Email</h4>
-                  <a href="mailto:info@yelmcountrycarvings.com" className="font-['Lato'] text-[#4A6151] hover:text-[#B87351] transition-colors duration-300">info@yelmcountrycarvings.com</a>
+                  <a href="mailto:tlzumach@hotmail.com" className="font-['Lato'] text-[#4A6151] hover:text-[#B87351] transition-colors duration-300">tlzumach@hotmail.com</a>
                 </div>
               </div>
             </div>
@@ -236,9 +343,11 @@ const ContactSection: React.FC<ContactSectionProps> = () => {
                   name="file"
                   onChange={handleFileChange}
                   className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/gif,image/webp,image/heic,image/heif"
+                  capture="environment"
+                  aria-describedby="file-description"
                 />
-                <p className="text-sm text-[#3E3C3B] mt-1">Optional: Share an image to help us understand your vision.</p>
+                <p id="file-description" className="text-sm text-[#3E3C3B] mt-1">Optional: Share an image to help us understand your vision. Accepted formats: JPEG, PNG, GIF, WEBP. Max size: 5MB.</p>
               </div>
 
               {/* Submit Button */}
