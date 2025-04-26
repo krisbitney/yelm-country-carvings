@@ -7,8 +7,8 @@ interface DirectionsSectionProps {
 const DirectionsSection: React.FC<DirectionsSectionProps> = () => {
   // Function to handle "Get Directions" button click
   const handleGetDirections = () => {
-    // In a real implementation, this would open Google Maps with the address pre-filled
-    window.open('https://www.google.com/maps/search/?api=1&query=Yelm+Country+Carvings+Yelm+WA', '_blank');
+    // Open Google Maps with the address pre-filled
+    window.open('https://www.google.com/maps/search/?api=1&query=16120+State+Route+507+SE+Yelm+WA+98597', '_blank');
   };
 
   return (
@@ -39,25 +39,31 @@ const DirectionsSection: React.FC<DirectionsSectionProps> = () => {
           </svg>
 
           <h2 className="font-['Cinzel'] text-3xl md:text-4xl font-bold text-[#6B4F41]">
-            Find Our Workshop
+            Visit Our Workshop
           </h2>
+          <p className="font-['Lato'] text-lg text-[#3E3C3B] mt-3 max-w-2xl mx-auto">
+            Come see our chainsaw art creations in person and watch our artists at work!
+          </p>
         </div>
 
-        {/* Map Container */}
-        <div className="relative rounded-lg overflow-hidden shadow-lg">
-          {/* Placeholder for Google Map - In a real implementation, this would be replaced with an actual Google Maps embed */}
-          <div className="aspect-w-16 aspect-h-9 bg-[#A07E5D] bg-opacity-20">
-            {/* This is a placeholder. In a real implementation, you would use the Google Maps API or an iframe */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p className="font-['Lato'] text-[#3E3C3B] text-xl">Google Map Placeholder</p>
-            </div>
-          </div>
-
-          {/* Map Overlay with Get Directions Button */}
-          <div className="absolute bottom-6 right-6">
+        {/* Address and Hours Card */}
+        <div className="flex flex-col md:flex-row gap-8 mb-8">
+          {/* Address Information */}
+          <div className="bg-white rounded-lg shadow-md p-6 flex-1">
+            <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41] mb-4">Our Location</h3>
+            <address className="not-italic font-['Lato'] text-lg text-[#3E3C3B] mb-4">
+              <p className="font-bold">Yelm Country Carvings</p>
+              <p>16120 State Route 507 SE</p>
+              <p>Yelm, WA 98597</p>
+              <p className="mt-4">
+                <a href="tel:+13605551234" className="text-[#B87351] hover:underline">
+                  (360) 555-1234
+                </a>
+              </p>
+            </address>
             <button 
               onClick={handleGetDirections}
-              className="px-6 py-3 bg-[#B87351] text-[#F5F1E9] font-['Lato'] font-bold rounded-md shadow-md hover:bg-[#A07E5D] transition-colors duration-300 flex items-center"
+              className="mt-4 px-6 py-3 bg-[#B87351] text-[#F5F1E9] font-['Lato'] font-bold rounded-md shadow-md hover:bg-[#A07E5D] transition-colors duration-300 flex items-center"
             >
               <svg 
                 className="w-5 h-5 mr-2" 
@@ -76,17 +82,70 @@ const DirectionsSection: React.FC<DirectionsSectionProps> = () => {
               Get Directions
             </button>
           </div>
+
+          {/* Hours Information */}
+          <div className="bg-white rounded-lg shadow-md p-6 flex-1">
+            <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41] mb-4">Workshop Hours</h3>
+            <div className="font-['Lato'] text-lg text-[#3E3C3B]">
+              <div className="grid grid-cols-2 gap-2">
+                <div className="font-bold">Monday - Friday:</div>
+                <div>9:00 AM - 5:00 PM</div>
+
+                <div className="font-bold">Saturday:</div>
+                <div>10:00 AM - 4:00 PM</div>
+
+                <div className="font-bold">Sunday:</div>
+                <div>Closed</div>
+              </div>
+              <p className="mt-4 text-[#B87351] font-semibold">
+                * Custom appointments available upon request
+              </p>
+            </div>
+          </div>
         </div>
 
-        {/* Nearby Landmarks */}
-        <div className="mt-8 bg-[#A07E5D] bg-opacity-10 p-6 rounded-lg">
-          <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4">Nearby Landmarks</h3>
-          <ul className="list-disc list-inside font-['Lato'] text-[#3E3C3B] space-y-2">
-            <li>Just 2 miles east of Yelm Prairie Park</li>
-            <li>Across from the Nisqually River Nature Trail</li>
-            <li>5 minutes from downtown Yelm</li>
-            <li>Look for the large wooden bear carving at our driveway entrance!</li>
-          </ul>
+        {/* Map Container */}
+        <div className="relative rounded-lg overflow-hidden shadow-lg">
+          {/* Google Maps iframe */}
+          <div className="aspect-w-16 aspect-h-9">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2724.2108553401394!2d-122.6047235!3d46.9421499!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5491a1f3b4b5b8a9%3A0x2c0e5b5e75c3b8b0!2s16120%20State%20Route%20507%20SE%2C%20Yelm%2C%20WA%2098597!5e0!3m2!1sen!2sus!4v1625152486789!5m2!1sen!2sus" 
+              width="100%" 
+              height="100%" 
+              style={{ border: 0 }} 
+              allowFullScreen={true} 
+              loading="lazy" 
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Yelm Country Carvings Location"
+              className="absolute inset-0"
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Travel Information */}
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Nearby Landmarks */}
+          <div className="bg-[#A07E5D] bg-opacity-10 p-6 rounded-lg">
+            <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4">Nearby Landmarks</h3>
+            <ul className="list-disc list-inside font-['Lato'] text-[#3E3C3B] space-y-2">
+              <li>Just 2 miles east of Yelm Prairie Park</li>
+              <li>Across from the Nisqually River Nature Trail</li>
+              <li>5 minutes from downtown Yelm</li>
+              <li>Look for the large wooden bear carving at our driveway entrance!</li>
+            </ul>
+          </div>
+
+          {/* Directions Tips */}
+          <div className="bg-[#A07E5D] bg-opacity-10 p-6 rounded-lg">
+            <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4">Travel Tips</h3>
+            <ul className="list-disc list-inside font-['Lato'] text-[#3E3C3B] space-y-2">
+              <li>From I-5, take exit 116 toward Yelm/Tenino</li>
+              <li>Follow SR-507 S for approximately 15 miles</li>
+              <li>Ample parking available on-site</li>
+              <li>Wheelchair accessible entrance and viewing area</li>
+              <li>Pet-friendly outdoor areas (leashed pets only)</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>

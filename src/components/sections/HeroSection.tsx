@@ -1,5 +1,5 @@
 import React from 'react';
-import backgroundImage from '../../assets/logo_with_wood_background_16x9.png';
+import backgroundImage from '../../assets/logo_with_wood_background_wide.jpg';
 
 const HeroSection: React.FC = () => {
   return (
@@ -17,14 +17,6 @@ const HeroSection: React.FC = () => {
 
       {/* Content Container - Positioned lower on the page */}
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-24 md:mt-32 lg:mt-40">
-        {/* Main Title */}
-        <h1 className="font-['Cinzel'] text-4xl md:text-5xl lg:text-6xl font-bold text-[#F5F1E9] mb-8 animate-fadeIn" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>
-          Yelm Country Carvings
-        </h1>
-        <p className="font-['Lato'] text-xl md:text-2xl text-[#F5F1E9] mb-12 animate-slideInUp" style={{ textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)' }}>
-          Handcrafted Chainsaw Art from the Pacific Northwest
-        </p>
-
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row justify-center gap-6">
           {/* Primary CTA Button */}
