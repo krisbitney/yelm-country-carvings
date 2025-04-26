@@ -92,7 +92,7 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
 
                 {/* Event Content */}
                 <div className="p-6">
-                  <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-2">{event.title}</h3>
+                  <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-2 min-h-[3.5rem] flex items-start">{event.title}</h3>
                   <p className="font-['Lato'] text-[#4A6151] font-semibold mb-2">{event.date}</p>
                   <p className="font-['Lato'] text-[#3E3C3B] mb-4">{event.location}</p>
 
