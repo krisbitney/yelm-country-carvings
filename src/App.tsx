@@ -2,6 +2,7 @@ import Navbar from './components/layout/Navbar';
 import HeroSection from './components/sections/HeroSection';
 import AboutSection from './components/sections/AboutSection';
 import ProcessSection from './components/sections/ProcessSection';
+import GallerySection from './components/sections/GallerySection';
 import EventsSection from './components/sections/EventsSection';
 import ContactSection from './components/sections/ContactSection';
 import DirectionsSection from './components/sections/DirectionsSection';
@@ -16,6 +17,7 @@ function App() {
         <HeroSection />
         <AboutSection />
         <ProcessSection />
+        <GallerySection />
         <EventsSection />
         <ContactSection />
         <DirectionsSection />

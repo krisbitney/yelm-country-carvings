@@ -35,7 +35,7 @@ const AboutSection: React.FC = () => {
           {/* Card 2: Quality Craftsmanship */}
           <div className="bg-[#F5F1E9] border-2 border-[#A07E5D] rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
             <div className="mb-4 overflow-hidden rounded-full w-24 h-24 mx-auto">
-              {/* Tree image */}
+              {/* Snowman image */}
               <img
                 src={snowman}
                 alt="Snowman Carving"
@@ -44,7 +44,7 @@ const AboutSection: React.FC = () => {
             </div>
             <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4 text-center">Quality Craftsmanship</h3>
             <p className="font-['Lato'] text-[#3E3C3B]">
-              I love creating pieces that make people smile. I do my own versions of items - bears, sasquatchs, turtles, frogs, orcas, sailors, snails, elephants, and more - all sizes and affordable for all budgets. The first carving I did was of a very large Snowman. I think he is adorable.
+              I love creating pieces that make people smile. I do my own versions of items - bears, sasquatches, turtles, frogs, orcas, sailors, snails, elephants, and more - all sizes and affordable for all budgets. The first carving I did was of a very large Snowman. I think he is adorable.
             </p>
           </div>
 
@@ -60,7 +60,7 @@ const AboutSection: React.FC = () => {
             </div>
             <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4 text-center">Meet the Carver</h3>
             <p className="font-['Lato'] text-[#3E3C3B]">
-              At Yelm Country Carvings, my goal is to create chainsaw carvings that are affordable and make peope happy. This is a hobby I started with the support of my husband who built me a wonderful workshop. He is my inspiration.
+              At Yelm Country Carvings, my goal is to create chainsaw carvings that are affordable and make people happy. This is a hobby I started with the support of my husband who built me a wonderful workshop. He is my inspiration.
             </p>
           </div>
         </div>

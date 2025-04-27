@@ -58,6 +58,12 @@ const Navbar: React.FC = () => {
             Process
           </a>
           <a 
+            href="#gallery" 
+            className="font-['Lato'] text-[#F5F1E9] hover:text-[#B87351] transition-all duration-300 py-1 border-b-2 border-transparent hover:border-[#B87351]"
+          >
+            Gallery
+          </a>
+          <a 
             href="#events" 
             className="font-['Lato'] text-[#F5F1E9] hover:text-[#B87351] transition-all duration-300 py-1 border-b-2 border-transparent hover:border-[#B87351]"
           >
@@ -155,6 +161,12 @@ const Navbar: React.FC = () => {
               className="font-['Lato'] text-[#F5F1E9] hover:text-[#B87351] transition-colors duration-300 border-l-2 border-transparent hover:border-[#B87351] pl-2"
             >
               Process
+            </a>
+            <a 
+              href="#gallery" 
+              className="font-['Lato'] text-[#F5F1E9] hover:text-[#B87351] transition-colors duration-300 border-l-2 border-transparent hover:border-[#B87351] pl-2"
+            >
+              Gallery
             </a>
             <a 
               href="#events" 

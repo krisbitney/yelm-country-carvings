@@ -65,6 +65,9 @@ const FAQSection: React.FC<FAQSectionProps> = () => {
             viewBox="0 0 24 24" 
             fill="currentColor" 
             xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            focusable="false"
+            role="img"
           >
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-4h2v2h-2zm0-10h2v8h-2z" />
           </svg>
@@ -85,9 +88,11 @@ const FAQSection: React.FC<FAQSectionProps> = () => {
                 >
                   {/* Question (Header) */}
                   <button 
+                    id={`faq-question-${faq.id}`}
                     className="w-full px-6 py-4 text-left bg-[#F5F1E9] hover:bg-[#A07E5D] hover:bg-opacity-10 hover:cursor-pointer flex justify-between items-center transition-colors duration-300"
                     onClick={() => toggleFAQ(faq.id)}
                     aria-expanded={expandedFAQs.includes(faq.id)}
+                    aria-controls={`faq-answer-${faq.id}`}
                   >
                     <span className="font-['Cinzel'] font-bold text-[#6B4F41]">{faq.question}</span>
                     <svg 
@@ -97,6 +102,8 @@ const FAQSection: React.FC<FAQSectionProps> = () => {
                       fill="none" 
                       viewBox="0 0 24 24" 
                       stroke="currentColor"
+                      aria-hidden="true"
+                      focusable="false"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
@@ -104,9 +111,12 @@ const FAQSection: React.FC<FAQSectionProps> = () => {
 
                   {/* Answer */}
                   <div 
+                    id={`faq-answer-${faq.id}`}
                     className={`overflow-hidden transition-all duration-300 ${
                       expandedFAQs.includes(faq.id) ? 'max-h-96' : 'max-h-0'
                     }`}
+                    role="region"
+                    aria-labelledby={`faq-question-${faq.id}`}
                   >
                     <div className="px-6 py-4 bg-white">
                       <p className="font-['Lato'] text-[#3E3C3B]">{faq.answer}</p>
@@ -122,6 +132,7 @@ const FAQSection: React.FC<FAQSectionProps> = () => {
             <a 
               href="#contact" 
               className="inline-block px-6 py-3 bg-[#4A6151] text-[#F5F1E9] font-['Lato'] font-bold rounded-md shadow-md hover:bg-[#6B4F41] hover:cursor-pointer transition-colors duration-300"
+              aria-label="Contact us with your questions"
             >
               Contact Us
             </a>

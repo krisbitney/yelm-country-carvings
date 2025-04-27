@@ -1,9 +1,30 @@
 import React from 'react';
 import backgroundImage from '../../assets/logo_with_wood_background_wide.jpg';
 
+// Define the CSS animation
+const zoomInOutAnimation = `
+@keyframes zoomInOut {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+`;
+
 const HeroSection: React.FC = () => {
   return (
     <section className="relative w-full h-screen flex items-center overflow-hidden">
+      {/* Add animation styles */}
+      <style dangerouslySetInnerHTML={{ __html: zoomInOutAnimation }} />
+
+      {/* Visually hidden h1 for SEO and accessibility */}
+      <h1 className="sr-only">Yelm Country Carvings - Handcrafted Chainsaw Art in Yelm, Washington</h1>
+
       {/* Background Slideshow */}
       <div className="absolute inset-0 bg-[#A07E5D] bg-opacity-80 overflow-hidden">
         <div 
@@ -12,6 +33,8 @@ const HeroSection: React.FC = () => {
             backgroundImage: `url(${backgroundImage})`,
             animation: 'zoomInOut 20s infinite alternate ease-in-out'
           }}
+          role="img"
+          aria-label="Yelm Country Carvings logo with wooden background"
         ></div>
       </div>
 
