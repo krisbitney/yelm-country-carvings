@@ -187,7 +187,7 @@ const GallerySection: React.FC = () => {
       {/* Full-size Image Modal */}
       {selectedImage && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-75 z-1001 flex items-center justify-center p-4 animate-fadeIn"
+          className="fixed inset-0 bg-black/85 z-1001 flex items-center justify-center p-4 animate-fadeIn"
           onClick={() => setSelectedImage(null)}
           aria-modal="true"
           role="dialog"

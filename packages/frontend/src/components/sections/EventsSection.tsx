@@ -93,9 +93,9 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
 
   // Toggle event details expansion
   const toggleEventDetails = (eventId: number) => {
-    setExpandedEvents(prev => 
-      prev.includes(eventId) 
-        ? prev.filter(id => id !== eventId) 
+    setExpandedEvents(prev =>
+      prev.includes(eventId)
+        ? prev.filter(id => id !== eventId)
         : [...prev, eventId]
     );
   };
@@ -148,15 +148,16 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
           // Event Listings
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {events.map(event => (
-              <div 
-                key={event.id} 
+              <div
+                key={event.id}
                 className="bg-[#F5F1E9] border border-[#A07E5D] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
               >
                 {/* Event Image */}
-                <div className="h-48 bg-[#A07E5D] bg-opacity-20 relative overflow-hidden">
-                  <img 
-                    src={event.image} 
-                    alt={event.title} 
+                {/* Changed bg-opacity-20 to /20 modifier */}
+                <div className="h-48 bg-[#A07E5D]/20 relative overflow-hidden">
+                  <img
+                    src={event.image}
+                    alt={event.title}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -176,13 +177,13 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
 
                   {/* Buttons */}
                   <div className="flex flex-wrap gap-2 mt-4">
-                    <button 
+                    <button
                       className="px-4 py-2 bg-[#4A6151] text-[#F5F1E9] font-['Lato'] rounded-md hover:bg-[#6B4F41] hover:cursor-pointer transition-colors duration-300 text-sm"
                       onClick={() => toggleEventDetails(event.id)}
                     >
                       {expandedEvents.includes(event.id) ? 'Show Less' : 'Learn More'}
                     </button>
-                    <button 
+                    <button
                       className="px-4 py-2 bg-[#A07E5D] text-[#F5F1E9] font-['Lato'] rounded-md hover:bg-[#B87351] hover:cursor-pointer transition-colors duration-300 text-sm flex items-center"
                       onClick={(e) => addToCalendar(event, e)}
                     >
@@ -198,21 +199,22 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
           </div>
         ) : (
           // Fallback Message when no events
-          <div className="text-center py-12 bg-[#A07E5D] bg-opacity-10 rounded-lg">
+          // Changed bg-opacity-10 to /10 modifier
+          <div className="text-center py-12 bg-[#A07E5D]/10 rounded-lg">
             <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41] mb-4">Stay Tuned!</h3>
             <p className="font-['Lato'] text-[#3E3C3B] mb-6">We're planning exciting events. Sign up to be notified when new events are scheduled.</p>
 
             {/* Event Notification Signup Form */}
             <form className="max-w-md mx-auto">
               <div className="flex flex-col sm:flex-row gap-2">
-                <input 
-                  type="email" 
-                  placeholder="Your email address" 
+                <input
+                  type="email"
+                  placeholder="Your email address"
                   className="flex-grow px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
                   required
                 />
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="px-6 py-2 bg-[#B87351] text-[#F5F1E9] font-['Lato'] font-bold rounded-md hover:bg-[#A07E5D] hover:cursor-pointer transition-colors duration-300"
                 >
                   Notify Me

@@ -17,12 +17,12 @@ const AboutSection: React.FC = () => {
         {/* Cards Container */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Card 1: Our Story */}
-          <div className="bg-[#F5F1E9] border-2 border-[#A07E5D] rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
+          <div className="bg-[#F5F1E9] border-2 border-[#A07E5D] rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300 hover:-translate-y-1">
             <div className="mb-4 overflow-hidden rounded-full w-24 h-24 mx-auto">
               {/* Tree image */}
-              <img 
-                src={tree} 
-                alt="Cedar Tree" 
+              <img
+                src={tree}
+                alt="Cedar Tree"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -33,7 +33,7 @@ const AboutSection: React.FC = () => {
           </div>
 
           {/* Card 2: Quality Craftsmanship */}
-          <div className="bg-[#F5F1E9] border-2 border-[#A07E5D] rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
+          <div className="bg-[#F5F1E9] border-2 border-[#A07E5D] rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300 hover:-translate-y-1">
             <div className="mb-4 overflow-hidden rounded-full w-24 h-24 mx-auto">
               {/* Snowman image */}
               <img
@@ -49,12 +49,12 @@ const AboutSection: React.FC = () => {
           </div>
 
           {/* Card 3: Meet the Carver */}
-          <div className="bg-[#F5F1E9] border-2 border-[#A07E5D] rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
+          <div className="bg-[#F5F1E9] border-2 border-[#A07E5D] rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300 hover:-translate-y-1">
             <div className="mb-4 overflow-hidden rounded-full w-24 h-24 mx-auto">
               {/* Carver's image */}
-              <img 
-                src={tracieAndBill} 
-                alt="Tracie and Bill" 
+              <img
+                src={tracieAndBill}
+                alt="Tracie and Bill"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -66,9 +66,11 @@ const AboutSection: React.FC = () => {
         </div>
 
         {/* Video Placeholder */}
-        <div className="mt-16 bg-[#A07E5D] bg-opacity-10 p-6 rounded-lg">
+        {/* Changed bg-opacity-10 to /10 modifier */}
+        <div className="mt-16 bg-[#A07E5D]/10 p-6 rounded-lg">
           <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4 text-center">Hear Our Story</h3>
-          <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden bg-[#6B4F41] flex items-center justify-center">
+          {/* Replaced aspect-w-16 and aspect-h-9 with aspect-[16/9] */}
+          <div className="aspect-[16/9] rounded-lg overflow-hidden bg-[#6B4F41] flex items-center justify-center">
             <div className="text-center p-8">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-[#F5F1E9] mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />

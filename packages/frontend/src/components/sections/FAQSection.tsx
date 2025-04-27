@@ -89,7 +89,7 @@ const FAQSection: React.FC<FAQSectionProps> = () => {
                   {/* Question (Header) */}
                   <button 
                     id={`faq-question-${faq.id}`}
-                    className="w-full px-6 py-4 text-left bg-[#F5F1E9] hover:bg-[#A07E5D] hover:bg-opacity-10 hover:cursor-pointer flex justify-between items-center transition-colors duration-300"
+                    className="w-full px-6 py-4 text-left bg-[#F5F1E9] hover:bg-[#A07E5D]/10 hover:cursor-pointer flex justify-between items-center transition-colors duration-300"
                     onClick={() => toggleFAQ(faq.id)}
                     aria-expanded={expandedFAQs.includes(faq.id)}
                     aria-controls={`faq-answer-${faq.id}`}

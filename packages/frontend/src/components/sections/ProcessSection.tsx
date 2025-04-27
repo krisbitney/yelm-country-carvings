@@ -16,30 +16,35 @@ const ProcessSection: React.FC<ProcessSectionProps> = () => {
       id: 1,
       title: 'Step 1: Selecting the Log',
       description: 'We carefully select premium quality logs with the right characteristics for your carving.',
+      elaboration: 'This is where additional detailed information about the process step would go. In a real implementation, each step would have more comprehensive information about the techniques, tools, and expertise involved.',
       image: logoImage
     },
     {
       id: 2,
       title: 'Step 2: Initial Shaping',
       description: 'Using professional-grade chainsaws, we rough out the basic form of your carving.',
+      elaboration: 'This is where additional detailed information about the process step would go. In a real implementation, each step would have more comprehensive information about the techniques, tools, and expertise involved.',
       image: logoImage
     },
     {
       id: 3,
       title: 'Step 3: Detailed Carving',
       description: 'Smaller chainsaws and specialized tools bring out the character and details of your piece.',
+      elaboration: 'This is where additional detailed information about the process step would go. In a real implementation, each step would have more comprehensive information about the techniques, tools, and expertise involved.',
       image: logoImage
     },
     {
       id: 4,
       title: 'Step 4: Sanding & Smoothing',
       description: 'Each carving is carefully sanded to create a smooth, splinter-free finish.',
+      elaboration: 'This is where additional detailed information about the process step would go. In a real implementation, each step would have more comprehensive information about the techniques, tools, and expertise involved.',
       image: logoImage
     },
     {
       id: 5,
       title: 'Step 5: Finishing Touches',
       description: 'We apply high-quality sealants and finishes to protect your carving for years to come.',
+      elaboration: 'This is where additional detailed information about the process step would go. In a real implementation, each step would have more comprehensive information about the techniques, tools, and expertise involved.',
       image: logoImage
     }
   ];
@@ -110,14 +115,14 @@ const ProcessSection: React.FC<ProcessSectionProps> = () => {
             />
 
             {/* Caption */}
-            <div className="absolute bottom-0 left-0 right-0 bg-[#3E3C3B] bg-opacity-70 text-[#F5F1E9] p-4">
+            <div className="absolute bottom-0 left-0 right-0 bg-[#3E3C3B]/70 text-[#F5F1E9] p-4">
               <h3 className="font-['Cinzel'] text-lg font-bold mb-1">{processSteps[activeStep].title}</h3>
               <p className="font-['Lato']">{processSteps[activeStep].description}</p>
             </div>
 
             {/* Navigation Arrows */}
             <button 
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#3E3C3B] bg-opacity-50 text-[#F5F1E9] p-2 rounded-full hover:bg-[#4A6151] hover:cursor-pointer transition-colors duration-300"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#3E3C3B]/50 text-[#F5F1E9] p-2 rounded-full hover:bg-[#4A6151] hover:cursor-pointer transition-colors duration-300"
               onClick={(e) => { e.stopPropagation(); prevStep(); }}
               aria-label="Previous step"
             >
@@ -126,7 +131,7 @@ const ProcessSection: React.FC<ProcessSectionProps> = () => {
               </svg>
             </button>
             <button 
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#3E3C3B] bg-opacity-50 text-[#F5F1E9] p-2 rounded-full hover:bg-[#4A6151] hover:cursor-pointer transition-colors duration-300"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#3E3C3B]/50 text-[#F5F1E9] p-2 rounded-full hover:bg-[#4A6151] hover:cursor-pointer transition-colors duration-300"
               onClick={(e) => { e.stopPropagation(); nextStep(); }}
               aria-label="Next step"
             >
@@ -184,11 +189,11 @@ const ProcessSection: React.FC<ProcessSectionProps> = () => {
 
       {/* Lightbox */}
       {lightboxOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
           <div className="relative bg-[#F5F1E9] rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto">
             {/* Close button */}
             <button 
-              className="absolute top-4 right-4 bg-[#3E3C3B] bg-opacity-50 text-[#F5F1E9] p-2 rounded-full hover:bg-[#4A6151] hover:cursor-pointer transition-colors duration-300"
+              className="absolute top-4 right-4 bg-[#3E3C3B]/50 text-[#F5F1E9] p-2 rounded-full hover:bg-[#4A6151] hover:cursor-pointer transition-colors duration-300"
               onClick={closeLightbox}
               aria-label="Close lightbox"
             >
@@ -216,9 +221,7 @@ const ProcessSection: React.FC<ProcessSectionProps> = () => {
                   {processSteps[activeStep].description}
                 </p>
                 <p className="font-['Lato'] text-[#3E3C3B] mt-4">
-                  This is where additional detailed information about the process step would go. 
-                  In a real implementation, each step would have more comprehensive information 
-                  about the techniques, tools, and expertise involved.
+                  {processSteps[activeStep].elaboration}
                 </p>
               </div>
             </div>
@@ -228,11 +231,11 @@ const ProcessSection: React.FC<ProcessSectionProps> = () => {
 
       {/* Video Modal */}
       {videoModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
           <div className="relative bg-[#F5F1E9] rounded-lg max-w-4xl w-full overflow-hidden">
             {/* Close button */}
             <button 
-              className="absolute top-4 right-4 bg-[#3E3C3B] bg-opacity-50 text-[#F5F1E9] p-2 rounded-full hover:bg-[#4A6151] hover:cursor-pointer transition-colors duration-300 z-10"
+              className="absolute top-4 right-4 bg-[#3E3C3B]/50 text-[#F5F1E9] p-2 rounded-full hover:bg-[#4A6151] hover:cursor-pointer transition-colors duration-300 z-10"
               onClick={closeVideoModal}
               aria-label="Close video"
             >
