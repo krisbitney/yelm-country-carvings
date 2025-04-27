@@ -71,3 +71,16 @@ html, body {
 .animate-pulse {
   animation: pulse 2s infinite ease-in-out;
 }
+
+/* react-multi-carousel */
+.carousel-container {
+
+}
+
+.carousel-dot-list {
+
+}
+
+.carousel-item-list {
+  padding-bottom: 2.5rem;
+}

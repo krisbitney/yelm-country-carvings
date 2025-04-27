@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 
@@ -22,6 +22,47 @@ import welcomeBear2 from '../../assets/img/gallery/welcome_bear_2.webp';
 import welcomeBear3 from '../../assets/img/gallery/welcome_bear_3.webp';
 
 const GallerySection: React.FC = () => {
+  // State to track the selected image for the modal
+  const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
+
+  // Function to navigate to the next image
+  const navigateToNextImage = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (selectedImage) {
+      const currentIndex = galleryImages.findIndex(img => img.src === selectedImage.src);
+      const nextIndex = (currentIndex + 1) % galleryImages.length;
+      setSelectedImage(galleryImages[nextIndex]);
+    }
+  };
+
+  // Function to navigate to the previous image
+  const navigateToPrevImage = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (selectedImage) {
+      const currentIndex = galleryImages.findIndex(img => img.src === selectedImage.src);
+      const prevIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+      setSelectedImage(galleryImages[prevIndex]);
+    }
+  };
+
+  // Handle keyboard navigation
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!selectedImage) return;
+
+      if (e.key === 'ArrowRight') {
+        navigateToNextImage();
+      } else if (e.key === 'ArrowLeft') {
+        navigateToPrevImage();
+      } else if (e.key === 'Escape') {
+        setSelectedImage(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedImage]);
+
   // Define responsive breakpoints for the carousel
   const responsive = {
     superLargeDesktop: {
@@ -103,10 +144,10 @@ const GallerySection: React.FC = () => {
             pauseOnHover={true}
             customTransition="all .5s"
             transitionDuration={500}
-            containerClass="carousel-container"
             removeArrowOnDeviceType={["tablet", "mobile"]}
-            dotListClass="custom-dot-list-style"
-            itemClass="carousel-item-padding-40-px"
+            containerClass={"carousel-container"}
+            dotListClass="carousel-dot-list"
+            itemClass="carousel-item-list"
             showDots={true}
             aria-label="Gallery of chainsaw carvings"
           >
@@ -117,8 +158,9 @@ const GallerySection: React.FC = () => {
                     <img 
                       src={image.src} 
                       alt={image.alt}
-                      className="w-full h-64 object-cover rounded-md"
+                      className="w-full h-64 object-cover rounded-md cursor-pointer"
                       loading="lazy"
+                      onClick={() => setSelectedImage(image)}
                     />
                   </div>
                   <p className="mt-2 text-center font-['Lato'] text-[#3E3C3B]">{image.alt}</p>
@@ -141,6 +183,60 @@ const GallerySection: React.FC = () => {
           </a>
         </div>
       </div>
+
+      {/* Full-size Image Modal */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-75 z-1001 flex items-center justify-center p-4 animate-fadeIn"
+          onClick={() => setSelectedImage(null)}
+          aria-modal="true"
+          role="dialog"
+        >
+          <button
+            className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-lg z-10 cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedImage(null);
+            }}
+            aria-label="Close modal"
+          >
+            <svg className="w-6 h-6 text-[#3E3C3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Left Arrow Button */}
+          <button
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg z-10 cursor-pointer"
+            onClick={navigateToPrevImage}
+            aria-label="Previous image"
+          >
+            <svg className="w-6 h-6 text-[#3E3C3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          {/* Right Arrow Button */}
+          <button
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg z-10 cursor-pointer"
+            onClick={navigateToNextImage}
+            aria-label="Next image"
+          >
+            <svg className="w-6 h-6 text-[#3E3C3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+          <div className="relative max-w-4xl max-h-[90vh] overflow-auto">
+            <img 
+              src={selectedImage.src} 
+              alt={selectedImage.alt}
+              className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <p className="mt-2 text-center text-white font-['Lato'] text-lg">{selectedImage.alt}</p>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
