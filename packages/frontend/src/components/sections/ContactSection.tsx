@@ -138,7 +138,6 @@ const ContactSection: React.FC<ContactSectionProps> = () => {
     try {
       // Create form data to send
       const emailFormData = new FormData();
-      emailFormData.append('to', organizerEmail); // Use constant
       emailFormData.append('from', formData.email);
       emailFormData.append('subject', `Contact Form Submission from ${formData.name}`);
       emailFormData.append('name', formData.name);

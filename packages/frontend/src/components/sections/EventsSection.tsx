@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import {atcb_action, ATCBActionEventConfig} from 'add-to-calendar-button';
 import { parse, format } from 'date-fns';
 
+// Import event images
+import eatonvilleFestival from '../../assets/img/events/eatonville_art_and_music_festival_2024_1.webp';
+import lakeLawrenceBazaar from '../../assets/img/events/lake_lawrence_holiday_bazaar_2024_1.webp';
+import meekerDays from '../../assets/img/events/meeker_days_2025.webp';
+
 interface Event {
   id: number;
   title: string;
@@ -60,7 +65,7 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
       date: 'August 2-4, 2024',
       location: 'Eatonville, WA',
       description: 'Join us at the Eatonville Art and Music Festival where we\'ll be showcasing our latest carvings and offering live demonstrations throughout the event.',
-      image: 'src/assets/img/events/eatonville_art_and_music_festival_2024_1.webp',
+      image: eatonvilleFestival,
       ...parseDateRange('August 2-4, 2024')
     },
     {
@@ -69,7 +74,7 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
       date: 'November 9-10, 2024',
       location: 'Lake Lawrence, WA',
       description: 'Visit our booth at the Lake Lawrence Holiday Bazaar to find unique hand-carved gifts for the holiday season. Special festival discounts available!',
-      image: 'src/assets/img/events/lake_lawrence_holiday_bazaar_2024_1.webp',
+      image: lakeLawrenceBazaar,
       ...parseDateRange('November 9-10, 2024')
     },
     {
@@ -78,7 +83,7 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
       date: 'June 13-15, 2025',
       location: 'Puyallup, WA',
       description: 'We\'re excited to participate in Meeker Days, one of the largest street festivals in the Pacific Northwest. Stop by to see our latest creations and watch live carving demonstrations.',
-      image: 'src/assets/img/events/meeker_days_2025.webp',
+      image: meekerDays,
       ...parseDateRange('June 13-15, 2025')
     }
   ];

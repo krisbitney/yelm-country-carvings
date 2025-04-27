@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Logo from './Logo';
+import {facebookLink} from "../../constants.ts";
 
 const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -90,7 +91,7 @@ const Navbar: React.FC = () => {
 
           {/* Facebook Icon */}
           <a 
-            href="https://www.facebook.com/YelmCountryCarvings" 
+            href={facebookLink}
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-[#F5F1E9] hover:text-[#B87351] transition-all duration-300 hover:scale-110"
@@ -195,7 +196,7 @@ const Navbar: React.FC = () => {
 
             {/* Facebook Icon */}
             <a 
-              href="https://www.facebook.com/YelmCountryCarvings" 
+              href={facebookLink}
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-[#F5F1E9] hover:text-[#B87351] transition-colors duration-300 flex items-center border-l-2 border-transparent hover:border-[#B87351] pl-2"

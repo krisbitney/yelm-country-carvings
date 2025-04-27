@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {facebookLink} from "../../constants.ts";
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -97,7 +98,7 @@ const Footer: React.FC = () => {
             <h3 className="font-['Cinzel'] text-xl font-bold mb-4 text-[#F5F1E9] border-b-2 border-[#B87351] pb-2 inline-block">Connect With Us</h3>
             <div className="mt-4 flex flex-col">
               <a 
-                href="https://www.facebook.com/YelmCountryCarvings" 
+                href={facebookLink}
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="text-[#F5F1E9] hover:text-[#B87351] transition-all duration-300 hover:scale-110 animate-pulse flex items-center"
