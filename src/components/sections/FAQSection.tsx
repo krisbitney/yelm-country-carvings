@@ -85,7 +85,7 @@ const FAQSection: React.FC<FAQSectionProps> = () => {
                 >
                   {/* Question (Header) */}
                   <button 
-                    className="w-full px-6 py-4 text-left bg-[#F5F1E9] hover:bg-[#A07E5D] hover:bg-opacity-10 flex justify-between items-center transition-colors duration-300"
+                    className="w-full px-6 py-4 text-left bg-[#F5F1E9] hover:bg-[#A07E5D] hover:bg-opacity-10 hover:cursor-pointer flex justify-between items-center transition-colors duration-300"
                     onClick={() => toggleFAQ(faq.id)}
                     aria-expanded={expandedFAQs.includes(faq.id)}
                   >
@@ -121,7 +121,7 @@ const FAQSection: React.FC<FAQSectionProps> = () => {
             <p className="font-['Lato'] text-[#3E3C3B] mb-4">Still have questions?</p>
             <a 
               href="#contact" 
-              className="inline-block px-6 py-3 bg-[#4A6151] text-[#F5F1E9] font-['Lato'] font-bold rounded-md shadow-md hover:bg-[#6B4F41] transition-colors duration-300"
+              className="inline-block px-6 py-3 bg-[#4A6151] text-[#F5F1E9] font-['Lato'] font-bold rounded-md shadow-md hover:bg-[#6B4F41] hover:cursor-pointer transition-colors duration-300"
             >
               Contact Us
             </a>

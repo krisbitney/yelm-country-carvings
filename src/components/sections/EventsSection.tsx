@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import {atcb_action, ATCBActionEventConfig} from 'add-to-calendar-button';
+import { parse, format } from 'date-fns';
 
 interface Event {
   id: number;
@@ -7,6 +9,9 @@ interface Event {
   location: string;
   description: string;
   image: string;
+  // These fields will be calculated from the date string
+  startDate?: string;
+  endDate?: string;
 }
 
 interface EventsSectionProps {
@@ -14,6 +19,39 @@ interface EventsSectionProps {
 }
 
 const EventsSection: React.FC<EventsSectionProps> = () => {
+  // Helper function to parse date ranges and calculate start/end dates
+  const parseDateRange = (dateString: string): { startDate: string, endDate: string } => {
+    // Handle different date formats: "Month Day-Day, Year" or "Month Day, Year"
+    const dateRegex = /([A-Za-z]+)\s+(\d+)(?:-(\d+))?,\s+(\d{4})/;
+    const match = dateString.match(dateRegex);
+
+    if (match) {
+      const [, month, startDay, endDay, year] = match;
+
+      // Parse the start date
+      const startDateObj = parse(`${month} ${startDay} ${year}`, 'MMMM d yyyy', new Date());
+      const formattedStartDate = format(startDateObj, 'yyyy-MM-dd');
+
+      // If there's an end day, parse it, otherwise use the start date
+      let formattedEndDate;
+      if (endDay) {
+        // For multi-day events, end date has same month and year as start date
+        const endDateObj = parse(`${month} ${endDay} ${year}`, 'MMMM d yyyy', new Date());
+        formattedEndDate = format(endDateObj, 'yyyy-MM-dd');
+      } else {
+        // For single-day events, end date is the same as start date
+        formattedEndDate = formattedStartDate;
+      }
+
+      return { startDate: formattedStartDate, endDate: formattedEndDate };
+    }
+
+    // Fallback to today's date if parsing fails
+    const today = new Date();
+    const formattedToday = format(today, 'yyyy-MM-dd');
+    return { startDate: formattedToday, endDate: formattedToday };
+  };
+
   // Events data
   const events: Event[] = [
     {
@@ -22,7 +60,8 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
       date: 'August 2-4, 2024',
       location: 'Eatonville, WA',
       description: 'Join us at the Eatonville Art and Music Festival where we\'ll be showcasing our latest carvings and offering live demonstrations throughout the event.',
-      image: 'src/assets/img/events/eatonville_art_and_music_festival_2024_1.webp'
+      image: 'src/assets/img/events/eatonville_art_and_music_festival_2024_1.webp',
+      ...parseDateRange('August 2-4, 2024')
     },
     {
       id: 2,
@@ -30,7 +69,8 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
       date: 'November 9-10, 2024',
       location: 'Lake Lawrence, WA',
       description: 'Visit our booth at the Lake Lawrence Holiday Bazaar to find unique hand-carved gifts for the holiday season. Special festival discounts available!',
-      image: 'src/assets/img/events/lake_lawrence_holiday_bazaar_2024_1.webp'
+      image: 'src/assets/img/events/lake_lawrence_holiday_bazaar_2024_1.webp',
+      ...parseDateRange('November 9-10, 2024')
     },
     {
       id: 3,
@@ -38,7 +78,8 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
       date: 'June 13-15, 2025',
       location: 'Puyallup, WA',
       description: 'We\'re excited to participate in Meeker Days, one of the largest street festivals in the Pacific Northwest. Stop by to see our latest creations and watch live carving demonstrations.',
-      image: 'src/assets/img/events/meeker_days_2025.webp'
+      image: 'src/assets/img/events/meeker_days_2025.webp',
+      ...parseDateRange('June 13-15, 2025')
     }
   ];
 
@@ -54,11 +95,36 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
     );
   };
 
-  // Add event to calendar function (placeholder)
-  const addToCalendar = (event: Event, e: React.MouseEvent) => {
+  // Add event to calendar function using add-to-calendar-button library
+  const addToCalendar = async (event: Event, e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent toggling the event details
-    console.log(`Adding event to calendar: ${event.title}`);
-    // In a real implementation, this would generate an iCal file or link to a calendar service
+
+    if (!event.startDate || !event.endDate) {
+      console.error('Event dates could not be parsed correctly');
+      return;
+    }
+
+    // Configure the calendar event options
+    const calendarEvent: ATCBActionEventConfig = {
+      name: event.title,
+      description: "Hello from Yelm Country Carvings! " + event.description,
+      startDate: event.startDate,
+      endDate: event.endDate,
+      location: event.location,
+      options: [
+        'Apple',
+        'Google',
+        'iCal',
+        'Microsoft365',
+        'Outlook.com',
+        'Yahoo',
+      ],
+      timeZone: 'America/Los_Angeles',
+      iCalFileName: event.title.replace(/\s+/g, '_').toLowerCase(),
+    };
+
+    // Trigger the add-to-calendar action
+    await atcb_action(calendarEvent);
   };
 
   return (
@@ -106,13 +172,13 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
                   {/* Buttons */}
                   <div className="flex flex-wrap gap-2 mt-4">
                     <button 
-                      className="px-4 py-2 bg-[#4A6151] text-[#F5F1E9] font-['Lato'] rounded-md hover:bg-[#6B4F41] transition-colors duration-300 text-sm"
+                      className="px-4 py-2 bg-[#4A6151] text-[#F5F1E9] font-['Lato'] rounded-md hover:bg-[#6B4F41] hover:cursor-pointer transition-colors duration-300 text-sm"
                       onClick={() => toggleEventDetails(event.id)}
                     >
                       {expandedEvents.includes(event.id) ? 'Show Less' : 'Learn More'}
                     </button>
                     <button 
-                      className="px-4 py-2 bg-[#A07E5D] text-[#F5F1E9] font-['Lato'] rounded-md hover:bg-[#B87351] transition-colors duration-300 text-sm flex items-center"
+                      className="px-4 py-2 bg-[#A07E5D] text-[#F5F1E9] font-['Lato'] rounded-md hover:bg-[#B87351] hover:cursor-pointer transition-colors duration-300 text-sm flex items-center"
                       onClick={(e) => addToCalendar(event, e)}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -142,7 +208,7 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
                 />
                 <button 
                   type="submit" 
-                  className="px-6 py-2 bg-[#B87351] text-[#F5F1E9] font-['Lato'] font-bold rounded-md hover:bg-[#A07E5D] transition-colors duration-300"
+                  className="px-6 py-2 bg-[#B87351] text-[#F5F1E9] font-['Lato'] font-bold rounded-md hover:bg-[#A07E5D] hover:cursor-pointer transition-colors duration-300"
                 >
                   Notify Me
                 </button>
