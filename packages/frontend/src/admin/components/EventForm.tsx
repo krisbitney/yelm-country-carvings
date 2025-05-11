@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { MarketEvent } from '../types';
+import { MarketEvent } from '../../types.ts';
 import { format } from 'date-fns';
 
 // Define the form validation schema
@@ -13,7 +13,7 @@ const eventSchema = z.object({
   description: z.string().min(1, 'Description is required'),
   startDate: z.string().min(1, 'Start date is required'),
   endDate: z.string().min(1, 'End date is required'),
-  image: z.string().optional(),
+  image: z.string().min(1, 'Image is required'),
 });
 
 // Define the form data type

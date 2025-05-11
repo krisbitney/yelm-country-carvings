@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logoImage from '../../assets/logo.png';
+import logoImage from '../../../assets/logo.png';
 
 interface ProcessSectionProps {
   // Add any props if needed

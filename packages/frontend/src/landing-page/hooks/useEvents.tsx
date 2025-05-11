@@ -1,17 +1,6 @@
 import {useEffect, useState} from "react";
-import eatonvilleFestival from "../../../backend/src/img/events/eatonville_art_and_music_festival_2024_1.webp";
-
-export interface MarketEvent {
-  id: number;
-  title: string;
-  date: string;
-  location: string;
-  description: string;
-  image: string;
-  // These fields will be calculated from the date string
-  startDate?: string;
-  endDate?: string;
-}
+import loadingImage from "../../assets/img/fallback/loading.png";
+import {MarketEvent} from "../../types.ts";
 
 const loadingEvent: MarketEvent = {
   id: 0,
@@ -19,7 +8,7 @@ const loadingEvent: MarketEvent = {
   date: 'Loading...',
   location: 'Loading...',
   description: 'Loading...',
-  image: eatonvilleFestival,
+  image: loadingImage,
   startDate: '2025-01-01',
   endDate: '2025-01-01'
 }

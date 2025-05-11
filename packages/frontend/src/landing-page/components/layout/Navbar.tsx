@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Logo from './Logo';
-import {facebookLink} from "../../constants.ts";
+import Logo from './Logo.tsx';
+import {facebookLink} from "../../../constants.ts";
 
 const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);

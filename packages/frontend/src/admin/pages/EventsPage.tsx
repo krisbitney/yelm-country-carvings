@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import AdminLayout from '../components/AdminLayout';
 import EventForm from '../components/EventForm';
 import { useAdminEvents } from '../hooks/useAdminEvents';
-import { MarketEvent } from '../types';
+import { MarketEvent } from '../../types.ts';
 
 const EventsPage: React.FC = () => {
   const { events, loading, error, fetchEvents, createEvent, updateEvent, deleteEvent, uploadEventImage } = useAdminEvents();

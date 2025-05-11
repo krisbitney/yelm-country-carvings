@@ -19,16 +19,17 @@ export const useAdminAuth = () => {
         throw new Error('No authentication token available');
       }
 
+      // Prepare headers
+      const newHeaders = new Headers(options.headers);
+      newHeaders.set('Authorization', `Bearer ${token}`);
+      if (!(options.body instanceof FormData)) {
+        newHeaders.set('Content-Type', 'application/json');
+      }
+
       // Add the authorization header to the request
       const authOptions: RequestInit = {
         ...options,
-        headers: {
-          ...options.headers,
-          Authorization: `Bearer ${token}`,
-          'Content-Type': options.body instanceof FormData 
-            ? undefined 
-            : 'application/json',
-        },
+        headers: newHeaders,
       };
 
       // Make the request

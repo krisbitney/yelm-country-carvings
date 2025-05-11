@@ -1,15 +1,11 @@
 import {useEffect, useState} from "react";
+import {GalleryImage} from "../../types.ts";
 
 // TODO: replace loading.png with high quality loading and error indicator images
 // Import gallery images for fallback
-import loadingIndicator from '../assets/img/fallback/loading.png';
-import errorIndicator from '../assets/img/fallback/loading.png';
+import loadingIndicator from '../../assets/img/fallback/loading.png';
+import errorIndicator from '../../assets/img/fallback/loading.png';
 
-export interface GalleryImage {
-  id: number;
-  src: string;
-  alt: string;
-}
 
 export const useGalleryImages = () => {
   // State for gallery images

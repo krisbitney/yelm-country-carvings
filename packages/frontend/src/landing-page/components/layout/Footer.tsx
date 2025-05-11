@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {facebookLink} from "../../constants.ts";
+import {facebookLink} from "../../../constants.ts";
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();

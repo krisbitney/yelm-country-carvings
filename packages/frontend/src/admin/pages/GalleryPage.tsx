@@ -4,7 +4,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautif
 import AdminLayout from '../components/AdminLayout';
 import GalleryForm from '../components/GalleryForm';
 import { useAdminGallery } from '../hooks/useAdminGallery';
-import { GalleryImage } from '../types';
+import { GalleryImage } from '../../types.ts';
 
 const GalleryPage: React.FC = () => {
   const { gallery, loading, error, fetchGallery, addGalleryImage, deleteGalleryImage, reorderGallery, uploadGalleryImage } = useAdminGallery();

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { GalleryImage } from '../types';
 
 // Define the form validation schema
 const galleryImageSchema = z.object({

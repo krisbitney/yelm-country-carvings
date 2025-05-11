@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { useAdminAuth } from './useAdminAuth';
-import { MarketEvent } from '../../../backend/types';
+import {MarketEvent} from "../../types.ts";
 
 interface UseAdminEventsReturn {
   events: MarketEvent[];

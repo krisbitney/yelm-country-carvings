@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { useAdminAuth } from './useAdminAuth';
-import { GalleryImage } from '../types';
+import { GalleryImage } from '../../types.ts';
 
 interface UseAdminGalleryReturn {
   gallery: GalleryImage[];

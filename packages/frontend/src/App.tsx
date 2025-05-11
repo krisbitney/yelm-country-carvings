@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import MainWebsite from './MainWebsite';
+import MainWebsite from './landing-page/MainWebsite.tsx';
 import AdminRoutes from './admin/AdminRoutes';
 
 /**

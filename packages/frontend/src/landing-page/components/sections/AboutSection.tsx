@@ -1,7 +1,7 @@
 import React from 'react';
-import tracieAndBill from '../../assets/img/about/tracie_bill.webp';
-import tree from '../../assets/img/about/tree.webp';
-import snowman from '../../assets/img/about/snowman.webp';
+import tracieAndBill from '../../../assets/img/about/tracie_bill.webp';
+import tree from '../../../assets/img/about/tree.webp';
+import snowman from '../../../assets/img/about/snowman.webp';
 
 const AboutSection: React.FC = () => {
   return (
