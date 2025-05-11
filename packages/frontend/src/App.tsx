@@ -1,31 +1,20 @@
-import Navbar from './components/layout/Navbar';
-import HeroSection from './components/sections/HeroSection';
-import AboutSection from './components/sections/AboutSection';
-import ProcessSection from './components/sections/ProcessSection';
-import GallerySection from './components/sections/GallerySection';
-import EventsSection from './components/sections/EventsSection';
-import ContactSection from './components/sections/ContactSection';
-import DirectionsSection from './components/sections/DirectionsSection';
-import FAQSection from './components/sections/FAQSection';
-import Footer from './components/layout/Footer';
+import { Routes, Route } from 'react-router-dom';
+import MainWebsite from './MainWebsite';
+import AdminRoutes from './admin/AdminRoutes';
 
+/**
+ * Main App component that handles routing for the entire application
+ */
 function App() {
   return (
-    <div className="font-['Lato'] text-[#3E3C3B]">
-      <Navbar />
-      <main>
-        <HeroSection />
-        <AboutSection />
-        <ProcessSection />
-        <GallerySection />
-        <EventsSection />
-        <ContactSection />
-        <DirectionsSection />
-        <FAQSection />
-      </main>
-      <Footer />
-    </div>
+    <Routes>
+      {/* Main website route */}
+      <Route path="/" element={<MainWebsite />} />
+
+      {/* Admin routes are handled by the AdminRoutes component */}
+      <Route path="/admin/*" element={<AdminRoutes />} />
+    </Routes>
   );
 }
 
-export default App
+export default App;
