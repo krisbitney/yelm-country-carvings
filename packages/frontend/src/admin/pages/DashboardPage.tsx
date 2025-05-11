@@ -27,7 +27,7 @@ const DashboardPage: React.FC = () => {
               Add, edit, or remove upcoming events. Keep your customers informed about where they can find you.
             </p>
             <Link
-              to="/admin/events"
+              to="events"
               className="inline-block px-6 py-3 bg-[#4A6151] text-white font-['Lato'] font-bold rounded-md hover:bg-[#3D5142] transition-colors duration-300"
             >
               Manage Events
@@ -48,7 +48,7 @@ const DashboardPage: React.FC = () => {
               Upload, arrange, or remove images from your gallery. Showcase your best work to potential customers.
             </p>
             <Link
-              to="/admin/gallery"
+              to="gallery"
               className="inline-block px-6 py-3 bg-[#4A6151] text-white font-['Lato'] font-bold rounded-md hover:bg-[#3D5142] transition-colors duration-300"
             >
               Manage Gallery

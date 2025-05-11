@@ -31,11 +31,11 @@ const AdminRoutes: React.FC = () => {
 
       <Routes>
         {/* Login page */}
-        <Route path="/admin/login" element={<LoginPage />} />
+        <Route path="login" element={<LoginPage />} />
 
         {/* Protected admin routes */}
         <Route 
-          path="/admin" 
+          path="/" 
           element={
             <ProtectedRoute>
               <DashboardPage />
@@ -44,7 +44,7 @@ const AdminRoutes: React.FC = () => {
         />
 
         <Route 
-          path="/admin/events" 
+          path="events" 
           element={
             <ProtectedRoute>
               <EventsPage />
@@ -53,7 +53,7 @@ const AdminRoutes: React.FC = () => {
         />
 
         <Route 
-          path="/admin/gallery" 
+          path="gallery" 
           element={
             <ProtectedRoute>
               <GalleryPage />
@@ -62,7 +62,7 @@ const AdminRoutes: React.FC = () => {
         />
 
         {/* Redirect any other admin routes to the dashboard */}
-        <Route path="/admin/*" element={<Navigate to="/admin" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AuthProvider>
   );

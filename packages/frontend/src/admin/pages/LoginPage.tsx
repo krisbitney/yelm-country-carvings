@@ -47,7 +47,7 @@ const LoginPage: React.FC = () => {
     setIsSubmitting(true);
     const success = await login(data.username, data.password);
     setIsSubmitting(false);
-    
+
     if (success) {
       navigate('/admin');
     }
@@ -78,7 +78,7 @@ const LoginPage: React.FC = () => {
               id="username"
               type="text"
               {...register('username')}
-              className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
+              className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151] text-[#3E3C3B]"
               disabled={isSubmitting}
             />
             {errors.username && (
@@ -94,7 +94,7 @@ const LoginPage: React.FC = () => {
               id="password"
               type="password"
               {...register('password')}
-              className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
+              className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151] text-[#3E3C3B]"
               disabled={isSubmitting}
             />
             {errors.password && (

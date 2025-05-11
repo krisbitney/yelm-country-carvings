@@ -30,7 +30,7 @@ export const useGalleryImages = () => {
       } catch (err) {
         console.error('Error fetching gallery images:', err);
         setError('Failed to load gallery images. Please try again later.');
-        setData([{ id: 0, src: errorIndicator, alt: 'Error indicator' }]);
+        setData([{ id: 0, src: errorIndicator, alt: 'Loading indicator' }]);
       } finally {
         setLoading(false);
       }
