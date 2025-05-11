@@ -48,6 +48,7 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
                     src={event.image}
                     alt={event.title}
                     className="w-full h-full object-cover"
+                    loading={"lazy"}
                   />
                 </div>
 

@@ -24,6 +24,7 @@ const AboutSection: React.FC = () => {
                 src={tree}
                 alt="Cedar Tree"
                 className="w-full h-full object-cover"
+                loading={"lazy"}
               />
             </div>
             <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4 text-center">Our Materials</h3>
@@ -40,6 +41,7 @@ const AboutSection: React.FC = () => {
                 src={snowman}
                 alt="Snowman Carving"
                 className="w-full h-full object-cover"
+                loading={"lazy"}
               />
             </div>
             <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4 text-center">Quality Craftsmanship</h3>
@@ -56,6 +58,7 @@ const AboutSection: React.FC = () => {
                 src={tracieAndBill}
                 alt="Tracie and Bill"
                 className="w-full h-full object-cover"
+                loading={"lazy"}
               />
             </div>
             <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4 text-center">Meet the Carver</h3>

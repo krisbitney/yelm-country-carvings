@@ -58,7 +58,13 @@ const server = Bun.serve({
     if (imageExtensions.includes(requestedExt)) {
       const imagePath = path.join(IMAGES_DIR, requestedFileName);
       if (fs.existsSync(imagePath) && fs.statSync(imagePath).isFile()) {
-        return new Response(Bun.file(imagePath));
+        const file = Bun.file(imagePath);
+        return new Response(file, {
+          headers: {
+            'Cache-Control': 'public, max-age=31536000, immutable',
+          },
+        });
+
       } else {
         return new Response('Not Found', { status: 404 });
       }
