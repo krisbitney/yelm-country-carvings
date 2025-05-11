@@ -1,22 +1,22 @@
 import path from 'path';
-import { existsSync, readFileSync } from 'fs';
+import fs from 'fs';
 import {handleContactForm} from "./handlers/handleContactForm";
 
-// Path to the frontend build directory
 const FRONTEND_DIR = path.join(import.meta.dir, '../../frontend/dist');
-
-// Path to the data directory
 const DATA_DIR = path.join(import.meta.dir, 'data');
+const IMAGES_DIR = path.join(import.meta.dir, 'img');
+
+const imageExtensions = ['.webp', '.png', '.jpg', '.jpeg', '.gif'];
 
 // Check if the frontend build directory exists
-if (!existsSync(FRONTEND_DIR)) {
+if (!fs.existsSync(FRONTEND_DIR)) {
   console.error('Frontend build directory not found. Please run "bun run build" in the frontend workspace first.');
   process.exit(1);
 }
 
 // Load events and gallery data
-const events = JSON.parse(readFileSync(path.join(DATA_DIR, 'events.json'), 'utf-8'));
-const gallery = JSON.parse(readFileSync(path.join(DATA_DIR, 'gallery.json'), 'utf-8'));
+const events = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'events.json'), 'utf-8'));
+const gallery = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'gallery.json'), 'utf-8'));
 
 // Define the server
 const server = Bun.serve({
@@ -45,15 +45,27 @@ const server = Bun.serve({
   // Fallback handler for non-API routes
   fetch(req) {
     const url = new URL(req.url);
-    let endpoint = url.pathname;
+    let requestPath = url.pathname;
 
     // Default to index.html for the root path
-    if (endpoint === '/') {
-      endpoint = '/index.html';
+    if (requestPath === '/') {
+      requestPath = '/index.html';
+    }
+
+    // Try to serve images from IMAGES_DIR
+    const requestedFileName = path.basename(requestPath);
+    const requestedExt = path.extname(requestedFileName).toLowerCase();
+    if (imageExtensions.includes(requestedExt)) {
+      const imagePath = path.join(IMAGES_DIR, requestedFileName);
+      if (fs.existsSync(imagePath) && fs.statSync(imagePath).isFile()) {
+        return new Response(Bun.file(imagePath));
+      } else {
+        return new Response('Not Found', { status: 404 });
+      }
     }
 
     // For SPA routing, serve index.html for any path that doesn't match a file
-    if (endpoint.indexOf('.') === -1) {
+    if (requestPath.indexOf('.') === -1) {
       return new Response(Bun.file(path.join(FRONTEND_DIR, 'index.html')));
     }
 

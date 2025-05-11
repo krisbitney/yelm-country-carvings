@@ -115,8 +115,8 @@ const GallerySection: React.FC = () => {
             showDots={true}
             aria-label="Gallery of chainsaw carvings"
           >
-            {galleryImages.map((image, index) => (
-              <div key={index} className="px-2" role="group" aria-roledescription="slide">
+            {galleryImages.map((image) => (
+              <div key={image.id} className="px-2" role="group" aria-roledescription="slide">
                 <div className="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                   <div className="aspect-w-4 aspect-h-3 overflow-hidden rounded-md">
                     <img 
