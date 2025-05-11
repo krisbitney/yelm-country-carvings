@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import eatonvilleFestival from "../assets/img/events/eatonville_art_and_music_festival_2024_1.webp";
+import eatonvilleFestival from "../../../backend/src/img/events/eatonville_art_and_music_festival_2024_1.webp";
 
 export interface MarketEvent {
   id: number;

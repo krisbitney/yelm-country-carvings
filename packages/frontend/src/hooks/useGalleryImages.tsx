@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
 
-// TODO: replace fishing_bear.webp with loading and error indicator images
+// TODO: replace loading.png with high quality loading and error indicator images
 // Import gallery images for fallback
-import loadingIndicator from '../../assets/img/gallery/fishing_bear.webp';
-import errorIndicator from '../../assets/img/gallery/fishing_bear.webp';
+import loadingIndicator from '../assets/img/fallback/loading.png';
+import errorIndicator from '../assets/img/fallback/loading.png';
 
 export interface GalleryImage {
   id: number;
