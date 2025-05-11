@@ -1,49 +1,34 @@
-import React, { useState } from 'react';
+import React, {useState, useCallback} from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-
-// Import all gallery images
-import fishingBear from '../../assets/img/gallery/fishing_bear.webp';
-import flyingHawk from '../../assets/img/gallery/flying_hawk.webp';
-import frogAndSantas from '../../assets/img/gallery/frog_and_santas.webp';
-import heartTrunkBear from '../../assets/img/gallery/heart_trunk_bear.webp';
-import linuxPenguin from '../../assets/img/gallery/linux_penguin.webp';
-import monkeyHeads from '../../assets/img/gallery/monkey_heads.webp';
-import oldSailor from '../../assets/img/gallery/old_sailor.webp';
-import orca from '../../assets/img/gallery/orca.webp';
-import sasquatch from '../../assets/img/gallery/sasquatch.webp';
-import seahawksBear from '../../assets/img/gallery/seahawks_bear.webp';
-import snowman2 from '../../assets/img/gallery/snowman_2.webp';
-import unpolishedElephant from '../../assets/img/gallery/unpolished_elephant.webp';
-import unpolishedSmurf from '../../assets/img/gallery/unpolished_smurf.webp';
-import unpolishedTurtle from '../../assets/img/gallery/unpolished_turtle.webp';
-import welcomeBear from '../../assets/img/gallery/welcome_bear.webp';
-import welcomeBear2 from '../../assets/img/gallery/welcome_bear_2.webp';
-import welcomeBear3 from '../../assets/img/gallery/welcome_bear_3.webp';
+import {useGalleryImages} from "../../hooks/useGalleryImages.tsx";
 
 const GallerySection: React.FC = () => {
+
   // State to track the selected image for the modal
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
 
+  const { data: galleryImages } = useGalleryImages();
+
   // Function to navigate to the next image
-  const navigateToNextImage = (e?: React.MouseEvent) => {
+  const navigateToNextImage = useCallback((e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     if (selectedImage) {
       const currentIndex = galleryImages.findIndex(img => img.src === selectedImage.src);
       const nextIndex = (currentIndex + 1) % galleryImages.length;
       setSelectedImage(galleryImages[nextIndex]);
     }
-  };
+  }, [galleryImages, selectedImage]);
 
   // Function to navigate to the previous image
-  const navigateToPrevImage = (e?: React.MouseEvent) => {
+  const navigateToPrevImage = useCallback((e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     if (selectedImage) {
       const currentIndex = galleryImages.findIndex(img => img.src === selectedImage.src);
       const prevIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
       setSelectedImage(galleryImages[prevIndex]);
     }
-  };
+  }, [galleryImages, selectedImage]);
 
   // Handle keyboard navigation
   React.useEffect(() => {
@@ -61,7 +46,7 @@ const GallerySection: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedImage]);
+  }, [selectedImage, galleryImages, navigateToNextImage, navigateToPrevImage]);
 
   // Define responsive breakpoints for the carousel
   const responsive = {
@@ -82,27 +67,6 @@ const GallerySection: React.FC = () => {
       items: 1
     }
   };
-
-  // Array of all gallery images with their details
-  const galleryImages = [
-    { src: fishingBear, alt: 'Fishing Bear Carving' },
-    { src: flyingHawk, alt: 'Flying Hawk Carving' },
-    { src: frogAndSantas, alt: 'Frog and Santa Carvings' },
-    { src: heartTrunkBear, alt: 'Bear with Heart on Trunk' },
-    { src: linuxPenguin, alt: 'Linux Penguin Carving' },
-    { src: monkeyHeads, alt: 'Monkey Head Carvings' },
-    { src: oldSailor, alt: 'Old Sailor Carving' },
-    { src: orca, alt: 'Orca Whale Carving' },
-    { src: sasquatch, alt: 'Sasquatch Carving' },
-    { src: seahawksBear, alt: 'Seahawks Bear Carving' },
-    { src: snowman2, alt: 'Snowman Carving' },
-    { src: unpolishedElephant, alt: 'Unpolished Elephant Carving' },
-    { src: unpolishedSmurf, alt: 'Unpolished Smurf Carving' },
-    { src: unpolishedTurtle, alt: 'Unpolished Turtle Carving' },
-    { src: welcomeBear, alt: 'Welcome Bear Carving' },
-    { src: welcomeBear2, alt: 'Welcome Bear Carving 2' },
-    { src: welcomeBear3, alt: 'Welcome Bear Carving 3' }
-  ];
 
   return (
     <section id="gallery" className="py-16 bg-[#F5F1E9]">

@@ -1,95 +1,16 @@
 import React, { useState } from 'react';
-import {atcb_action, ATCBActionEventConfig} from 'add-to-calendar-button';
-import { parse, format } from 'date-fns';
-
-// Import event images
-import eatonvilleFestival from '../../assets/img/events/eatonville_art_and_music_festival_2024_1.webp';
-import lakeLawrenceBazaar from '../../assets/img/events/lake_lawrence_holiday_bazaar_2024_1.webp';
-import meekerDays from '../../assets/img/events/meeker_days_2025.webp';
-
-interface Event {
-  id: number;
-  title: string;
-  date: string;
-  location: string;
-  description: string;
-  image: string;
-  // These fields will be calculated from the date string
-  startDate?: string;
-  endDate?: string;
-}
+import {useEvents} from "../../hooks/useEvents.tsx";
+import {addToCalendar} from "../../utils/addToCalendar.ts";
 
 interface EventsSectionProps {
   // Add any props if needed
 }
 
 const EventsSection: React.FC<EventsSectionProps> = () => {
-  // Helper function to parse date ranges and calculate start/end dates
-  const parseDateRange = (dateString: string): { startDate: string, endDate: string } => {
-    // Handle different date formats: "Month Day-Day, Year" or "Month Day, Year"
-    const dateRegex = /([A-Za-z]+)\s+(\d+)(?:-(\d+))?,\s+(\d{4})/;
-    const match = dateString.match(dateRegex);
-
-    if (match) {
-      const [, month, startDay, endDay, year] = match;
-
-      // Parse the start date
-      const startDateObj = parse(`${month} ${startDay} ${year}`, 'MMMM d yyyy', new Date());
-      const formattedStartDate = format(startDateObj, 'yyyy-MM-dd');
-
-      // If there's an end day, parse it, otherwise use the start date
-      let formattedEndDate;
-      if (endDay) {
-        // For multi-day events, end date has same month and year as start date
-        const endDateObj = parse(`${month} ${endDay} ${year}`, 'MMMM d yyyy', new Date());
-        formattedEndDate = format(endDateObj, 'yyyy-MM-dd');
-      } else {
-        // For single-day events, end date is the same as start date
-        formattedEndDate = formattedStartDate;
-      }
-
-      return { startDate: formattedStartDate, endDate: formattedEndDate };
-    }
-
-    // Fallback to today's date if parsing fails
-    const today = new Date();
-    const formattedToday = format(today, 'yyyy-MM-dd');
-    return { startDate: formattedToday, endDate: formattedToday };
-  };
-
-  // Events data
-  const events: Event[] = [
-    {
-      id: 1,
-      title: 'Eatonville Art and Music Festival',
-      date: 'August 2-4, 2024',
-      location: 'Eatonville, WA',
-      description: 'Join us at the Eatonville Art and Music Festival where we\'ll be showcasing our latest carvings and offering live demonstrations throughout the event.',
-      image: eatonvilleFestival,
-      ...parseDateRange('August 2-4, 2024')
-    },
-    {
-      id: 2,
-      title: 'Lake Lawrence Holiday Bazaar',
-      date: 'November 9-10, 2024',
-      location: 'Lake Lawrence, WA',
-      description: 'Visit our booth at the Lake Lawrence Holiday Bazaar to find unique hand-carved gifts for the holiday season. Special festival discounts available!',
-      image: lakeLawrenceBazaar,
-      ...parseDateRange('November 9-10, 2024')
-    },
-    {
-      id: 3,
-      title: 'Meeker Days',
-      date: 'June 13-15, 2025',
-      location: 'Puyallup, WA',
-      description: 'We\'re excited to participate in Meeker Days, one of the largest street festivals in the Pacific Northwest. Stop by to see our latest creations and watch live carving demonstrations.',
-      image: meekerDays,
-      ...parseDateRange('June 13-15, 2025')
-    }
-  ];
-
   // State to track which event details are expanded
   const [expandedEvents, setExpandedEvents] = useState<number[]>([]);
+
+  const { data: events } = useEvents();
 
   // Toggle event details expansion
   const toggleEventDetails = (eventId: number) => {
@@ -98,38 +19,6 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
         ? prev.filter(id => id !== eventId)
         : [...prev, eventId]
     );
-  };
-
-  // Add event to calendar function using add-to-calendar-button library
-  const addToCalendar = async (event: Event, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent toggling the event details
-
-    if (!event.startDate || !event.endDate) {
-      console.error('Event dates could not be parsed correctly');
-      return;
-    }
-
-    // Configure the calendar event options
-    const calendarEvent: ATCBActionEventConfig = {
-      name: event.title,
-      description: "Hello from Yelm Country Carvings! " + event.description,
-      startDate: event.startDate,
-      endDate: event.endDate,
-      location: event.location,
-      options: [
-        'Apple',
-        'Google',
-        'iCal',
-        'Microsoft365',
-        'Outlook.com',
-        'Yahoo',
-      ],
-      timeZone: 'America/Los_Angeles',
-      iCalFileName: event.title.replace(/\s+/g, '_').toLowerCase(),
-    };
-
-    // Trigger the add-to-calendar action
-    await atcb_action(calendarEvent);
   };
 
   return (

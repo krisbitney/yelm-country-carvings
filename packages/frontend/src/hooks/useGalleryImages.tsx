@@ -1,0 +1,47 @@
+import {useEffect, useState} from "react";
+
+// TODO: replace fishing_bear.webp with loading and error indicator images
+// Import gallery images for fallback
+import loadingIndicator from '../../assets/img/gallery/fishing_bear.webp';
+import errorIndicator from '../../assets/img/gallery/fishing_bear.webp';
+
+export interface GalleryImage {
+  id: number;
+  src: string;
+  alt: string;
+}
+
+export const useGalleryImages = () => {
+  // State for gallery images
+  const [data, setData] = useState<GalleryImage[]>([{ id: 0, src: loadingIndicator, alt: 'Loading indicator' }]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch gallery images from the API
+  useEffect(() => {
+    const fetchGalleryImages = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/gallery');
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch gallery images');
+        }
+
+        const images: GalleryImage[] = await response.json();
+        setData(images);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching gallery images:', err);
+        setError('Failed to load gallery images. Please try again later.');
+        setData([{ id: 0, src: errorIndicator, alt: 'Error indicator' }]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    void fetchGalleryImages();
+  }, []);
+
+  return { data, loading, error }
+}

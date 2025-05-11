@@ -9,7 +9,8 @@
     "start": "bun run dist/index.js"
   },
   "dependencies": {
-    "frontend": "workspace:*"
+    "frontend": "workspace:*",
+    "smtp2go-nodejs": "^0.3.5"
   },
   "devDependencies": {
     "@types/bun": "latest"

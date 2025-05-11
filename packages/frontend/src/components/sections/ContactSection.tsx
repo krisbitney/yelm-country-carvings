@@ -136,10 +136,15 @@ const ContactSection: React.FC<ContactSectionProps> = () => {
     }
 
     try {
+      // Set loading state
+      setFormStatus({
+        submitted: true,
+        success: false,
+        message: 'Sending your message...'
+      });
+
       // Create form data to send
       const emailFormData = new FormData();
-      emailFormData.append('from', formData.email);
-      emailFormData.append('subject', `Contact Form Submission from ${formData.name}`);
       emailFormData.append('name', formData.name);
       emailFormData.append('email', formData.email);
       emailFormData.append('phone', formData.phone || 'Not provided');
@@ -150,25 +155,23 @@ const ContactSection: React.FC<ContactSectionProps> = () => {
         emailFormData.append('file', formData.file);
       }
 
-      // In a real implementation, this would send the form data to a server
-      // For example:
-      // const response = await fetch('/api/send-email', {
-      //   method: 'POST',
-      //   body: emailFormData,
-      // });
-      //
-      // if (!response.ok) {
-      //   throw new Error('Failed to send email');
-      // }
+      // Send the form data to the server
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        body: emailFormData,
+      });
 
-      // For now, log the form data and simulate successful submission
-      console.log('Form submitted:', formData);
+      const result = await response.json();
 
-      // Simulate successful submission
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Failed to send message');
+      }
+
+      // Handle successful submission
       setFormStatus({
         submitted: true,
         success: true,
-        message: 'Thank you for your message! We\'ll get back to you soon.'
+        message: result.message || 'Thank you for your message! We\'ll get back to you soon.'
       });
 
       // Reset form after successful submission
@@ -179,6 +182,7 @@ const ContactSection: React.FC<ContactSectionProps> = () => {
         message: '',
         file: null,
       });
+
       // Reset file input visually
       const fileInput = document.getElementById('file-upload') as HTMLInputElement | null;
       if (fileInput) {
@@ -190,7 +194,7 @@ const ContactSection: React.FC<ContactSectionProps> = () => {
       setFormStatus({
         submitted: true,
         success: false,
-        message: 'There was an error sending your message. Please try again later.'
+        message: error instanceof Error ? error.message : 'There was an error sending your message. Please try again later.'
       });
     }
   };
