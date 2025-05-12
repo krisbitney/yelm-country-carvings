@@ -1,12 +1,13 @@
 import dotenv from 'dotenv';
-import { generateToken } from '../../utils/jwt';
+import { generateToken, verifyToken, extractTokenFromHeader } from '../../utils/jwt';
+import bcrypt from 'bcrypt';
 
 // Load environment variables
 dotenv.config();
 
 // Get admin credentials from environment variables
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'secure_password';
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || '$2b$10$3euPcmQFCiblsZeEu5s7p.9MQtWgS.XKZCkuR.zEn/fwXLGJLQQpq'; // Hash for 'secure_password'
 
 /**
  * Handle admin login
@@ -17,12 +18,22 @@ export const handleAdminLogin = async (req: Request): Promise<Response> => {
   try {
     // Parse the request body
     const { username, password } = await req.json();
-    
-    // Validate the credentials
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+
+    // Check if username is valid
+    if (username !== ADMIN_USERNAME) {
+      return Response.json({ 
+        success: false, 
+        message: 'Invalid username or password' 
+      }, { status: 401 });
+    }
+
+    // Validate the password using bcrypt
+    const isPasswordValid = await bcrypt.compare(password, ADMIN_PASSWORD_HASH);
+
+    if (isPasswordValid) {
       // Generate a JWT token
       const token = generateToken({ username });
-      
+
       // Return the token
       return Response.json({ 
         success: true, 
@@ -30,7 +41,7 @@ export const handleAdminLogin = async (req: Request): Promise<Response> => {
         message: 'Login successful' 
       });
     }
-    
+
     // Invalid credentials
     return Response.json({ 
       success: false, 
@@ -38,7 +49,7 @@ export const handleAdminLogin = async (req: Request): Promise<Response> => {
     }, { status: 401 });
   } catch (error) {
     console.error('Login error:', error);
-    
+
     // Return a generic error message
     return Response.json({ 
       success: false, 
@@ -55,8 +66,34 @@ export const handleAdminLogin = async (req: Request): Promise<Response> => {
 export const handleVerifyToken = (req: Request): Response => {
   // The request has already been authenticated by the middleware
   // If we reach this point, the token is valid
+
+  // Extract the token from the Authorization header to get the username
+  const authHeader = req.headers.get('Authorization');
+  const token = extractTokenFromHeader(authHeader || '');
+
+  // This should never happen since the middleware already checked for a valid token
+  if (!token) {
+    return Response.json({ 
+      success: false, 
+      message: 'No token provided' 
+    }, { status: 401 });
+  }
+
+  // Get the payload from the token
+  const payload = verifyToken(token);
+
+  // This should never happen since the middleware already verified the token
+  if (!payload) {
+    return Response.json({ 
+      success: false, 
+      message: 'Invalid token' 
+    }, { status: 401 });
+  }
+
+  // Return success with the username
   return Response.json({ 
     success: true, 
-    message: 'Token is valid' 
+    message: 'Token is valid',
+    username: payload.username
   });
 };

@@ -1,12 +1,7 @@
-import { beforeEach, afterEach, mock } from 'bun:test';
-import fs from 'fs/promises';
-import path from 'path';
-import jwt from 'jsonwebtoken';
-import SMTP2GOApi from 'smtp2go-nodejs';
+import { beforeEach, mock } from 'bun:test';
+import dotenv from 'dotenv';
 
-// Mock environment variables
-process.env.JWT_SECRET = 'test_secret';
-process.env.SMTP2GO_API_KEY = 'test_api_key';
+dotenv.config();
 
 // Mock fs/promises
 const mockData = {
@@ -40,7 +35,7 @@ const mockFs = {
 };
 
 // Apply the mock
-mock.module('fs/promises', () => mockFs);
+mock.module('fs', () => mockFs);
 
 // Mock jsonwebtoken to avoid actual verification
 mock.module('jsonwebtoken', () => {
@@ -123,5 +118,5 @@ export const createTestToken = (payload = { username: 'admin' }) => {
 
 // Reset mocks between tests
 beforeEach(() => {
-  mock.resetAll();
+  mock.restore();
 });

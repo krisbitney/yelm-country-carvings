@@ -11,7 +11,7 @@ describe('Auth Handler', () => {
 
   beforeEach(() => {
     // Reset mocks between tests
-    mock.resetAll();
+    mock.restore();
     
     // Set environment variables for testing
     process.env.ADMIN_USERNAME = 'admin';

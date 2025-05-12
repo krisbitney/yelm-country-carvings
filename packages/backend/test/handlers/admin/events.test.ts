@@ -19,7 +19,7 @@ describe('Events Handler', () => {
 
   beforeEach(() => {
     // Reset mocks between tests
-    mock.resetAll();
+    mock.restore();
   });
 
   describe('getEvents', () => {

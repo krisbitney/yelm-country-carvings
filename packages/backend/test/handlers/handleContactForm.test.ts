@@ -110,7 +110,7 @@ describe('Contact Form Handler', () => {
     // Force an error in the email sending process by mocking the setup file's SMTP2GO mock
     // This relies on the mock in setup.ts, but we override the consume method to throw an error
     const smtp2goMock = await import('smtp2go-nodejs');
-    const clientMock = smtp2goMock.default().client();
+    const clientMock = smtp2goMock.default(process.env.SMTP2GO_API_KEY).client();
     spyOn(clientMock, 'consume').mockImplementation(() => {
       throw new Error('SMTP error');
     });

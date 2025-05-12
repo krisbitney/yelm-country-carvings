@@ -18,7 +18,7 @@ describe('Gallery Handler', () => {
 
   beforeEach(() => {
     // Reset mocks between tests
-    mock.resetAll();
+    mock.restore()
   });
 
   describe('getGallery', () => {

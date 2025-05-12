@@ -76,12 +76,12 @@ const server = Bun.serve({
     },
 
     "/api/admin/events/:id": {
-      PUT: async (req, { params }) => {
-        const id = parseInt(params.id);
+      PUT: async (req) => {
+        const id = parseInt(req.params.id);
         return await updateEvent(req, id);
       },
-      DELETE: async (req, { params }) => {
-        const id = parseInt(params.id);
+      DELETE: async (req) => {
+        const id = parseInt(req.params.id);
         return await deleteEvent(req, id);
       }
     },
@@ -97,8 +97,8 @@ const server = Bun.serve({
     },
 
     "/api/admin/gallery/:id": {
-      DELETE: async (req, { params }) => {
-        const id = parseInt(params.id);
+      DELETE: async (req) => {
+        const id = parseInt(req.params.id);
         return await deleteGalleryImage(req, id);
       }
     },

@@ -11,7 +11,7 @@ describe('Image Upload Handler', () => {
 
   beforeEach(() => {
     // Reset mocks between tests
-    mock.resetAll();
+    mock.restore();
   });
 
   test('should upload an image successfully when authenticated', async () => {

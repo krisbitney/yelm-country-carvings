@@ -1,7 +1,7 @@
 import SMTP2GOApi from "smtp2go-nodejs";
+import {organizerEmail, smtpSenderEmail} from "frontend/src/constants";
 
 const smtp2go = SMTP2GOApi(process.env.SMTP2GO_API_KEY || '');
-const RECIPIENT_EMAIL = 'tlzumach@hotmail.com';
 
 class SimpleAttachment {
   filename: string;
@@ -49,11 +49,11 @@ export const handleContactForm = async (req: Request) => {
     const mailService = smtp2go.mail()
       .from({
         name: 'Yelm Country Carvings Website',
-        email: 'no-reply@yelmcountrycarvings.com'
+        email: smtpSenderEmail,
       })
       .to({
         name: 'Yelm Country Carvings',
-        email: RECIPIENT_EMAIL
+        email: organizerEmail,
       })
       .subject(`Contact Form Submission from ${name}`)
       .html(emailContent);
