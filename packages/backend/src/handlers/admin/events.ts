@@ -16,7 +16,7 @@ if (isTestMode && process.env.TEST_EVENTS_FILE) {
   IMAGES_DIR = path.join(path.dirname(EVENTS_FILE_PATH), 'events-images');
 } else {
   // Use production paths
-  EVENTS_FILE_PATH = path.join(import.meta.dir, '../../../data/events.json');
+  EVENTS_FILE_PATH = path.join(import.meta.dir, '../../data/events.json');
   IMAGES_DIR = path.join(import.meta.dir, '../../../img/events');
 }
 

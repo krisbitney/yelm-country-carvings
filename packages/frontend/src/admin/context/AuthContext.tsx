@@ -107,12 +107,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         localStorage.setItem('adminToken', data.token);
 
         // Update the auth state immediately
+        // Use a callback to ensure we're working with the latest state
         setAuthState({
           isAuthenticated: true,
           token: data.token,
           loading: false,
           error: null,
         });
+
+        // Add a longer delay to ensure the state is updated before navigation
+        await new Promise(resolve => setTimeout(resolve, 300));
 
         return true;
       } else {

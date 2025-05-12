@@ -20,6 +20,9 @@ const LoginPage: React.FC = () => {
   const location = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Create a ref to track if the component is mounted
+  const isMountedRef = React.useRef(true);
+
   // Get the form methods
   const {
     register,
@@ -29,9 +32,16 @@ const LoginPage: React.FC = () => {
     resolver: zodResolver(loginSchema),
   });
 
+  // Set isMounted to false when the component unmounts
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
   // Redirect if already authenticated
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && isMountedRef.current) {
       const from = location.state?.from?.pathname || '/';
       navigate(from, { replace: true });
     }
@@ -46,13 +56,26 @@ const LoginPage: React.FC = () => {
   const onSubmit = async (data: LoginFormData) => {
     setIsSubmitting(true);
     const success = await login(data.username, data.password);
-    setIsSubmitting(false);
 
-    // If login was successful, manually trigger navigation
-    // This is a backup in case the useEffect doesn't trigger immediately
+    // Only update state if the component is still mounted
+    if (isMountedRef.current) {
+      setIsSubmitting(false);
+    }
+
+    // If login was successful, manually trigger navigation after a small delay
+    // This ensures the auth state is fully updated before navigation
     if (success) {
+      // We'll still let the useEffect handle the navigation as a backup
+      // But this manual navigation with a delay should help ensure the dashboard is shown
       const from = location.state?.from?.pathname || '/';
-      navigate(from, { replace: true });
+
+      // Use a reference to the timeout so we can clear it if the component unmounts
+      setTimeout(() => {
+        // Only navigate if the component is still mounted
+        if (isMountedRef.current) {
+          navigate(from, { replace: true });
+        }
+      }, 400); // 400ms delay to ensure auth state is updated
     }
   };
 

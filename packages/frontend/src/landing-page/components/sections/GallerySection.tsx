@@ -120,7 +120,7 @@ const GallerySection: React.FC = () => {
                 <div className="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                   <div className="aspect-w-4 aspect-h-3 overflow-hidden rounded-md">
                     <img 
-                      src={image.src} 
+                      src={image.src.startsWith('/') ? image.src : `/${image.src}`} 
                       alt={image.alt}
                       className="w-full h-64 object-cover rounded-md cursor-pointer"
                       loading="lazy"
@@ -192,7 +192,7 @@ const GallerySection: React.FC = () => {
           </button>
           <div className="relative max-w-4xl max-h-[90vh] overflow-auto">
             <img 
-              src={selectedImage.src} 
+              src={selectedImage.src.startsWith('/') ? selectedImage.src : `/${selectedImage.src}`} 
               alt={selectedImage.alt}
               className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-xl"
               onClick={(e) => e.stopPropagation()}

@@ -50,27 +50,27 @@ const GalleryPage: React.FC = () => {
   // Handle drag end for reordering
   const handleDragEnd = async (result: DropResult) => {
     setIsDragging(false);
-    
+
     // If dropped outside the list or no movement
     if (!result.destination || result.destination.index === result.source.index) {
       return;
     }
-    
+
     // Create a copy of the gallery
     const newGallery = Array.from(gallery);
-    
+
     // Remove the dragged item
     const [removed] = newGallery.splice(result.source.index, 1);
-    
+
     // Insert it at the new position
     newGallery.splice(result.destination.index, 0, removed);
-    
+
     // Get the ordered IDs
     const imageIds = newGallery.map(img => img.id);
-    
+
     // Update the order in the backend
     const success = await reorderGallery(imageIds);
-    
+
     if (!success) {
       // If reordering failed, fetch the original order
       void fetchGallery();
@@ -129,7 +129,7 @@ const GalleryPage: React.FC = () => {
                   <span className="font-bold">Tip:</span> Drag and drop images to reorder them. The order here will be reflected on the public gallery.
                 </p>
               </div>
-              
+
               <DragDropContext 
                 onDragStart={() => setIsDragging(true)}
                 onDragEnd={handleDragEnd}
@@ -158,11 +158,11 @@ const GalleryPage: React.FC = () => {
                             >
                               <div className="aspect-w-4 aspect-h-3 relative">
                                 <img
-                                  src={image.src}
+                                  src={image.src.startsWith('/') ? image.src : `/${image.src}`}
                                   alt={image.alt}
                                   className="w-full h-48 object-cover"
                                 />
-                                
+
                                 {/* Delete Confirmation Overlay */}
                                 {confirmDelete === image.id && (
                                   <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center p-4 text-white">
@@ -184,7 +184,7 @@ const GalleryPage: React.FC = () => {
                                   </div>
                                 )}
                               </div>
-                              
+
                               <div className="p-3">
                                 <p className="text-[#3E3C3B] font-['Lato'] text-sm truncate">{image.alt}</p>
                                 <div className="mt-2 flex justify-between items-center">

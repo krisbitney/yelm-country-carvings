@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -13,9 +13,24 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
+  const [shouldRender, setShouldRender] = useState(false);
+
+  // Use an effect to ensure we only render the children after authentication is confirmed
+  useEffect(() => {
+    if (isAuthenticated && !loading) {
+      // Add a small delay to ensure the authentication state is fully propagated
+      const timeoutId = setTimeout(() => {
+        setShouldRender(true);
+      }, 50);
+
+      return () => clearTimeout(timeoutId);
+    } else {
+      setShouldRender(false);
+    }
+  }, [isAuthenticated, loading]);
 
   // Show loading state while checking authentication
-  if (loading) {
+  if (loading || (isAuthenticated && !shouldRender)) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#F5F1E9]">
         <div className="text-center">
@@ -31,7 +46,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Navigate to="login" state={{ from: location }} replace />;
   }
 
-  // If authenticated, render the children
+  // If authenticated and should render, render the children
   return <>{children}</>;
 };
 

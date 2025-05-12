@@ -45,7 +45,7 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ onSubmit, onCancel, uploadIma
     try {
       setUploadProgress(true);
       const imagePath = await uploadImage(file);
-      
+
       if (imagePath) {
         setValue('src', imagePath);
         setImagePreview(imagePath);
@@ -111,7 +111,7 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ onSubmit, onCancel, uploadIma
             <p className="text-[#3E3C3B] font-['Lato'] mb-2">Image Preview:</p>
             <div className="w-full max-w-md h-48 bg-[#A07E5D]/20 relative overflow-hidden rounded-md">
               <img
-                src={imagePreview}
+                src={imagePreview.startsWith('/') ? imagePreview : `/${imagePreview}`}
                 alt="Gallery preview"
                 className="w-full h-full object-cover"
               />
