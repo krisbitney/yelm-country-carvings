@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 export const TEST_DATA_DIR = path.join(__dirname, 'test-data');
 export const TEST_EVENTS_FILE = path.join(TEST_DATA_DIR, 'events.json');
 export const TEST_GALLERY_FILE = path.join(TEST_DATA_DIR, 'gallery.json');
-export const TEST_IMAGE = path.join(TEST_DATA_DIR, "test-image.webp");
+export const TEST_IMAGE = path.join(TEST_DATA_DIR, "test.webp");
 export const TEST_JWT_SECRET = 'test-secret';
 
 // Set environment variables for test mode
@@ -90,4 +90,3 @@ export const createTestRequest = (options: {
 export const createTestToken = (payload = { username: 'admin' }, expiresIn = '1h') => {
   return jwt.sign(payload, TEST_JWT_SECRET, { expiresIn });
 };
-

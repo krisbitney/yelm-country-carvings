@@ -158,6 +158,30 @@ const server = Bun.serve({
           },
         });
       } else {
+        // If not found in IMAGES_DIR, try to serve from frontend build directory
+        const filePath = path.join(FRONTEND_DIR, requestPath);
+        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+          const file = Bun.file(filePath);
+          return new Response(file, {
+            headers: {
+              'Cache-Control': 'public, max-age=31536000, immutable',
+            },
+          });
+        }
+
+        // Also check in the assets directory for hashed filenames
+        if (requestPath.startsWith('/assets/')) {
+          const assetsPath = path.join(FRONTEND_DIR, requestPath);
+          if (fs.existsSync(assetsPath) && fs.statSync(assetsPath).isFile()) {
+            const file = Bun.file(assetsPath);
+            return new Response(file, {
+              headers: {
+                'Cache-Control': 'public, max-age=31536000, immutable',
+              },
+            });
+          }
+        }
+
         return new Response('Not Found', { status: 404 });
       }
     }
