@@ -36,7 +36,7 @@ const EventsPage: React.FC = () => {
   // Handle event update
   const handleUpdateEvent = async (eventData: Omit<MarketEvent, 'id'>) => {
     if (!selectedEvent) return;
-    
+
     const success = await updateEvent(selectedEvent.id, eventData);
     if (success) {
       setIsEditingEvent(false);
@@ -146,7 +146,7 @@ const EventsPage: React.FC = () => {
                           <div className="h-10 w-10 flex-shrink-0 mr-4">
                             <img
                               className="h-10 w-10 rounded-full object-cover"
-                              src={event.image}
+                              src={event.image.startsWith('/') ? event.image : `/${event.image}`}
                               alt={event.title}
                             />
                           </div>

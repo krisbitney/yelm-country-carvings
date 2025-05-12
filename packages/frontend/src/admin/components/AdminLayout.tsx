@@ -21,8 +21,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
       // If on dashboard, go to the main website
       window.location.href = '/';
     } else {
-      // Otherwise, go back to the dashboard
-      navigate('/');
+      // Otherwise, go back to the admin dashboard
+      navigate('/admin');
     }
   };
 
@@ -45,7 +45,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
           </div>
           <div className="flex items-center">
             <Link
-              to="/"
+              to="/admin"
               className={`px-4 py-2 rounded-md transition-colors duration-300 mr-2 ${
                 isDashboard 
                   ? 'bg-[#3D5142] text-white cursor-default' 

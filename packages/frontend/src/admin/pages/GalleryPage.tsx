@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, DropResult } from 'react-beautiful-dnd';
 import AdminLayout from '../components/AdminLayout';
 import GalleryForm from '../components/GalleryForm';
 import { useAdminGallery } from '../hooks/useAdminGallery';
 import { GalleryImage } from '../../types.ts';
+import { StrictModeDroppable } from '../components/StrictModeDroppable';
 
 const GalleryPage: React.FC = () => {
   const { gallery, loading, error, fetchGallery, addGalleryImage, deleteGalleryImage, reorderGallery, uploadGalleryImage } = useAdminGallery();
   const [isAddingImage, setIsAddingImage] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
 
   // Fetch gallery on component mount
   useEffect(() => {
@@ -49,8 +49,6 @@ const GalleryPage: React.FC = () => {
 
   // Handle drag end for reordering
   const handleDragEnd = async (result: DropResult) => {
-    setIsDragging(false);
-
     // If dropped outside the list or no movement
     if (!result.destination || result.destination.index === result.source.index) {
       return;
@@ -124,22 +122,33 @@ const GalleryPage: React.FC = () => {
             </div>
           ) : (
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <div className="mb-4">
-                <p className="text-[#3E3C3B] font-['Lato']">
-                  <span className="font-bold">Tip:</span> Drag and drop images to reorder them. The order here will be reflected on the public gallery.
-                </p>
+              <div className="mb-6 bg-[#4A6151]/10 p-4 rounded-lg border border-[#4A6151]/20">
+                <div className="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#4A6151] mr-3 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <div>
+                    <p className="text-[#3E3C3B] font-['Lato'] font-bold mb-1">Gallery Arrangement</p>
+                    <p className="text-[#3E3C3B] font-['Lato']">
+                      To rearrange images, click and hold on an image, then drag it to a new position. Release to drop it in place.
+                      <br />
+                      The order you set here will be reflected on the public gallery page of your website.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <DragDropContext 
-                onDragStart={() => setIsDragging(true)}
                 onDragEnd={handleDragEnd}
               >
-                <Droppable droppableId="gallery" direction="horizontal">
-                  {(provided) => (
+                <StrictModeDroppable droppableId="gallery" type="grid">
+                  {(provided, snapshot) => (
                     <div
                       {...provided.droppableProps}
                       ref={provided.innerRef}
-                      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+                      className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ${
+                        snapshot.isDraggingOver ? 'bg-[#4A6151]/5 rounded-lg p-2' : ''
+                      }`}
                     >
                       {gallery.map((image, index) => (
                         <Draggable key={image.id.toString()} draggableId={image.id.toString()} index={index}>
@@ -147,16 +156,25 @@ const GalleryPage: React.FC = () => {
                             <div
                               ref={provided.innerRef}
                               {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              className={`bg-[#F5F1E9] rounded-lg overflow-hidden shadow-md ${
-                                snapshot.isDragging ? 'shadow-lg ring-2 ring-[#4A6151]' : ''
+                              className={`bg-[#F5F1E9] rounded-lg overflow-hidden shadow-md transition-all duration-200 ${
+                                snapshot.isDragging ? 'shadow-xl ring-2 ring-[#4A6151] scale-105 z-10' : 'hover:shadow-lg'
                               }`}
                               style={{
                                 ...provided.draggableProps.style,
-                                cursor: isDragging ? 'grabbing' : 'grab',
                               }}
                             >
-                              <div className="aspect-w-4 aspect-h-3 relative">
+                              <div className="aspect-w-4 aspect-h-3 relative group">
+                                <div 
+                                  {...provided.dragHandleProps}
+                                  className="absolute top-2 right-2 bg-black/50 text-white p-1 rounded-md opacity-70 hover:opacity-100 transition-opacity duration-200 z-10 cursor-grab"
+                                  style={{
+                                    cursor: snapshot.isDragging ? 'grabbing' : 'grab',
+                                  }}
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                  </svg>
+                                </div>
                                 <img
                                   src={image.src.startsWith('/') ? image.src : `/${image.src}`}
                                   alt={image.alt}
@@ -205,7 +223,7 @@ const GalleryPage: React.FC = () => {
                       {provided.placeholder}
                     </div>
                   )}
-                </Droppable>
+                </StrictModeDroppable>
               </DragDropContext>
             </div>
           )}

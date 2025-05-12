@@ -5,19 +5,9 @@
     "alt": "Fishing Bear Carving"
   },
   {
-    "id": 2,
-    "src": "gallery/flying_hawk.webp",
-    "alt": "Flying Hawk Carving"
-  },
-  {
     "id": 3,
     "src": "gallery/frog_and_santas.webp",
     "alt": "Frog and Santa Carvings"
-  },
-  {
-    "id": 4,
-    "src": "gallery/heart_trunk_bear.webp",
-    "alt": "Bear with Heart on Trunk"
   },
   {
     "id": 5,
@@ -25,14 +15,29 @@
     "alt": "Linux Penguin Carving"
   },
   {
-    "id": 6,
-    "src": "gallery/monkey_heads.webp",
-    "alt": "Monkey Head Carvings"
+    "id": 14,
+    "src": "gallery/unpolished_turtle.webp",
+    "alt": "Unpolished Turtle Carving"
+  },
+  {
+    "id": 4,
+    "src": "gallery/heart_trunk_bear.webp",
+    "alt": "Bear with Heart on Trunk"
   },
   {
     "id": 7,
     "src": "gallery/old_sailor.webp",
     "alt": "Old Sailor Carving"
+  },
+  {
+    "id": 2,
+    "src": "gallery/flying_hawk.webp",
+    "alt": "Flying Hawk Carving"
+  },
+  {
+    "id": 6,
+    "src": "gallery/monkey_heads.webp",
+    "alt": "Monkey Head Carvings"
   },
   {
     "id": 8,
@@ -63,11 +68,6 @@
     "id": 13,
     "src": "gallery/unpolished_smurf.webp",
     "alt": "Unpolished Smurf Carving"
-  },
-  {
-    "id": 14,
-    "src": "gallery/unpolished_turtle.webp",
-    "alt": "Unpolished Turtle Carving"
   },
   {
     "id": 15,
