@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { DragDropContext, Draggable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, DropResult } from '@hello-pangea/dnd';
 import AdminLayout from '../components/AdminLayout';
 import GalleryForm from '../components/GalleryForm';
 import { useAdminGallery } from '../hooks/useAdminGallery';
@@ -70,6 +70,7 @@ const GalleryPage: React.FC = () => {
     const success = await reorderGallery(imageIds);
 
     if (!success) {
+      toast.error("Failed to reorder images. Reverting changes.");
       // If reordering failed, fetch the original order
       void fetchGallery();
     }
@@ -130,7 +131,7 @@ const GalleryPage: React.FC = () => {
                   <div>
                     <p className="text-[#3E3C3B] font-['Lato'] font-bold mb-1">Gallery Arrangement</p>
                     <p className="text-[#3E3C3B] font-['Lato']">
-                      To rearrange images, click and hold on an image, then drag it to a new position. Release to drop it in place.
+                      To rearrange images in this list, click and hold on the drag handle, then move it up or down to a new position. Release to drop it in place.
                       <br />
                       The order you set here will be reflected on the public gallery page of your website.
                     </p>
@@ -141,12 +142,12 @@ const GalleryPage: React.FC = () => {
               <DragDropContext 
                 onDragEnd={handleDragEnd}
               >
-                <StrictModeDroppable droppableId="gallery" type="grid">
+                <StrictModeDroppable droppableId="gallery" type="list">
                   {(provided, snapshot) => (
                     <div
                       {...provided.droppableProps}
                       ref={provided.innerRef}
-                      className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ${
+                      className={`flex flex-col gap-4 ${
                         snapshot.isDraggingOver ? 'bg-[#4A6151]/5 rounded-lg p-2' : ''
                       }`}
                     >
@@ -156,66 +157,64 @@ const GalleryPage: React.FC = () => {
                             <div
                               ref={provided.innerRef}
                               {...provided.draggableProps}
-                              className={`bg-[#F5F1E9] rounded-lg overflow-hidden shadow-md transition-all duration-200 ${
-                                snapshot.isDragging ? 'shadow-xl ring-2 ring-[#4A6151] scale-105 z-10' : 'hover:shadow-lg'
+                              className={`bg-[#F5F1E9] rounded-lg shadow-md transition-all duration-200 flex items-center p-3 ${
+                                snapshot.isDragging ? 'shadow-xl ring-2 ring-[#4A6151] scale-[1.02] z-10' : 'hover:shadow-lg'
                               }`}
                               style={{
                                 ...provided.draggableProps.style,
                               }}
                             >
-                              <div className="aspect-w-4 aspect-h-3 relative group">
-                                <div 
-                                  {...provided.dragHandleProps}
-                                  className="absolute top-2 right-2 bg-black/50 text-white p-1 rounded-md opacity-70 hover:opacity-100 transition-opacity duration-200 z-10 cursor-grab"
-                                  style={{
-                                    cursor: snapshot.isDragging ? 'grabbing' : 'grab',
-                                  }}
-                                >
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                                  </svg>
-                                </div>
-                                <img
-                                  src={image.src.startsWith('/') ? image.src : `/${image.src}`}
-                                  alt={image.alt}
-                                  className="w-full h-48 object-cover"
-                                />
+                              <div 
+                                {...provided.dragHandleProps}
+                                className="bg-[#4A6151]/10 text-[#4A6151] p-2 rounded-md mr-4 cursor-grab flex-shrink-0"
+                                style={{
+                                  cursor: snapshot.isDragging ? 'grabbing' : 'grab',
+                                }}
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                                </svg>
+                              </div>
 
-                                {/* Delete Confirmation Overlay */}
-                                {confirmDelete === image.id && (
-                                  <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center p-4 text-white">
-                                    <p className="text-center mb-4">Are you sure you want to delete this image?</p>
-                                    <div className="flex space-x-4">
-                                      <button
-                                        onClick={() => handleDeleteImage(image.id)}
-                                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                                      >
-                                        Delete
-                                      </button>
-                                      <button
-                                        onClick={() => setConfirmDelete(null)}
-                                        className="px-4 py-2 bg-[#4A6151] text-white rounded-md hover:bg-[#3D5142]"
-                                      >
-                                        Cancel
-                                      </button>
-                                    </div>
+                              <img
+                                src={image.src.startsWith('/') ? image.src : `/${image.src}`}
+                                alt={image.alt}
+                                className="w-20 h-20 object-cover rounded-md flex-shrink-0"
+                              />
+
+                              <div className="ml-4 flex-grow">
+                                <p className="text-[#3E3C3B] font-['Lato'] font-medium">{image.alt}</p>
+                                <span className="text-xs text-[#6B4F41]">ID: {image.id}</span>
+                              </div>
+
+                              <button
+                                onClick={() => setConfirmDelete(image.id)}
+                                className="text-red-600 hover:text-red-800 text-sm px-3 py-1 ml-4 flex-shrink-0"
+                                disabled={confirmDelete !== null}
+                              >
+                                Delete
+                              </button>
+
+                              {/* Delete Confirmation Overlay */}
+                              {confirmDelete === image.id && (
+                                <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center p-4 text-white rounded-lg">
+                                  <p className="text-center mb-4">Are you sure you want to delete this image?</p>
+                                  <div className="flex space-x-4">
+                                    <button
+                                      onClick={() => handleDeleteImage(image.id)}
+                                      className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                                    >
+                                      Delete
+                                    </button>
+                                    <button
+                                      onClick={() => setConfirmDelete(null)}
+                                      className="px-4 py-2 bg-[#4A6151] text-white rounded-md hover:bg-[#3D5142]"
+                                    >
+                                      Cancel
+                                    </button>
                                   </div>
-                                )}
-                              </div>
-
-                              <div className="p-3">
-                                <p className="text-[#3E3C3B] font-['Lato'] text-sm truncate">{image.alt}</p>
-                                <div className="mt-2 flex justify-between items-center">
-                                  <span className="text-xs text-[#6B4F41]">ID: {image.id}</span>
-                                  <button
-                                    onClick={() => setConfirmDelete(image.id)}
-                                    className="text-red-600 hover:text-red-800 text-sm"
-                                    disabled={confirmDelete !== null}
-                                  >
-                                    Delete
-                                  </button>
                                 </div>
-                              </div>
+                              )}
                             </div>
                           )}
                         </Draggable>

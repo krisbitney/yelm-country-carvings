@@ -85,6 +85,15 @@ html, body {
   padding-bottom: 2.5rem;
 }
 
+/* Drag and drop placeholder styles for @hello-pangea/dnd */
+.hello-pangea-dnd-placeholder {
+  background-color: rgba(74, 97, 81, 0.2);
+  border: 2px dashed rgba(74, 97, 81, 0.5);
+  border-radius: 0.5rem;
+  margin: 0;
+}
+
+/* Keep the old class for backward compatibility */
 .react-beautiful-dnd-placeholder {
   background-color: rgba(74, 97, 81, 0.2);
   border: 2px dashed rgba(74, 97, 81, 0.5);

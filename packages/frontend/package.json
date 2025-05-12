@@ -15,7 +15,7 @@
     "add-to-calendar-button": "^2.8.9",
     "date-fns": "^4.1.0",
     "react": "^19.0.0",
-    "react-beautiful-dnd": "^13.1.1",
+    "@hello-pangea/dnd": "^18.0.1",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.3",
     "react-multi-carousel": "^2.8.6",
@@ -25,7 +25,6 @@
     "zod": "^3.24.4"
   },
   "devDependencies": {
-    "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
