@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'bun:test';
 import { authenticateJWT, authenticateAdmin } from '../../src/middleware/auth';
-import { createMockRequest } from '../setup';
+import { createTestRequest } from '../setup';
 import { generateToken } from '../../src/utils/jwt';
 import '../setup';
 
@@ -8,7 +8,7 @@ describe('Authentication Middleware', () => {
   describe('authenticateJWT', () => {
     test('should return undefined for a valid token', () => {
       const token = generateToken({ username: 'testuser' });
-      const request = createMockRequest({
+      const request = createTestRequest({
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
@@ -17,7 +17,7 @@ describe('Authentication Middleware', () => {
     });
 
     test('should return 401 response when no token is provided', () => {
-      const request = createMockRequest({});
+      const request = createTestRequest({});
       const response = authenticateJWT(request);
 
       expect(response).toBeDefined();
@@ -25,7 +25,7 @@ describe('Authentication Middleware', () => {
     });
 
     test('should return 401 response for an invalid token format', () => {
-      const request = createMockRequest({
+      const request = createTestRequest({
         headers: { 'Authorization': 'InvalidFormat' }
       });
 
@@ -35,7 +35,7 @@ describe('Authentication Middleware', () => {
     });
 
     test('should return 401 response for a malformed token', () => {
-      const request = createMockRequest({
+      const request = createTestRequest({
         headers: { 'Authorization': 'Bearer invalid.token.here' }
       });
 
@@ -48,7 +48,7 @@ describe('Authentication Middleware', () => {
   describe('authenticateAdmin', () => {
     test('should return undefined for a valid admin token', () => {
       const token = generateToken({ username: 'admin' });
-      const request = createMockRequest({
+      const request = createTestRequest({
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
@@ -57,7 +57,7 @@ describe('Authentication Middleware', () => {
     });
 
     test('should return 401 response when no token is provided', () => {
-      const request = createMockRequest({});
+      const request = createTestRequest({});
       const response = authenticateAdmin(request);
 
       expect(response).toBeDefined();
@@ -65,7 +65,7 @@ describe('Authentication Middleware', () => {
     });
 
     test('should return 401 response for an invalid token', () => {
-      const request = createMockRequest({
+      const request = createTestRequest({
         headers: { 'Authorization': 'Bearer invalid.token.here' }
       });
 

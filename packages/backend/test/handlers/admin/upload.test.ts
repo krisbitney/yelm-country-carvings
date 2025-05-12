@@ -1,6 +1,6 @@
 import { describe, test, expect, mock, beforeEach } from 'bun:test';
 import { handleImageUpload } from '../../../src/handlers/admin/upload';
-import {createMockRequest, createTestToken, TEST_IMAGE} from '../../setup';
+import {createTestRequest, createTestToken, TEST_IMAGE} from '../../setup';
 import '../../setup';
 
 describe('Image Upload Handler', () => {
@@ -23,7 +23,7 @@ describe('Image Upload Handler', () => {
     formData.append('folder', 'events');
     
     // Create a mock request with valid auth and form data
-    const request = createMockRequest({
+    const request = createTestRequest({
       method: 'POST',
       headers: validAuthHeader,
       formData
@@ -43,7 +43,7 @@ describe('Image Upload Handler', () => {
 
   test('should return 401 when not authenticated', async () => {
     // Create a mock request without auth
-    const request = createMockRequest({
+    const request = createTestRequest({
       method: 'POST'
     });
     
@@ -60,7 +60,7 @@ describe('Image Upload Handler', () => {
     formData.append('folder', 'events');
     
     // Create a mock request with valid auth and form data
-    const request = createMockRequest({
+    const request = createTestRequest({
       method: 'POST',
       headers: validAuthHeader,
       formData
@@ -89,7 +89,7 @@ describe('Image Upload Handler', () => {
     formData.append('folder', 'invalid');
     
     // Create a mock request with valid auth and form data
-    const request = createMockRequest({
+    const request = createTestRequest({
       method: 'POST',
       headers: validAuthHeader,
       formData

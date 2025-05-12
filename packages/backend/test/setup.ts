@@ -46,7 +46,7 @@ afterEach(async () => {
 });
 
 // Helper to create real requests with test data
-export const createMockRequest = (options: {
+export const createTestRequest = (options: {
   method?: string;
   url?: string;
   headers?: Record<string, string>;

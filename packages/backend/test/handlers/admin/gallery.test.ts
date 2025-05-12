@@ -2,7 +2,7 @@
 import '../../setup';
 import { describe, test, expect, beforeEach } from 'bun:test';
 import { getGallery, addGalleryImage, deleteGalleryImage, reorderGallery } from '../../../src/handlers/admin/gallery';
-import { createMockRequest, createTestToken, TEST_GALLERY_FILE } from '../../setup';
+import { createTestRequest, createTestToken, TEST_GALLERY_FILE } from '../../setup';
 import fs from 'fs/promises';
 
 describe('Gallery Handler', () => {
@@ -41,7 +41,7 @@ describe('Gallery Handler', () => {
       await writeTestGallery(existingGallery);
 
       // Create a request with valid auth
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'GET',
         headers: validAuthHeader
       });
@@ -60,7 +60,7 @@ describe('Gallery Handler', () => {
 
     test('should return 401 when not authenticated', async () => {
       // Create a request without auth
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'GET'
       });
 
@@ -83,7 +83,7 @@ describe('Gallery Handler', () => {
         alt: 'New Image'
       };
 
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'POST',
         headers: validAuthHeader,
         body: newImage
@@ -111,7 +111,7 @@ describe('Gallery Handler', () => {
 
     test('should return 401 when not authenticated', async () => {
       // Create a request without auth
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'POST',
         body: { src: 'gallery/test.webp', alt: 'Test Image' }
       });
@@ -135,7 +135,7 @@ describe('Gallery Handler', () => {
       await writeTestGallery(existingGallery);
 
       // Create a request with valid auth
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'DELETE',
         headers: validAuthHeader
       });
@@ -158,7 +158,7 @@ describe('Gallery Handler', () => {
       await writeTestGallery([]);
 
       // Create a request with valid auth
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'DELETE',
         headers: validAuthHeader
       });
@@ -178,7 +178,7 @@ describe('Gallery Handler', () => {
       await writeTestGallery(existingGallery);
 
       // Create a request without auth
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'DELETE'
       });
 
@@ -206,7 +206,7 @@ describe('Gallery Handler', () => {
 
       // Create a request with valid auth and new order
       const newOrder = { imageIds: [3, 1, 2] }; // New order of image IDs
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'POST',
         headers: validAuthHeader,
         body: newOrder
@@ -238,7 +238,7 @@ describe('Gallery Handler', () => {
       await writeTestGallery(existingGallery);
 
       // Create a request without auth
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'POST',
         body: { imageIds: [1, 2, 3] }
       });

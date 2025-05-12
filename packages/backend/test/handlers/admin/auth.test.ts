@@ -1,4 +1,4 @@
-import { createMockRequest, createTestToken } from '../../setup';
+import { createTestRequest, createTestToken } from '../../setup';
 import { describe, test, expect, mock, beforeEach } from 'bun:test';
 import { handleAdminLogin, handleVerifyToken } from '../../../src/handlers/admin/auth';
 
@@ -15,7 +15,7 @@ describe('Auth Handler', () => {
   describe('handleAdminLogin', () => {
     test('should return a token when credentials are valid', async () => {
       // Create a mock request with valid credentials
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'POST',
         body: {
           username: 'admin',
@@ -35,7 +35,7 @@ describe('Auth Handler', () => {
 
     test('should return 401 when username is invalid', async () => {
       // Create a mock request with invalid username
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'POST',
         body: {
           username: 'invalid',
@@ -55,7 +55,7 @@ describe('Auth Handler', () => {
     test('should return 401 when password is invalid', async () => {
 
       // Create a mock request with valid username but invalid password
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'POST',
         body: {
           username: 'admin',
@@ -76,7 +76,7 @@ describe('Auth Handler', () => {
   describe('handleVerifyToken', () => {
     test('should return success when token is valid', async () => {
       // Create a mock request with valid auth header
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'GET',
         headers: validAuthHeader
       });
@@ -96,7 +96,7 @@ describe('Auth Handler', () => {
 
     test('should handle errors during token verification', async () => {
       // Create a mock request with invalid token
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'GET',
         headers: { 'Authorization': 'Bearer invalid.token.here' }
       });

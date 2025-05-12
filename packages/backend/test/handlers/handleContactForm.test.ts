@@ -2,7 +2,7 @@
 import '../setup';
 import { describe, test, expect, mock } from 'bun:test';
 import { handleContactForm } from '../../src/handlers/handleContactForm';
-import { createMockRequest } from '../setup';
+import { createTestRequest } from '../setup';
 
 describe('Contact Form Handler', () => {
   test('should successfully process a valid contact form submission', async () => {
@@ -14,7 +14,7 @@ describe('Contact Form Handler', () => {
     formData.append('message', 'This is a test message');
 
     // Create a request with the form data
-    const request = createMockRequest({
+    const request = createTestRequest({
       method: 'POST',
       formData
     });
@@ -48,7 +48,7 @@ describe('Contact Form Handler', () => {
     formData.append('message', ''); // Empty message
 
     // Create a request with the form data
-    const request = createMockRequest({
+    const request = createTestRequest({
       method: 'POST',
       formData
     });

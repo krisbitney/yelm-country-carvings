@@ -2,7 +2,7 @@
 import '../../setup';
 import { describe, test, expect, beforeEach } from 'bun:test';
 import { getEvents, createEvent, updateEvent, deleteEvent } from '../../../src/handlers/admin/events';
-import { createMockRequest, createTestToken, TEST_EVENTS_FILE } from '../../setup';
+import { createTestRequest, createTestToken, TEST_EVENTS_FILE } from '../../setup';
 import fs from 'fs/promises';
 
 describe('Events Handler', () => {
@@ -44,7 +44,7 @@ describe('Events Handler', () => {
       await writeTestEvents(testEvents);
 
       // Create a request with valid auth
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'GET',
         headers: validAuthHeader
       });
@@ -63,7 +63,7 @@ describe('Events Handler', () => {
 
     test('should return 401 when not authenticated', async () => {
       // Create a request without auth
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'GET'
       });
 
@@ -78,7 +78,7 @@ describe('Events Handler', () => {
   describe('createEvent', () => {
     test('should create a new event when authenticated', async () => {
       // Create a request with valid auth and event data
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'POST',
         headers: validAuthHeader,
         body: sampleEvent
@@ -104,7 +104,7 @@ describe('Events Handler', () => {
 
     test('should return 401 when not authenticated', async () => {
       // Create a request without auth
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'POST',
         body: sampleEvent
       });
@@ -136,7 +136,7 @@ describe('Events Handler', () => {
       };
 
       // Create a request with valid auth and updated event data
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'PUT',
         headers: validAuthHeader,
         body: updatedEvent
@@ -165,7 +165,7 @@ describe('Events Handler', () => {
       await writeTestEvents([]);
 
       // Create a request with valid auth and event data
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'PUT',
         headers: validAuthHeader,
         body: sampleEvent
@@ -192,7 +192,7 @@ describe('Events Handler', () => {
       await writeTestEvents(existingEvents);
 
       // Create a request without auth
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'PUT',
         body: sampleEvent
       });
@@ -219,7 +219,7 @@ describe('Events Handler', () => {
       await writeTestEvents(existingEvents);
 
       // Create a request with valid auth
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'DELETE',
         headers: validAuthHeader
       });
@@ -242,7 +242,7 @@ describe('Events Handler', () => {
       await writeTestEvents([]);
 
       // Create a request with valid auth
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'DELETE',
         headers: validAuthHeader
       });
@@ -264,7 +264,7 @@ describe('Events Handler', () => {
       await writeTestEvents(existingEvents);
 
       // Create a request without auth
-      const request = createMockRequest({
+      const request = createTestRequest({
         method: 'DELETE'
       });
 
