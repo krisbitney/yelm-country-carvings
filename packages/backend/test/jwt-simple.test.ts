@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeAll } from 'bun:test';
+import { describe, test, expect } from 'bun:test';
 import { extractTokenFromHeader } from '../src/utils/jwt';
 
 describe('JWT Utilities - Simple Tests', () => {

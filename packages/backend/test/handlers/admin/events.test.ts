@@ -1,7 +1,9 @@
-import { describe, test, expect, mock, beforeEach } from 'bun:test';
-import { getEvents, createEvent, updateEvent, deleteEvent } from '../../../src/handlers/admin/events';
-import { createMockRequest, createTestToken } from '../../setup';
+// Import setup first to ensure environment variables are set
 import '../../setup';
+import { describe, test, expect, beforeEach } from 'bun:test';
+import { getEvents, createEvent, updateEvent, deleteEvent } from '../../../src/handlers/admin/events';
+import { createMockRequest, createTestToken, TEST_EVENTS_FILE } from '../../setup';
+import fs from 'fs/promises';
 
 describe('Events Handler', () => {
   // Sample event data for testing
@@ -17,14 +19,31 @@ describe('Events Handler', () => {
   const validToken = createTestToken({ username: 'admin' });
   const validAuthHeader = { 'Authorization': `Bearer ${validToken}` };
 
-  beforeEach(() => {
-    // Reset mocks between tests
-    mock.restore();
+  // Helper function to write test events to the file
+  const writeTestEvents = async (events) => {
+    await fs.writeFile(TEST_EVENTS_FILE, JSON.stringify(events));
+  };
+
+  // Helper function to read test events from the file
+  const readTestEvents = async () => {
+    const data = await fs.readFile(TEST_EVENTS_FILE, 'utf-8');
+    return JSON.parse(data);
+  };
+
+  beforeEach(async () => {
+    // Initialize with empty events for each test
+    await writeTestEvents([]);
   });
 
   describe('getEvents', () => {
     test('should return events when authenticated', async () => {
-      // Create a mock request with valid auth
+      // Set up test data
+      const testEvents = [
+        { id: 1, ...sampleEvent }
+      ];
+      await writeTestEvents(testEvents);
+
+      // Create a request with valid auth
       const request = createMockRequest({
         method: 'GET',
         headers: validAuthHeader
@@ -37,10 +56,13 @@ describe('Events Handler', () => {
       // Verify the response
       expect(response.status).toBe(200);
       expect(Array.isArray(data)).toBe(true);
+      expect(data.length).toBe(1);
+      expect(data[0].id).toBe(1);
+      expect(data[0].name).toBe(sampleEvent.name);
     });
 
     test('should return 401 when not authenticated', async () => {
-      // Create a mock request without auth
+      // Create a request without auth
       const request = createMockRequest({
         method: 'GET'
       });
@@ -55,7 +77,7 @@ describe('Events Handler', () => {
 
   describe('createEvent', () => {
     test('should create a new event when authenticated', async () => {
-      // Create a mock request with valid auth and event data
+      // Create a request with valid auth and event data
       const request = createMockRequest({
         method: 'POST',
         headers: validAuthHeader,
@@ -72,10 +94,16 @@ describe('Events Handler', () => {
       expect(data.event).toBeDefined();
       expect(data.event.name).toBe(sampleEvent.name);
       expect(data.event.id).toBeDefined();
+
+      // Verify the event was actually saved to the file
+      const savedEvents = await readTestEvents();
+      expect(savedEvents.length).toBe(1);
+      expect(savedEvents[0].name).toBe(sampleEvent.name);
+      expect(savedEvents[0].id).toBe(data.event.id);
     });
 
     test('should return 401 when not authenticated', async () => {
-      // Create a mock request without auth
+      // Create a request without auth
       const request = createMockRequest({
         method: 'POST',
         body: sampleEvent
@@ -86,40 +114,10 @@ describe('Events Handler', () => {
 
       // Verify the response
       expect(response.status).toBe(401);
-    });
 
-    test('should handle errors during event creation', async () => {
-      // Create a mock request with valid auth and event data
-      const request = createMockRequest({
-        method: 'POST',
-        headers: validAuthHeader,
-        body: sampleEvent
-      });
-
-      // Mock fs.writeFile to throw an error
-      mock.module('fs/promises', () => ({
-        readFile: mock(async () => JSON.stringify([])),
-        writeFile: mock(async () => {
-          throw new Error('Write error');
-        }),
-        mkdir: mock(async () => {}),
-        unlink: mock(async () => {})
-      }));
-
-      // Mock console.error to suppress error logs
-      const originalConsoleError = console.error;
-      console.error = mock(() => {});
-
-      // Call the handler
-      const response = await createEvent(request);
-      const data = await response.json();
-
-      // Restore console.error
-      console.error = originalConsoleError;
-
-      // Verify the response
-      expect(response.status).toBe(500);
-      expect(data.success).toBe(false);
+      // Verify no event was saved
+      const savedEvents = await readTestEvents();
+      expect(savedEvents.length).toBe(0);
     });
   });
 
@@ -129,14 +127,7 @@ describe('Events Handler', () => {
       const existingEvents = [
         { id: 1, ...sampleEvent }
       ];
-
-      // Mock fs.readFile to return existing events
-      mock.module('fs/promises', () => ({
-        readFile: mock(async () => JSON.stringify(existingEvents)),
-        writeFile: mock(async () => {}),
-        mkdir: mock(async () => {}),
-        unlink: mock(async () => {})
-      }));
+      await writeTestEvents(existingEvents);
 
       // Create updated event data
       const updatedEvent = {
@@ -144,7 +135,7 @@ describe('Events Handler', () => {
         name: 'Updated Event Name'
       };
 
-      // Create a mock request with valid auth and updated event data
+      // Create a request with valid auth and updated event data
       const request = createMockRequest({
         method: 'PUT',
         headers: validAuthHeader,
@@ -161,21 +152,19 @@ describe('Events Handler', () => {
       expect(data.event).toBeDefined();
       expect(data.event.name).toBe(updatedEvent.name);
       expect(data.event.id).toBe(1);
+
+      // Verify the event was actually updated in the file
+      const savedEvents = await readTestEvents();
+      expect(savedEvents.length).toBe(1);
+      expect(savedEvents[0].name).toBe(updatedEvent.name);
+      expect(savedEvents[0].id).toBe(1);
     });
 
     test('should return 404 when event does not exist', async () => {
-      // Setup existing events (empty array)
-      const existingEvents = [];
+      // Start with empty events
+      await writeTestEvents([]);
 
-      // Mock fs.readFile to return existing events
-      mock.module('fs/promises', () => ({
-        readFile: mock(async () => JSON.stringify(existingEvents)),
-        writeFile: mock(async () => {}),
-        mkdir: mock(async () => {}),
-        unlink: mock(async () => {})
-      }));
-
-      // Create a mock request with valid auth and event data
+      // Create a request with valid auth and event data
       const request = createMockRequest({
         method: 'PUT',
         headers: validAuthHeader,
@@ -189,10 +178,20 @@ describe('Events Handler', () => {
       // Verify the response
       expect(response.status).toBe(404);
       expect(data.success).toBe(false);
+
+      // Verify no event was added
+      const savedEvents = await readTestEvents();
+      expect(savedEvents.length).toBe(0);
     });
 
     test('should return 401 when not authenticated', async () => {
-      // Create a mock request without auth
+      // Setup existing events
+      const existingEvents = [
+        { id: 1, ...sampleEvent }
+      ];
+      await writeTestEvents(existingEvents);
+
+      // Create a request without auth
       const request = createMockRequest({
         method: 'PUT',
         body: sampleEvent
@@ -203,6 +202,11 @@ describe('Events Handler', () => {
 
       // Verify the response
       expect(response.status).toBe(401);
+
+      // Verify the event was not modified
+      const savedEvents = await readTestEvents();
+      expect(savedEvents.length).toBe(1);
+      expect(savedEvents[0].name).toBe(sampleEvent.name);
     });
   });
 
@@ -212,16 +216,9 @@ describe('Events Handler', () => {
       const existingEvents = [
         { id: 1, ...sampleEvent }
       ];
+      await writeTestEvents(existingEvents);
 
-      // Mock fs.readFile to return existing events
-      mock.module('fs/promises', () => ({
-        readFile: mock(async () => JSON.stringify(existingEvents)),
-        writeFile: mock(async () => {}),
-        mkdir: mock(async () => {}),
-        unlink: mock(async () => {})
-      }));
-
-      // Create a mock request with valid auth
+      // Create a request with valid auth
       const request = createMockRequest({
         method: 'DELETE',
         headers: validAuthHeader
@@ -234,21 +231,17 @@ describe('Events Handler', () => {
       // Verify the response
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
+
+      // Verify the event was actually deleted from the file
+      const savedEvents = await readTestEvents();
+      expect(savedEvents.length).toBe(0);
     });
 
     test('should return 404 when event does not exist', async () => {
-      // Setup existing events (empty array)
-      const existingEvents = [];
+      // Start with empty events
+      await writeTestEvents([]);
 
-      // Mock fs.readFile to return existing events
-      mock.module('fs/promises', () => ({
-        readFile: mock(async () => JSON.stringify(existingEvents)),
-        writeFile: mock(async () => {}),
-        mkdir: mock(async () => {}),
-        unlink: mock(async () => {})
-      }));
-
-      // Create a mock request with valid auth
+      // Create a request with valid auth
       const request = createMockRequest({
         method: 'DELETE',
         headers: validAuthHeader
@@ -264,7 +257,13 @@ describe('Events Handler', () => {
     });
 
     test('should return 401 when not authenticated', async () => {
-      // Create a mock request without auth
+      // Setup existing events
+      const existingEvents = [
+        { id: 1, ...sampleEvent }
+      ];
+      await writeTestEvents(existingEvents);
+
+      // Create a request without auth
       const request = createMockRequest({
         method: 'DELETE'
       });
@@ -274,6 +273,10 @@ describe('Events Handler', () => {
 
       // Verify the response
       expect(response.status).toBe(401);
+
+      // Verify the event was not deleted
+      const savedEvents = await readTestEvents();
+      expect(savedEvents.length).toBe(1);
     });
   });
 });

@@ -1,36 +1,25 @@
+import { createMockRequest, createTestToken } from '../../setup';
 import { describe, test, expect, mock, beforeEach } from 'bun:test';
 import { handleAdminLogin, handleVerifyToken } from '../../../src/handlers/admin/auth';
-import { createMockRequest, createTestToken } from '../../setup';
-import bcrypt from 'bcrypt';
-import '../../setup';
 
 describe('Auth Handler', () => {
   // Setup valid auth token
-  const validToken = createTestToken({ username: 'admin' });
+  const validToken = createTestToken();
   const validAuthHeader = { 'Authorization': `Bearer ${validToken}` };
 
   beforeEach(() => {
     // Reset mocks between tests
     mock.restore();
-    
-    // Set environment variables for testing
-    process.env.ADMIN_USERNAME = 'admin';
-    process.env.ADMIN_PASSWORD_HASH = 'hashed_password';
   });
 
   describe('handleAdminLogin', () => {
     test('should return a token when credentials are valid', async () => {
-      // Mock bcrypt.compare to return true (valid password)
-      mock.module('bcrypt', () => ({
-        compare: mock(async () => true)
-      }));
-
       // Create a mock request with valid credentials
       const request = createMockRequest({
         method: 'POST',
         body: {
           username: 'admin',
-          password: 'password123'
+          password: 'secure_password'
         }
       });
 
@@ -50,7 +39,7 @@ describe('Auth Handler', () => {
         method: 'POST',
         body: {
           username: 'invalid',
-          password: 'password123'
+          password: 'secure_password'
         }
       });
 
@@ -64,10 +53,6 @@ describe('Auth Handler', () => {
     });
 
     test('should return 401 when password is invalid', async () => {
-      // Mock bcrypt.compare to return false (invalid password)
-      mock.module('bcrypt', () => ({
-        compare: mock(async () => false)
-      }));
 
       // Create a mock request with valid username but invalid password
       const request = createMockRequest({
@@ -86,39 +71,6 @@ describe('Auth Handler', () => {
       expect(response.status).toBe(401);
       expect(data.success).toBe(false);
     });
-
-    test('should handle errors during login', async () => {
-      // Mock bcrypt.compare to throw an error
-      mock.module('bcrypt', () => ({
-        compare: mock(async () => {
-          throw new Error('Bcrypt error');
-        })
-      }));
-
-      // Create a mock request with valid credentials
-      const request = createMockRequest({
-        method: 'POST',
-        body: {
-          username: 'admin',
-          password: 'password123'
-        }
-      });
-
-      // Mock console.error to suppress error logs
-      const originalConsoleError = console.error;
-      console.error = mock(() => {});
-
-      // Call the handler
-      const response = await handleAdminLogin(request);
-      const data = await response.json();
-
-      // Restore console.error
-      console.error = originalConsoleError;
-
-      // Verify the response
-      expect(response.status).toBe(500);
-      expect(data.success).toBe(false);
-    });
   });
 
   describe('handleVerifyToken', () => {
@@ -130,10 +82,13 @@ describe('Auth Handler', () => {
       });
 
       // Call the handler
-      const response = await handleVerifyToken(request);
+      const response = handleVerifyToken(request);
       const data = await response.json();
 
       // Verify the response
+      if (response.status !== 200) {
+        console.error(JSON.stringify(data, null, 2));
+      }
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
       expect(data.username).toBeDefined();

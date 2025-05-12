@@ -3,9 +3,22 @@ import path from 'path';
 import { authenticateAdmin } from '../../middleware/auth';
 import { MarketEvent } from '../../types';
 
-// Path to the events data file
-const EVENTS_FILE_PATH = path.join(import.meta.dir, '../../../data/events.json');
-const IMAGES_DIR = path.join(import.meta.dir, '../../../img/events');
+// Determine if we're in test mode
+const isTestMode = process.env.NODE_ENV === 'test';
+
+// Get the appropriate file paths based on environment
+let EVENTS_FILE_PATH: string;
+let IMAGES_DIR: string;
+
+if (isTestMode && process.env.TEST_EVENTS_FILE) {
+  // Use test-specific paths
+  EVENTS_FILE_PATH = process.env.TEST_EVENTS_FILE;
+  IMAGES_DIR = path.join(path.dirname(EVENTS_FILE_PATH), 'events-images');
+} else {
+  // Use production paths
+  EVENTS_FILE_PATH = path.join(import.meta.dir, '../../../data/events.json');
+  IMAGES_DIR = path.join(import.meta.dir, '../../../img/events');
+}
 
 // Ensure the events images directory exists
 try {
@@ -76,27 +89,27 @@ export const createEvent = async (req: Request): Promise<Response> => {
   try {
     // Parse the request body
     const eventData = await req.json();
-    
+
     // Read existing events
     const events = await readEvents();
-    
+
     // Generate a new ID
     const newId = events.length > 0 
       ? Math.max(...events.map(e => e.id)) + 1 
       : 1;
-    
+
     // Create the new event
     const newEvent: MarketEvent = {
       id: newId,
       ...eventData
     };
-    
+
     // Add the new event
     events.push(newEvent);
-    
+
     // Save the updated events
     await writeEvents(events);
-    
+
     return Response.json({ 
       success: true, 
       event: newEvent,
@@ -125,13 +138,13 @@ export const updateEvent = async (req: Request, id: number): Promise<Response> =
   try {
     // Parse the request body
     const eventData = await req.json();
-    
+
     // Read existing events
     const events = await readEvents();
-    
+
     // Find the event to update
     const eventIndex = events.findIndex(e => e.id === id);
-    
+
     // If the event doesn't exist, return 404
     if (eventIndex === -1) {
       return Response.json({ 
@@ -139,20 +152,20 @@ export const updateEvent = async (req: Request, id: number): Promise<Response> =
         message: 'Event not found' 
       }, { status: 404 });
     }
-    
+
     // Update the event
     const updatedEvent: MarketEvent = {
       ...events[eventIndex],
       ...eventData,
       id // Ensure the ID doesn't change
     };
-    
+
     // Replace the event in the array
     events[eventIndex] = updatedEvent;
-    
+
     // Save the updated events
     await writeEvents(events);
-    
+
     return Response.json({ 
       success: true, 
       event: updatedEvent,
@@ -181,10 +194,10 @@ export const deleteEvent = async (req: Request, id: number): Promise<Response> =
   try {
     // Read existing events
     const events = await readEvents();
-    
+
     // Find the event to delete
     const eventIndex = events.findIndex(e => e.id === id);
-    
+
     // If the event doesn't exist, return 404
     if (eventIndex === -1) {
       return Response.json({ 
@@ -192,16 +205,16 @@ export const deleteEvent = async (req: Request, id: number): Promise<Response> =
         message: 'Event not found' 
       }, { status: 404 });
     }
-    
+
     // Get the event to delete (for image cleanup)
     const eventToDelete = events[eventIndex];
-    
+
     // Remove the event from the array
     events.splice(eventIndex, 1);
-    
+
     // Save the updated events
     await writeEvents(events);
-    
+
     // Try to delete the associated image if it exists
     if (eventToDelete.image && eventToDelete.image.startsWith('events/')) {
       try {
@@ -212,7 +225,7 @@ export const deleteEvent = async (req: Request, id: number): Promise<Response> =
         console.warn('Failed to delete event image:', error);
       }
     }
-    
+
     return Response.json({ 
       success: true, 
       message: 'Event deleted successfully' 

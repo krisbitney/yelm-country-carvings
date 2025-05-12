@@ -1,12 +1,13 @@
-import { describe, test, expect, mock } from 'bun:test';
+import { describe, test, expect } from 'bun:test';
 import { authenticateJWT, authenticateAdmin } from '../../src/middleware/auth';
-import { createMockRequest, createTestToken } from '../setup';
+import { createMockRequest } from '../setup';
+import { generateToken } from '../../src/utils/jwt';
 import '../setup';
 
 describe('Authentication Middleware', () => {
   describe('authenticateJWT', () => {
     test('should return undefined for a valid token', () => {
-      const token = createTestToken();
+      const token = generateToken({ username: 'testuser' });
       const request = createMockRequest({
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -46,7 +47,7 @@ describe('Authentication Middleware', () => {
 
   describe('authenticateAdmin', () => {
     test('should return undefined for a valid admin token', () => {
-      const token = createTestToken({ username: 'admin' });
+      const token = generateToken({ username: 'admin' });
       const request = createMockRequest({
         headers: { 'Authorization': `Bearer ${token}` }
       });

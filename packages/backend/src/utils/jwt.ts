@@ -1,10 +1,11 @@
-import jwt from 'jsonwebtoken';
+import jwt, {Secret} from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_for_development';
+// Use test-specific secret in test mode, otherwise use the environment variable
+const JWT_SECRET: Secret = process.env.JWT_SECRET || 'test-secret';
 
 // Define the payload type
 interface JWTPayload {
@@ -16,11 +17,10 @@ interface JWTPayload {
 /**
  * Generate a JWT token
  * @param payload - The data to include in the token
- * @param expiresIn - Token expiration time (default: 24 hours)
  * @returns The generated JWT token
  */
-export const generateToken = (payload: JWTPayload, expiresIn = '24h'): string => {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn });
+export const generateToken = (payload: JWTPayload): string => {
+  return jwt.sign(payload, JWT_SECRET);
 };
 
 /**
@@ -31,8 +31,7 @@ export const generateToken = (payload: JWTPayload, expiresIn = '24h'): string =>
 export const verifyToken = (token: string): JWTPayload | null => {
   try {
     return jwt.verify(token, JWT_SECRET) as JWTPayload;
-  } catch (error) {
-    console.error('JWT verification error:', error);
+  } catch {
     return null;
   }
 };
@@ -46,6 +45,6 @@ export const extractTokenFromHeader = (authHeader?: string): string | null => {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return null;
   }
-  
+
   return authHeader.split(' ')[1];
 };

@@ -1,13 +1,14 @@
 import dotenv from 'dotenv';
 import { generateToken, verifyToken, extractTokenFromHeader } from '../../utils/jwt';
-import bcrypt from 'bcrypt';
 
 // Load environment variables
 dotenv.config();
 
 // Get admin credentials from environment variables
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
-const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || '$2b$10$3euPcmQFCiblsZeEu5s7p.9MQtWgS.XKZCkuR.zEn/fwXLGJLQQpq'; // Hash for 'secure_password'
+// For testing, defaults to hash for 'secure_password'
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH ||
+  '$argon2id$v=19$m=65536,t=2,p=1$doboF/ae2w/97TeRbu6tluTTmrf5luSobD/OeiQHZA4$6t2GTpeHAQdgdhjp6wIOyj2JsCVTEQl8NkjOrv7Ky6I';
 
 /**
  * Handle admin login
@@ -27,8 +28,8 @@ export const handleAdminLogin = async (req: Request): Promise<Response> => {
       }, { status: 401 });
     }
 
-    // Validate the password using bcrypt
-    const isPasswordValid = await bcrypt.compare(password, ADMIN_PASSWORD_HASH);
+    // Validate the password using Bun's native password utilities
+    const isPasswordValid = await Bun.password.verify(password, ADMIN_PASSWORD_HASH);
 
     if (isPasswordValid) {
       // Generate a JWT token

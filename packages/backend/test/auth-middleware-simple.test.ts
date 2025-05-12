@@ -1,4 +1,4 @@
-import { describe, test, expect, mock, spyOn } from 'bun:test';
+import { describe, test, expect, spyOn } from 'bun:test';
 import { authenticateJWT, authenticateAdmin } from '../src/middleware/auth';
 import * as jwtUtils from '../src/utils/jwt';
 
