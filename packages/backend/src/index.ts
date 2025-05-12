@@ -12,8 +12,8 @@ import {authenticateAdmin} from "./middleware/auth";
 dotenv.config();
 
 const FRONTEND_DIR = path.join(import.meta.dir, '../../frontend/dist');
-const DATA_DIR = path.join(import.meta.dir, 'data');
-const IMAGES_DIR = path.join(import.meta.dir, 'img');
+const DATA_DIR = path.join(import.meta.dir, '../data');
+const IMAGES_DIR = path.join(import.meta.dir, '../img');
 
 const imageExtensions = ['.webp', '.png', '.jpg', '.jpeg', '.gif'];
 
@@ -23,10 +23,6 @@ if (!fs.existsSync(FRONTEND_DIR)) {
   process.exit(1);
 }
 
-// Load events and gallery data
-const events = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'events.json'), 'utf-8'));
-const gallery = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'gallery.json'), 'utf-8'));
-
 // Define the server
 const server = Bun.serve({
   port: process.env.PORT || 3000,
@@ -35,11 +31,11 @@ const server = Bun.serve({
   routes: {
     // Public API endpoints
     "/api/events": () => {
-      return Response.json(events);
+      return Response.json(JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'events.json'), 'utf-8')));
     },
 
     "/api/gallery": () => {
-      return Response.json(gallery);
+      return Response.json(JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'gallery.json'), 'utf-8')));
     },
 
     "/api/contact": {

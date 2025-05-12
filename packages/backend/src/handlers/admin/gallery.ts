@@ -16,7 +16,7 @@ if (isTestMode && process.env.TEST_GALLERY_FILE) {
   IMAGES_DIR = path.join(path.dirname(GALLERY_FILE_PATH), 'gallery-images');
 } else {
   // Use production paths
-  GALLERY_FILE_PATH = path.join(import.meta.dir, '../../data/gallery.json');
+  GALLERY_FILE_PATH = path.join(import.meta.dir, '../../../data/gallery.json');
   IMAGES_DIR = path.join(import.meta.dir, '../../../img/gallery');
 }
 
