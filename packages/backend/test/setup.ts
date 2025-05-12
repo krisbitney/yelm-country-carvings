@@ -40,6 +40,30 @@ afterEach(async () => {
     // Clean up test files but keep the directory
     await fs.writeFile(TEST_EVENTS_FILE, JSON.stringify([]));
     await fs.writeFile(TEST_GALLERY_FILE, JSON.stringify([]));
+
+    // Clean up temporary image directories
+    const testImgDir = path.join(TEST_DATA_DIR, 'test-img');
+    try {
+      // Remove all files in the events and gallery subdirectories
+      const eventsDir = path.join(testImgDir, 'events');
+      const galleryDir = path.join(testImgDir, 'gallery');
+
+      // Get all files in the directories
+      const eventFiles = await fs.readdir(eventsDir).catch(() => []);
+      const galleryFiles = await fs.readdir(galleryDir).catch(() => []);
+
+      // Delete each file
+      for (const file of eventFiles) {
+        await fs.unlink(path.join(eventsDir, file)).catch(() => {});
+      }
+
+      for (const file of galleryFiles) {
+        await fs.unlink(path.join(galleryDir, file)).catch(() => {});
+      }
+    } catch (error) {
+      // Ignore errors if directories don't exist
+      console.warn('Warning: Could not clean up test image directories:', error);
+    }
   } catch (error) {
     console.error('Error cleaning up test environment:', error);
   }

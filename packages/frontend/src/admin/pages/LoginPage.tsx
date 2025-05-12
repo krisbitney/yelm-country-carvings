@@ -32,7 +32,7 @@ const LoginPage: React.FC = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      const from = location.state?.from?.pathname || '/admin';
+      const from = location.state?.from?.pathname || '/';
       navigate(from, { replace: true });
     }
   }, [isAuthenticated, navigate, location]);
@@ -48,8 +48,11 @@ const LoginPage: React.FC = () => {
     const success = await login(data.username, data.password);
     setIsSubmitting(false);
 
+    // If login was successful, manually trigger navigation
+    // This is a backup in case the useEffect doesn't trigger immediately
     if (success) {
-      navigate('/admin');
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
     }
   };
 
@@ -64,8 +67,14 @@ const LoginPage: React.FC = () => {
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-            {error}
+          <div className="mb-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 rounded shadow-md">
+            <div className="flex items-center">
+              <svg className="w-6 h-6 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span className="font-bold">Login Error:</span>
+            </div>
+            <p className="mt-1 ml-8">{error}</p>
           </div>
         )}
 

@@ -3,8 +3,20 @@ import fs from 'fs/promises';
 import sharp from 'sharp';
 import { authenticateAdmin } from '../../middleware/auth';
 
-// Base directory for image uploads
-const IMG_DIR = path.join(import.meta.dir, '../../../img');
+// Determine if we're in test mode
+const isTestMode = process.env.NODE_ENV === 'test';
+
+// Get the appropriate file paths based on environment
+let IMG_DIR: string;
+
+if (isTestMode && process.env.TEST_EVENTS_FILE) {
+  // Use test-specific paths - create a temporary directory for test images
+  const testDataDir = path.dirname(process.env.TEST_EVENTS_FILE);
+  IMG_DIR = path.join(testDataDir, 'test-img');
+} else {
+  // Use production paths
+  IMG_DIR = path.join(import.meta.dir, '../../../img');
+}
 
 // Ensure the image directories exist
 try {
@@ -30,17 +42,17 @@ const processAndSaveImage = async (
   const timestamp = Date.now();
   const extension = '.webp'; // Convert all images to webp for better compression
   const uniqueFilename = `${path.basename(filename, path.extname(filename))}_${timestamp}${extension}`;
-  
+
   // Determine the directory and path
   const directory = path.join(IMG_DIR, type);
   const imagePath = path.join(directory, uniqueFilename);
-  
+
   // Process the image with sharp
   await sharp(imageBuffer)
     .resize(1200, 800, { fit: 'inside', withoutEnlargement: true }) // Resize to reasonable dimensions
     .webp({ quality: 80 }) // Convert to webp with good quality
     .toFile(imagePath);
-  
+
   // Return the relative path for storage in the database
   return `${type}/${uniqueFilename}`;
 };
@@ -67,7 +79,7 @@ export const handleImageUpload = async (req: Request): Promise<Response> => {
 
     // Parse the form data
     const formData = await req.formData();
-    
+
     // Get the image file
     const imageFile = formData.get('image') as File | null;
     if (!imageFile) {
@@ -76,7 +88,7 @@ export const handleImageUpload = async (req: Request): Promise<Response> => {
         message: 'No image file provided'
       }, { status: 400 });
     }
-    
+
     // Get the image type (events or gallery)
     const type = formData.get('type') as 'events' | 'gallery' | null;
     if (!type || (type !== 'events' && type !== 'gallery')) {
@@ -85,13 +97,13 @@ export const handleImageUpload = async (req: Request): Promise<Response> => {
         message: 'Invalid or missing image type (must be "events" or "gallery")'
       }, { status: 400 });
     }
-    
+
     // Convert the file to a buffer
     const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
-    
+
     // Process and save the image
     const imagePath = await processAndSaveImage(imageBuffer, imageFile.name, type);
-    
+
     // Return the path to the saved image
     return Response.json({
       success: true,

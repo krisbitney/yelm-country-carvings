@@ -13,7 +13,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
   const navigate = useNavigate();
 
   // Check if the current path is the dashboard
-  const isDashboard = location.pathname === '/admin' || location.pathname.endsWith('/admin/');
+  const isDashboard = location.pathname === '/admin' || location.pathname === '/admin/' || location.pathname === '/';
 
   // Handle back button click
   const handleBack = () => {

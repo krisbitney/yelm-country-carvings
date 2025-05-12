@@ -168,7 +168,12 @@ export const deleteGalleryImage = async (req: Request, id: number): Promise<Resp
     // Try to delete the associated image file if it exists
     if (imageToDelete.src && imageToDelete.src.startsWith('gallery/')) {
       try {
-        const imagePath = path.join(import.meta.dir, '../../../img', imageToDelete.src);
+        // Use the appropriate image directory based on environment
+        const baseImgDir = isTestMode && process.env.TEST_GALLERY_FILE
+          ? path.join(path.dirname(process.env.TEST_GALLERY_FILE), 'test-img')
+          : path.join(import.meta.dir, '../../../img');
+
+        const imagePath = path.join(baseImgDir, imageToDelete.src);
         await fs.unlink(imagePath);
       } catch (error) {
         // Log but don't fail if image deletion fails

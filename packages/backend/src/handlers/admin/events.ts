@@ -218,7 +218,12 @@ export const deleteEvent = async (req: Request, id: number): Promise<Response> =
     // Try to delete the associated image if it exists
     if (eventToDelete.image && eventToDelete.image.startsWith('events/')) {
       try {
-        const imagePath = path.join(import.meta.dir, '../../../img', eventToDelete.image);
+        // Use the appropriate image directory based on environment
+        const baseImgDir = isTestMode && process.env.TEST_EVENTS_FILE
+          ? path.join(path.dirname(process.env.TEST_EVENTS_FILE), 'test-img')
+          : path.join(import.meta.dir, '../../../img');
+
+        const imagePath = path.join(baseImgDir, eventToDelete.image);
         await fs.unlink(imagePath);
       } catch (error) {
         // Log but don't fail if image deletion fails

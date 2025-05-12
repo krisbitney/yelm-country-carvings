@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem('adminToken');
-      
+
       if (!token) {
         setAuthState({
           isAuthenticated: false,
@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         });
         return;
       }
-      
+
       try {
         // Verify the token with the backend
         const response = await fetch('/api/auth/verify', {
@@ -55,7 +55,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             'Authorization': `Bearer ${token}`,
           },
         });
-        
+
         if (response.ok) {
           setAuthState({
             isAuthenticated: true,
@@ -83,7 +83,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         });
       }
     };
-    
+
     void checkAuth();
   }, []);
 
@@ -91,7 +91,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
       setAuthState(prev => ({ ...prev, loading: true, error: null }));
-      
+
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -99,20 +99,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         },
         body: JSON.stringify({ username, password }),
       });
-      
+
       const data = await response.json();
-      
+
       if (response.ok && data.success) {
         // Store the token in localStorage
         localStorage.setItem('adminToken', data.token);
-        
+
+        // Update the auth state immediately
         setAuthState({
           isAuthenticated: true,
           token: data.token,
           loading: false,
           error: null,
         });
-        
+
         return true;
       } else {
         setAuthState(prev => ({
@@ -120,18 +121,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           loading: false,
           error: data.message || 'Invalid credentials',
         }));
-        
+
         return false;
       }
     } catch (error) {
       console.error('Login error:', error);
-      
+
       setAuthState(prev => ({
         ...prev,
         loading: false,
         error: 'Login failed. Please try again.',
       }));
-      
+
       return false;
     }
   };
@@ -140,7 +141,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = () => {
     // Remove the token from localStorage
     localStorage.removeItem('adminToken');
-    
+
     // Update the authentication state
     setAuthState({
       isAuthenticated: false,
@@ -174,10 +175,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 // Create a hook to use the auth context
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  
+
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
-  
+
   return context;
 };
