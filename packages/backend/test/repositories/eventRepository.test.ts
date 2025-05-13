@@ -47,8 +47,8 @@ describe('Event Repository', () => {
         ${testEvent.location}, 
         ${testEvent.description}, 
         ${testEvent.image}, 
-        ${testEvent.start_date}, 
-        ${testEvent.end_date}
+        ${testEvent.start_date.toISOString()}, 
+        ${testEvent.end_date.toISOString()}
       ) 
       RETURNING 
         id, 
@@ -101,5 +101,5 @@ describe('Event Repository', () => {
     expect(retrievedEvent.title).toBe(testEvent.title);
   });
 
-  // Add more tests for update, delete, etc.
+  // TODO: Add more tests for update, delete, etc.
 });

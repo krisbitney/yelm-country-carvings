@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {organizerEmail} from "../../../constants.ts";
 
 interface ContactSectionProps {
   // Add any props if needed
@@ -23,7 +24,6 @@ const ContactSection: React.FC<ContactSectionProps> = () => {
 
   // --- Constants for calendar event ---
   const organizerName = "Yelm Country Carvings";
-  const organizerEmail = 'tlzumach@hotmail.com';
 
   // --- Constants for the mailto link ---
   // More inviting subject line

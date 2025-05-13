@@ -1,59 +1,15 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { authenticateAdmin } from '../../middleware/auth';
-import { MarketEvent } from '../../types';
 import { eventRepository } from '../../repositories/eventRepository';
-
-// Determine if we're in test mode
-const isTestMode = process.env.NODE_ENV === 'test';
-
-// Get the appropriate file paths based on environment
-let EVENTS_FILE_PATH: string;
-let IMAGES_DIR: string;
-
-if (isTestMode && process.env.TEST_EVENTS_FILE) {
-  // Use test-specific paths
-  EVENTS_FILE_PATH = process.env.TEST_EVENTS_FILE;
-  IMAGES_DIR = path.join(path.dirname(EVENTS_FILE_PATH), 'events-images');
-} else {
-  // Use production paths
-  EVENTS_FILE_PATH = path.join(import.meta.dir, '../../../data/events.json');
-  IMAGES_DIR = path.join(import.meta.dir, '../../../img/events');
-}
+import {IMAGES_DIR} from "../../index";
 
 // Ensure the events images directory exists
 try {
-  await fs.mkdir(IMAGES_DIR, { recursive: true });
+  await fs.mkdir(path.join(IMAGES_DIR, "events"), { recursive: true });
 } catch (error) {
   console.error('Error creating events images directory:', error);
 }
-
-/**
- * Read events from the JSON file
- * @returns Array of events
- */
-const readEvents = async (): Promise<MarketEvent[]> => {
-  try {
-    const data = await fs.readFile(EVENTS_FILE_PATH, 'utf-8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error reading events file:', error);
-    return [];
-  }
-};
-
-/**
- * Write events to the JSON file
- * @param events - The events to write
- */
-const writeEvents = async (events: MarketEvent[]): Promise<void> => {
-  try {
-    await fs.writeFile(EVENTS_FILE_PATH, JSON.stringify(events, null, 2), 'utf-8');
-  } catch (error) {
-    console.error('Error writing events file:', error);
-    throw new Error('Failed to save events');
-  }
-};
 
 /**
  * Get all events
@@ -194,12 +150,7 @@ export const deleteEvent = async (req: Request, id: number): Promise<Response> =
     // Try to delete the associated image if it exists
     if (eventToDelete.image && eventToDelete.image.startsWith('events/')) {
       try {
-        // Use the appropriate image directory based on environment
-        const baseImgDir = isTestMode && process.env.TEST_EVENTS_FILE
-          ? path.join(path.dirname(process.env.TEST_EVENTS_FILE), 'test-img')
-          : path.join(import.meta.dir, '../../../img');
-
-        const imagePath = path.join(baseImgDir, eventToDelete.image);
+        const imagePath = path.resolve(path.join(IMAGES_DIR,"..", eventToDelete.image));
         await fs.unlink(imagePath);
       } catch (error) {
         // Log but don't fail if image deletion fails

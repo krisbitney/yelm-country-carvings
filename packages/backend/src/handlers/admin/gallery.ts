@@ -1,59 +1,15 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { authenticateAdmin } from '../../middleware/auth';
-import { GalleryImage } from '../../types';
 import { galleryRepository } from '../../repositories/galleryRepository';
-
-// Determine if we're in test mode
-const isTestMode = process.env.NODE_ENV === 'test';
-
-// Get the appropriate file paths based on environment
-let GALLERY_FILE_PATH: string;
-let IMAGES_DIR: string;
-
-if (isTestMode && process.env.TEST_GALLERY_FILE) {
-  // Use test-specific paths
-  GALLERY_FILE_PATH = process.env.TEST_GALLERY_FILE;
-  IMAGES_DIR = path.join(path.dirname(GALLERY_FILE_PATH), 'gallery-images');
-} else {
-  // Use production paths
-  GALLERY_FILE_PATH = path.join(import.meta.dir, '../../../data/gallery.json');
-  IMAGES_DIR = path.join(import.meta.dir, '../../../img/gallery');
-}
+import {IMAGES_DIR} from "../../index";
 
 // Ensure the gallery images directory exists
 try {
-  await fs.mkdir(IMAGES_DIR, { recursive: true });
+  await fs.mkdir(path.join(IMAGES_DIR, "gallery"), { recursive: true });
 } catch (error) {
   console.error('Error creating gallery images directory:', error);
 }
-
-/**
- * Read gallery images from the JSON file
- * @returns Array of gallery images
- */
-const readGallery = async (): Promise<GalleryImage[]> => {
-  try {
-    const data = await fs.readFile(GALLERY_FILE_PATH, 'utf-8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error reading gallery file:', error);
-    return [];
-  }
-};
-
-/**
- * Write gallery images to the JSON file
- * @param images - The gallery images to write
- */
-const writeGallery = async (images: GalleryImage[]): Promise<void> => {
-  try {
-    await fs.writeFile(GALLERY_FILE_PATH, JSON.stringify(images, null, 2), 'utf-8');
-  } catch (error) {
-    console.error('Error writing gallery file:', error);
-    throw new Error('Failed to save gallery');
-  }
-};
 
 /**
  * Get all gallery images
@@ -166,12 +122,7 @@ export const deleteGalleryImage = async (req: Request, id: number): Promise<Resp
     // Try to delete the associated image file if it exists
     if (imageToDelete.src && imageToDelete.src.startsWith('gallery/')) {
       try {
-        // Use the appropriate image directory based on environment
-        const baseImgDir = isTestMode && process.env.TEST_GALLERY_FILE
-          ? path.join(path.dirname(process.env.TEST_GALLERY_FILE), 'test-img')
-          : path.join(import.meta.dir, '../../../img');
-
-        const imagePath = path.join(baseImgDir, imageToDelete.src);
+        const imagePath = path.resolve(path.join(IMAGES_DIR,"..", imageToDelete.src));
         await fs.unlink(imagePath);
       } catch (error) {
         // Log but don't fail if image deletion fails

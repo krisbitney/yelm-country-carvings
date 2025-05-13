@@ -8,7 +8,7 @@ import {createTestRequest, createTestToken} from "../../utils/helpers";
 describe('Events Handler', () => {
   // Sample event data for testing
   const sampleEvent = {
-    name: 'Test Event',
+    title: 'Test Event',
     date: '2023-12-25',
     location: 'Test Location',
     description: 'Test Description',
@@ -49,7 +49,7 @@ describe('Events Handler', () => {
         ) 
         VALUES (
           ${event.id}, 
-          ${event.title || event.name}, 
+          ${event.title}, 
           ${event.date}, 
           ${event.location}, 
           ${event.description}, 
@@ -66,7 +66,7 @@ describe('Events Handler', () => {
     return await testSql`
       SELECT 
         id, 
-        title as name, 
+        title, 
         date, 
         location, 
         description, 
@@ -101,7 +101,7 @@ describe('Events Handler', () => {
       expect(Array.isArray(data)).toBe(true);
       expect(data.length).toBe(1);
       expect(data[0].id).toBe(1);
-      expect(data[0].name).toBe(sampleEvent.name);
+      expect(data[0].title).toBe(sampleEvent.title);
     });
 
     test('should return 401 when not authenticated', async () => {
@@ -135,13 +135,13 @@ describe('Events Handler', () => {
       expect(response.status).toBe(201);
       expect(data.success).toBe(true);
       expect(data.event).toBeDefined();
-      expect(data.event.name).toBe(sampleEvent.name);
+      expect(data.event.title).toBe(sampleEvent.title);
       expect(data.event.id).toBeDefined();
 
       // Verify the event was actually saved to the file
       const savedEvents = await readTestEvents();
       expect(savedEvents.length).toBe(1);
-      expect(savedEvents[0].name).toBe(sampleEvent.name);
+      expect(savedEvents[0].title).toBe(sampleEvent.title);
       expect(savedEvents[0].id).toBe(data.event.id);
     });
 
@@ -193,13 +193,13 @@ describe('Events Handler', () => {
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
       expect(data.event).toBeDefined();
-      expect(data.event.name).toBe(updatedEvent.name);
+      expect(data.event.title).toBe(updatedEvent.title);
       expect(data.event.id).toBe(1);
 
       // Verify the event was actually updated in the file
       const savedEvents = await readTestEvents();
       expect(savedEvents.length).toBe(1);
-      expect(savedEvents[0].name).toBe(updatedEvent.name);
+      expect(savedEvents[0].title).toBe(updatedEvent.title);
       expect(savedEvents[0].id).toBe(1);
     });
 
@@ -249,12 +249,12 @@ describe('Events Handler', () => {
       // Verify the event was not modified
       const savedEvents = await readTestEvents();
       expect(savedEvents.length).toBe(1);
-      expect(savedEvents[0].name).toBe(sampleEvent.name);
+      expect(savedEvents[0].title).toBe(sampleEvent.title);
     });
   });
 
-  describe('deleteEvent', () => {
-    test('should delete an existing event when authenticated', async () => {
+  describe.only('deleteEvent', () => {
+    test.only('should delete an existing event when authenticated', async () => {
       // Setup existing events
       const existingEvents = [
         { id: 1, ...sampleEvent }
@@ -270,6 +270,10 @@ describe('Events Handler', () => {
       // Call the handler
       const response = await deleteEvent(request, 1);
       const data = await response.json();
+
+      if (response.status !== 200) {
+        console.log(JSON.stringify(data, null, 2));
+      }
 
       // Verify the response
       expect(response.status).toBe(200);

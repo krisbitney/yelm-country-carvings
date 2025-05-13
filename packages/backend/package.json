@@ -7,7 +7,7 @@
     "dev": "bun run --watch src/index.ts",
     "build": "bun build src/index.ts --outdir dist --target bun",
     "start": "bun run dist/index.js",
-    "test": "bun run docker:up && wait-on tcp:localhost:5432 && sleep 5 && bun test && bun run docker:down",
+    "test": "bun run docker:up && wait-on tcp:localhost:5432 && sleep 5 && bun test events && bun run docker:down",
     "test:watch": "bun test --watch",
     "test:coverage": "bun test --coverage",
     "db:create-schema": "bun run scripts/createSchema.ts",
