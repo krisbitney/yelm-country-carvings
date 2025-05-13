@@ -2,8 +2,8 @@
 import '../../setup';
 import { describe, test, expect, beforeEach } from 'bun:test';
 import { getGallery, addGalleryImage, deleteGalleryImage, reorderGallery } from '../../../src/handlers/admin/gallery';
-import { createTestRequest, createTestToken, TEST_GALLERY_FILE } from '../../setup';
-import fs from 'fs/promises';
+import { createTestRequest, createTestToken } from '../../setup';
+import testSql from '../../utils/testDb';
 
 describe('Gallery Handler', () => {
   // Sample gallery image data for testing
@@ -18,27 +18,44 @@ describe('Gallery Handler', () => {
   const validToken = createTestToken({ username: 'admin' });
   const validAuthHeader = { 'Authorization': `Bearer ${validToken}` };
 
-  // Helper function to write test gallery to the file
-  const writeTestGallery = async (gallery) => {
-    await fs.writeFile(TEST_GALLERY_FILE, JSON.stringify(gallery));
+  // Helper function to insert test gallery images into the database
+  const insertTestGallery = async (gallery) => {
+    for (const image of gallery) {
+      await testSql`
+        INSERT INTO gallery (
+          id, 
+          src, 
+          alt, 
+          order_position
+        ) 
+        VALUES (
+          ${image.id}, 
+          ${image.src}, 
+          ${image.alt}, 
+          ${image.order}
+        )
+      `;
+    }
   };
 
-  // Helper function to read test gallery from the file
+  // Helper function to read test gallery from the database
   const readTestGallery = async () => {
-    const data = await fs.readFile(TEST_GALLERY_FILE, 'utf-8');
-    return JSON.parse(data);
+    return await testSql`
+      SELECT 
+        id, 
+        src, 
+        alt, 
+        order_position as "order" 
+      FROM gallery 
+      ORDER BY order_position
+    `;
   };
-
-  beforeEach(async () => {
-    // Initialize with empty gallery for each test
-    await writeTestGallery([]);
-  });
 
   describe('getGallery', () => {
     test('should return gallery images when authenticated', async () => {
       // Setup existing gallery
       const existingGallery = [sampleImage];
-      await writeTestGallery(existingGallery);
+      await insertTestGallery(existingGallery);
 
       // Create a request with valid auth
       const request = createTestRequest({
@@ -75,7 +92,7 @@ describe('Gallery Handler', () => {
   describe('addGalleryImage', () => {
     test('should add a new gallery image when authenticated', async () => {
       // Start with empty gallery
-      await writeTestGallery([]);
+      await testSql`TRUNCATE TABLE gallery RESTART IDENTITY CASCADE`;
 
       // Create a request with valid auth and image data
       const newImage = {
@@ -132,7 +149,7 @@ describe('Gallery Handler', () => {
     test('should delete an existing gallery image when authenticated', async () => {
       // Setup existing gallery
       const existingGallery = [sampleImage];
-      await writeTestGallery(existingGallery);
+      await insertTestGallery(existingGallery);
 
       // Create a request with valid auth
       const request = createTestRequest({
@@ -155,7 +172,7 @@ describe('Gallery Handler', () => {
 
     test('should return 404 when image does not exist', async () => {
       // Start with empty gallery
-      await writeTestGallery([]);
+      await testSql`TRUNCATE TABLE gallery RESTART IDENTITY CASCADE`;
 
       // Create a request with valid auth
       const request = createTestRequest({
@@ -175,7 +192,7 @@ describe('Gallery Handler', () => {
     test('should return 401 when not authenticated', async () => {
       // Setup existing gallery
       const existingGallery = [sampleImage];
-      await writeTestGallery(existingGallery);
+      await insertTestGallery(existingGallery);
 
       // Create a request without auth
       const request = createTestRequest({
@@ -202,7 +219,7 @@ describe('Gallery Handler', () => {
         { id: 2, src: 'gallery/2.webp', alt: 'Image 2', order: 2 },
         { id: 3, src: 'gallery/3.webp', alt: 'Image 3', order: 3 }
       ];
-      await writeTestGallery(existingGallery);
+      await insertTestGallery(existingGallery);
 
       // Create a request with valid auth and new order
       const newOrder = { imageIds: [3, 1, 2] }; // New order of image IDs
@@ -235,7 +252,7 @@ describe('Gallery Handler', () => {
         { id: 2, src: 'gallery/2.webp', alt: 'Image 2', order: 2 },
         { id: 3, src: 'gallery/3.webp', alt: 'Image 3', order: 3 }
       ];
-      await writeTestGallery(existingGallery);
+      await insertTestGallery(existingGallery);
 
       // Create a request without auth
       const request = createTestRequest({

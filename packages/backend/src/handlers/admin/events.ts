@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { authenticateAdmin } from '../../middleware/auth';
 import { MarketEvent } from '../../types';
+import { eventRepository } from '../../repositories/eventRepository';
 
 // Determine if we're in test mode
 const isTestMode = process.env.NODE_ENV === 'test';
@@ -65,7 +66,7 @@ export const getEvents = async (req: Request): Promise<Response> => {
   if (authResponse) return authResponse;
 
   try {
-    const events = await readEvents();
+    const events = await eventRepository.getAll();
     return Response.json(events);
   } catch (error) {
     console.error('Error getting events:', error);
@@ -90,25 +91,19 @@ export const createEvent = async (req: Request): Promise<Response> => {
     // Parse the request body
     const eventData = await req.json();
 
-    // Read existing events
-    const events = await readEvents();
-
-    // Generate a new ID
-    const newId = events.length > 0 
-      ? Math.max(...events.map(e => e.id)) + 1 
-      : 1;
+    // Validate required fields
+    const requiredFields = ['title', 'date', 'location', 'description', 'image'];
+    for (const field of requiredFields) {
+      if (!eventData[field]) {
+        return Response.json({ 
+          success: false, 
+          message: `Missing required field: ${field}` 
+        }, { status: 400 });
+      }
+    }
 
     // Create the new event
-    const newEvent: MarketEvent = {
-      id: newId,
-      ...eventData
-    };
-
-    // Add the new event
-    events.push(newEvent);
-
-    // Save the updated events
-    await writeEvents(events);
+    const newEvent = await eventRepository.create(eventData);
 
     return Response.json({ 
       success: true, 
@@ -139,32 +134,15 @@ export const updateEvent = async (req: Request, id: number): Promise<Response> =
     // Parse the request body
     const eventData = await req.json();
 
-    // Read existing events
-    const events = await readEvents();
+    // Update the event
+    const updatedEvent = await eventRepository.update(id, eventData);
 
-    // Find the event to update
-    const eventIndex = events.findIndex(e => e.id === id);
-
-    // If the event doesn't exist, return 404
-    if (eventIndex === -1) {
+    if (!updatedEvent) {
       return Response.json({ 
         success: false, 
         message: 'Event not found' 
       }, { status: 404 });
     }
-
-    // Update the event
-    const updatedEvent: MarketEvent = {
-      ...events[eventIndex],
-      ...eventData,
-      id // Ensure the ID doesn't change
-    };
-
-    // Replace the event in the array
-    events[eventIndex] = updatedEvent;
-
-    // Save the updated events
-    await writeEvents(events);
 
     return Response.json({ 
       success: true, 
@@ -192,28 +170,26 @@ export const deleteEvent = async (req: Request, id: number): Promise<Response> =
   if (authResponse) return authResponse;
 
   try {
-    // Read existing events
-    const events = await readEvents();
-
-    // Find the event to delete
-    const eventIndex = events.findIndex(e => e.id === id);
+    // Get the event to delete (for image cleanup)
+    const eventToDelete = await eventRepository.getById(id);
 
     // If the event doesn't exist, return 404
-    if (eventIndex === -1) {
+    if (!eventToDelete) {
       return Response.json({ 
         success: false, 
         message: 'Event not found' 
       }, { status: 404 });
     }
 
-    // Get the event to delete (for image cleanup)
-    const eventToDelete = events[eventIndex];
+    // Delete the event from the database
+    const deleted = await eventRepository.delete(id);
 
-    // Remove the event from the array
-    events.splice(eventIndex, 1);
-
-    // Save the updated events
-    await writeEvents(events);
+    if (!deleted) {
+      return Response.json({ 
+        success: false, 
+        message: 'Failed to delete event' 
+      }, { status: 500 });
+    }
 
     // Try to delete the associated image if it exists
     if (eventToDelete.image && eventToDelete.image.startsWith('events/')) {

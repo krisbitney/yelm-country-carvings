@@ -2,8 +2,8 @@
 import '../../setup';
 import { describe, test, expect, beforeEach } from 'bun:test';
 import { getEvents, createEvent, updateEvent, deleteEvent } from '../../../src/handlers/admin/events';
-import { createTestRequest, createTestToken, TEST_EVENTS_FILE } from '../../setup';
-import fs from 'fs/promises';
+import { createTestRequest, createTestToken } from '../../setup';
+import testSql from '../../utils/testDb';
 
 describe('Events Handler', () => {
   // Sample event data for testing
@@ -19,21 +19,50 @@ describe('Events Handler', () => {
   const validToken = createTestToken({ username: 'admin' });
   const validAuthHeader = { 'Authorization': `Bearer ${validToken}` };
 
-  // Helper function to write test events to the file
-  const writeTestEvents = async (events) => {
-    await fs.writeFile(TEST_EVENTS_FILE, JSON.stringify(events));
+  // Helper function to insert test events into the database
+  const insertTestEvents = async (events) => {
+    for (const event of events) {
+      await testSql`
+        INSERT INTO events (
+          id, 
+          title, 
+          date, 
+          location, 
+          description, 
+          image, 
+          start_date, 
+          end_date
+        ) 
+        VALUES (
+          ${event.id}, 
+          ${event.title || event.name}, 
+          ${event.date}, 
+          ${event.location}, 
+          ${event.description}, 
+          ${event.image}, 
+          ${event.startDate || null}, 
+          ${event.endDate || null}
+        )
+      `;
+    }
   };
 
-  // Helper function to read test events from the file
+  // Helper function to read test events from the database
   const readTestEvents = async () => {
-    const data = await fs.readFile(TEST_EVENTS_FILE, 'utf-8');
-    return JSON.parse(data);
+    return await testSql`
+      SELECT 
+        id, 
+        title as name, 
+        date, 
+        location, 
+        description, 
+        image, 
+        start_date as "startDate", 
+        end_date as "endDate" 
+      FROM events 
+      ORDER BY id
+    `;
   };
-
-  beforeEach(async () => {
-    // Initialize with empty events for each test
-    await writeTestEvents([]);
-  });
 
   describe('getEvents', () => {
     test('should return events when authenticated', async () => {
@@ -41,7 +70,7 @@ describe('Events Handler', () => {
       const testEvents = [
         { id: 1, ...sampleEvent }
       ];
-      await writeTestEvents(testEvents);
+      await insertTestEvents(testEvents);
 
       // Create a request with valid auth
       const request = createTestRequest({
@@ -127,7 +156,7 @@ describe('Events Handler', () => {
       const existingEvents = [
         { id: 1, ...sampleEvent }
       ];
-      await writeTestEvents(existingEvents);
+      await insertTestEvents(existingEvents);
 
       // Create updated event data
       const updatedEvent = {
@@ -162,7 +191,7 @@ describe('Events Handler', () => {
 
     test('should return 404 when event does not exist', async () => {
       // Start with empty events
-      await writeTestEvents([]);
+      await testSql`TRUNCATE TABLE events RESTART IDENTITY CASCADE`;
 
       // Create a request with valid auth and event data
       const request = createTestRequest({
@@ -189,7 +218,7 @@ describe('Events Handler', () => {
       const existingEvents = [
         { id: 1, ...sampleEvent }
       ];
-      await writeTestEvents(existingEvents);
+      await insertTestEvents(existingEvents);
 
       // Create a request without auth
       const request = createTestRequest({
@@ -216,7 +245,7 @@ describe('Events Handler', () => {
       const existingEvents = [
         { id: 1, ...sampleEvent }
       ];
-      await writeTestEvents(existingEvents);
+      await insertTestEvents(existingEvents);
 
       // Create a request with valid auth
       const request = createTestRequest({
@@ -239,7 +268,7 @@ describe('Events Handler', () => {
 
     test('should return 404 when event does not exist', async () => {
       // Start with empty events
-      await writeTestEvents([]);
+      await testSql`TRUNCATE TABLE events RESTART IDENTITY CASCADE`;
 
       // Create a request with valid auth
       const request = createTestRequest({
@@ -261,7 +290,7 @@ describe('Events Handler', () => {
       const existingEvents = [
         { id: 1, ...sampleEvent }
       ];
-      await writeTestEvents(existingEvents);
+      await insertTestEvents(existingEvents);
 
       // Create a request without auth
       const request = createTestRequest({

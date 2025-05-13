@@ -7,9 +7,16 @@
     "dev": "bun run --watch src/index.ts",
     "build": "bun build src/index.ts --outdir dist --target bun",
     "start": "bun run dist/index.js",
-    "test": "bun test",
+    "test": "bun run docker:up && wait-on tcp:localhost:5432 && bun test",
     "test:watch": "bun test --watch",
-    "test:coverage": "bun test --coverage"
+    "test:coverage": "bun test --coverage",
+    "db:create-schema": "bun run scripts/createSchema.ts",
+    "db:migrate:events": "bun run scripts/migrateEvents.ts",
+    "db:migrate:gallery": "bun run scripts/migrateGallery.ts",
+    "db:migrate:all": "bun run db:create-schema && bun run db:migrate:events && bun run db:migrate:gallery",
+    "db:backup": "bun run scripts/backupDb.ts",
+    "docker:up": "docker-compose -f ../../docker-compose.yml up -d --remove-orphans",
+    "docker:down": "docker-compose -f ../../docker-compose.yml down"
   },
   "dependencies": {
     "dotenv": "^16.5.0",

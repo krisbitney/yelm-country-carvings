@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { authenticateAdmin } from '../../middleware/auth';
 import { GalleryImage } from '../../types';
+import { galleryRepository } from '../../repositories/galleryRepository';
 
 // Determine if we're in test mode
 const isTestMode = process.env.NODE_ENV === 'test';
@@ -65,7 +66,7 @@ export const getGallery = async (req: Request): Promise<Response> => {
   if (authResponse) return authResponse;
 
   try {
-    const gallery = await readGallery();
+    const gallery = await galleryRepository.getAll();
     return Response.json(gallery);
   } catch (error) {
     console.error('Error getting gallery:', error);
@@ -90,13 +91,19 @@ export const addGalleryImage = async (req: Request): Promise<Response> => {
     // Parse the request body
     const imageData = await req.json();
 
-    // Read existing gallery
-    const gallery = await readGallery();
+    // Validate required fields
+    const requiredFields = ['src', 'alt'];
+    for (const field of requiredFields) {
+      if (!imageData[field]) {
+        return Response.json({ 
+          success: false, 
+          message: `Missing required field: ${field}` 
+        }, { status: 400 });
+      }
+    }
 
-    // Generate a new ID
-    const newId = gallery.length > 0 
-      ? Math.max(...gallery.map(img => img.id)) + 1 
-      : 1;
+    // Get all gallery images to determine the next order
+    const gallery = await galleryRepository.getAll();
 
     // Generate the next order number
     const nextOrder = gallery.length > 0
@@ -104,17 +111,10 @@ export const addGalleryImage = async (req: Request): Promise<Response> => {
       : 1;
 
     // Create the new gallery image
-    const newImage: GalleryImage = {
-      id: newId,
-      order: nextOrder,
-      ...imageData
-    };
-
-    // Add the new image
-    gallery.push(newImage);
-
-    // Save the updated gallery
-    await writeGallery(gallery);
+    const newImage = await galleryRepository.create({
+      ...imageData,
+      order: nextOrder
+    });
 
     return Response.json({ 
       success: true, 
@@ -142,28 +142,26 @@ export const deleteGalleryImage = async (req: Request, id: number): Promise<Resp
   if (authResponse) return authResponse;
 
   try {
-    // Read existing gallery
-    const gallery = await readGallery();
-
-    // Find the image to delete
-    const imageIndex = gallery.findIndex(img => img.id === id);
+    // Get the image to delete (for file cleanup)
+    const imageToDelete = await galleryRepository.getById(id);
 
     // If the image doesn't exist, return 404
-    if (imageIndex === -1) {
+    if (!imageToDelete) {
       return Response.json({ 
         success: false, 
         message: 'Gallery image not found' 
       }, { status: 404 });
     }
 
-    // Get the image to delete (for file cleanup)
-    const imageToDelete = gallery[imageIndex];
+    // Delete the image from the database
+    const deleted = await galleryRepository.delete(id);
 
-    // Remove the image from the array
-    gallery.splice(imageIndex, 1);
-
-    // Save the updated gallery
-    await writeGallery(gallery);
+    if (!deleted) {
+      return Response.json({ 
+        success: false, 
+        message: 'Failed to delete gallery image' 
+      }, { status: 500 });
+    }
 
     // Try to delete the associated image file if it exists
     if (imageToDelete.src && imageToDelete.src.startsWith('gallery/')) {
@@ -216,30 +214,11 @@ export const reorderGallery = async (req: Request): Promise<Response> => {
       }, { status: 400 });
     }
 
-    // Read existing gallery
-    const gallery = await readGallery();
+    // Reorder the gallery
+    await galleryRepository.reorder(imageIds);
 
-    // Create a map of id -> image for quick lookup
-    const imageMap = new Map(gallery.map(img => [img.id, img]));
-
-    // Create a new array with the images in the specified order
-    const reorderedGallery: GalleryImage[] = [];
-
-    for (const id of imageIds) {
-      const image = imageMap.get(id);
-      if (image) {
-        reorderedGallery.push(image);
-        imageMap.delete(id);
-      }
-    }
-
-    // Add any remaining images (that weren't in the imageIds array) at the end
-    for (const image of imageMap.values()) {
-      reorderedGallery.push(image);
-    }
-
-    // Save the updated gallery
-    await writeGallery(reorderedGallery);
+    // Get the updated gallery
+    const reorderedGallery = await galleryRepository.getAll();
 
     return Response.json({ 
       success: true, 

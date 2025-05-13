@@ -2,6 +2,7 @@ import { beforeEach, afterEach, mock } from 'bun:test';
 import fs from 'fs/promises';
 import path from 'path';
 import jwt from 'jsonwebtoken';
+import { setupTestDb, teardownTestDb } from './utils/testDb';
 
 // Set up test-specific environment
 export const TEST_DATA_DIR = path.join(__dirname, 'test-data');
@@ -21,14 +22,21 @@ process.env.ADMIN_PASSWORD = 'secure_password';
 // Set this early to ensure it's available before any imports
 process.env.JWT_SECRET = TEST_JWT_SECRET;
 
+// Set up test database URL for PostgreSQL tests
+process.env.POSTGRES_URL = process.env.POSTGRES_URL?.replace(/\/[^/]+$/, '/yelm_country_carvings_test') || 
+  'postgres://yelm:yelm_password@localhost:5432/yelm_country_carvings_test';
+
 // Create test data directory and files if they don't exist
+// Also set up test database
 beforeEach(async () => {
   try {
+    // Set up filesystem test data
     await fs.mkdir(TEST_DATA_DIR, { recursive: true });
-
-    // Initialize empty events and gallery files
     await fs.writeFile(TEST_EVENTS_FILE, JSON.stringify([]));
     await fs.writeFile(TEST_GALLERY_FILE, JSON.stringify([]));
+
+    // Set up test database
+    await setupTestDb();
   } catch (error) {
     console.error('Error setting up test environment:', error);
   }
@@ -37,7 +45,7 @@ beforeEach(async () => {
 // Clean up test data after each test
 afterEach(async () => {
   try {
-    // Clean up test files but keep the directory
+    // Clean up filesystem test data
     await fs.writeFile(TEST_EVENTS_FILE, JSON.stringify([]));
     await fs.writeFile(TEST_GALLERY_FILE, JSON.stringify([]));
 
@@ -64,6 +72,9 @@ afterEach(async () => {
       // Ignore errors if directories don't exist
       console.warn('Warning: Could not clean up test image directories:', error);
     }
+
+    // Clean up test database
+    await teardownTestDb();
   } catch (error) {
     console.error('Error cleaning up test environment:', error);
   }

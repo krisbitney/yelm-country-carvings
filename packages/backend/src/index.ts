@@ -7,6 +7,8 @@ import {getEvents, createEvent, updateEvent, deleteEvent} from "./handlers/admin
 import {getGallery, addGalleryImage, deleteGalleryImage, reorderGallery} from "./handlers/admin/gallery";
 import {handleImageUpload} from "./handlers/admin/upload";
 import {authenticateAdmin} from "./middleware/auth";
+import {eventRepository} from "./repositories/eventRepository";
+import {galleryRepository} from "./repositories/galleryRepository";
 
 // Load environment variables
 dotenv.config();
@@ -30,12 +32,24 @@ const server = Bun.serve({
   // Define API routes
   routes: {
     // Public API endpoints
-    "/api/events": () => {
-      return Response.json(JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'events.json'), 'utf-8')));
+    "/api/events": async () => {
+      try {
+        const events = await eventRepository.getAll();
+        return Response.json(events);
+      } catch (error) {
+        console.error('Error getting events:', error);
+        return Response.json({ success: false, message: 'Failed to get events' }, { status: 500 });
+      }
     },
 
-    "/api/gallery": () => {
-      return Response.json(JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'gallery.json'), 'utf-8')));
+    "/api/gallery": async () => {
+      try {
+        const gallery = await galleryRepository.getAll();
+        return Response.json(gallery);
+      } catch (error) {
+        console.error('Error getting gallery:', error);
+        return Response.json({ success: false, message: 'Failed to get gallery' }, { status: 500 });
+      }
     },
 
     "/api/contact": {
