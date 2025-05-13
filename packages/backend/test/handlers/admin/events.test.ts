@@ -1,6 +1,7 @@
 // Import setup first to ensure environment variables are set
 import '../../setup';
-import {describe, test, expect, beforeEach, afterEach, beforeAll, afterAll} from 'bun:test';
+import "../../../src/index";
+import {describe, test, expect, beforeEach, beforeAll, afterAll} from 'bun:test';
 import { getEvents, createEvent, updateEvent, deleteEvent } from '../../../src/handlers/admin/events';
 import {closeTestDb, setupTestDb, teardownTestDb} from "../../utils/testDb";
 import {createTestRequest, createTestToken} from "../../utils/helpers";
@@ -253,8 +254,8 @@ describe('Events Handler', () => {
     });
   });
 
-  describe.only('deleteEvent', () => {
-    test.only('should delete an existing event when authenticated', async () => {
+  describe('deleteEvent', () => {
+    test('should delete an existing event when authenticated', async () => {
       // Setup existing events
       const existingEvents = [
         { id: 1, ...sampleEvent }

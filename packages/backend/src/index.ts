@@ -19,6 +19,13 @@ export const IMAGES_DIR: string = process.env.NODE_ENV === 'test'
   ? path.join(import.meta.dir, '../test/test-images')
   : path.join(import.meta.dir, '../img');
 
+// Ensure the gallery images directory exists
+try {
+  fs.mkdirSync(path.join(IMAGES_DIR, "gallery"), { recursive: true });
+  fs.mkdirSync(path.join(IMAGES_DIR, "events"), { recursive: true });
+} catch (error) {
+  console.error('Error creating gallery or events images directory:', error);
+}
 
 const imageExtensions = ['.webp', '.png', '.jpg', '.jpeg', '.gif'];
 

@@ -1,5 +1,6 @@
 // Import setup first to ensure environment variables are set
 import '../setup';
+import "../../src/index";
 import { describe, test, expect } from 'bun:test';
 import { authenticateJWT, authenticateAdmin } from '../../src/middleware/auth';
 import { generateToken } from '../../src/utils/jwt';

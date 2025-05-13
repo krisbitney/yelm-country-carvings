@@ -1,5 +1,6 @@
 // Import setup first to ensure environment variables are set
 import '../../setup';
+import "../../../src/index";
 import {describe, test, expect, beforeEach, beforeAll, afterAll} from 'bun:test';
 import { getGallery, addGalleryImage, deleteGalleryImage, reorderGallery } from '../../../src/handlers/admin/gallery';
 import {closeTestDb, setupTestDb, teardownTestDb} from '../../utils/testDb';

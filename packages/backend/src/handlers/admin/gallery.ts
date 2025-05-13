@@ -4,13 +4,6 @@ import { authenticateAdmin } from '../../middleware/auth';
 import { galleryRepository } from '../../repositories/galleryRepository';
 import {IMAGES_DIR} from "../../index";
 
-// Ensure the gallery images directory exists
-try {
-  await fs.mkdir(path.join(IMAGES_DIR, "gallery"), { recursive: true });
-} catch (error) {
-  console.error('Error creating gallery images directory:', error);
-}
-
 /**
  * Get all gallery images
  * @param req - The request object
@@ -122,7 +115,7 @@ export const deleteGalleryImage = async (req: Request, id: number): Promise<Resp
     // Try to delete the associated image file if it exists
     if (imageToDelete.src && imageToDelete.src.startsWith('gallery/')) {
       try {
-        const imagePath = path.resolve(path.join(IMAGES_DIR,"..", imageToDelete.src));
+        const imagePath = path.resolve(path.join(IMAGES_DIR, imageToDelete.src));
         await fs.unlink(imagePath);
       } catch (error) {
         // Log but don't fail if image deletion fails

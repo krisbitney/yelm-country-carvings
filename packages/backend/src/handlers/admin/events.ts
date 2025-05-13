@@ -4,13 +4,6 @@ import { authenticateAdmin } from '../../middleware/auth';
 import { eventRepository } from '../../repositories/eventRepository';
 import {IMAGES_DIR} from "../../index";
 
-// Ensure the events images directory exists
-try {
-  await fs.mkdir(path.join(IMAGES_DIR, "events"), { recursive: true });
-} catch (error) {
-  console.error('Error creating events images directory:', error);
-}
-
 /**
  * Get all events
  * @param req - The request object
@@ -150,7 +143,7 @@ export const deleteEvent = async (req: Request, id: number): Promise<Response> =
     // Try to delete the associated image if it exists
     if (eventToDelete.image && eventToDelete.image.startsWith('events/')) {
       try {
-        const imagePath = path.resolve(path.join(IMAGES_DIR,"..", eventToDelete.image));
+        const imagePath = path.resolve(path.join(IMAGES_DIR, eventToDelete.image));
         await fs.unlink(imagePath);
       } catch (error) {
         // Log but don't fail if image deletion fails

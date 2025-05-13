@@ -1,5 +1,6 @@
 // Import setup first to ensure environment variables are set
 import '../../setup';
+import "../../../src/index";
 import { describe, test, expect, mock, beforeEach, afterEach } from 'bun:test';
 import { handleImageUpload } from '../../../src/handlers/admin/upload';
 import {TEST_IMAGE, cleanupImageDirectories} from '../../setup';
