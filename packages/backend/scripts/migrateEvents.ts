@@ -3,7 +3,7 @@ import path from 'path';
 import sql from '../src/utils/db';
 import { MarketEvent } from '../src/types';
 
-const DATA_DIR = path.join(import.meta.dir, '../data');
+const DATA_DIR = path.join(__dirname, '../data');
 const EVENTS_FILE_PATH = path.join(DATA_DIR, 'events.json');
 
 async function migrateEvents() {

@@ -3,7 +3,7 @@ import path from 'path';
 import sql from '../src/utils/db';
 import { GalleryImage } from '../src/types';
 
-const DATA_DIR = path.join(import.meta.dir, '../data');
+const DATA_DIR = path.join(__dirname, '../data');
 const GALLERY_FILE_PATH = path.join(DATA_DIR, 'gallery.json');
 
 async function migrateGallery() {

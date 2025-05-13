@@ -7,7 +7,7 @@ async function createSchema() {
     console.log('Creating database schema...');
     
     // Read schema SQL file
-    const schemaPath = path.join(import.meta.dir, '../schema.sql');
+    const schemaPath = path.join(__dirname, '../schema.sql');
     const schemaSql = await fs.readFile(schemaPath, 'utf-8');
     
     // Execute schema SQL using simple query mode for multiple statements

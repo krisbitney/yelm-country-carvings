@@ -5,7 +5,7 @@ import fs from 'fs/promises';
 async function backupDatabase() {
   try {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const backupDir = path.join(import.meta.dir, '../backups');
+    const backupDir = path.join(__dirname, '../backups');
     const backupFile = path.join(backupDir, `backup-${timestamp}.sql`);
 
     // Ensure backup directory exists
