@@ -1,6 +1,6 @@
-import { describe, test, expect, mock, beforeEach } from 'bun:test';
+import { describe, test, expect, mock, beforeEach, afterEach } from 'bun:test';
 import { handleImageUpload } from '../../../src/handlers/admin/upload';
-import {createTestRequest, createTestToken, TEST_IMAGE} from '../../setup';
+import {createTestRequest, createTestToken, TEST_IMAGE, setupFilesystem, cleanupImageDirectories} from '../../setup';
 import '../../setup';
 
 describe('Image Upload Handler', () => {
@@ -8,9 +8,16 @@ describe('Image Upload Handler', () => {
   const validToken = createTestToken({ username: 'admin' });
   const validAuthHeader = { 'Authorization': `Bearer ${validToken}` };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     // Reset mocks between tests
     mock.restore();
+    // Set up filesystem for tests
+    await setupFilesystem();
+  });
+
+  afterEach(async () => {
+    // Clean up image directories after tests
+    await cleanupImageDirectories();
   });
 
   test('should upload an image successfully when authenticated', async () => {

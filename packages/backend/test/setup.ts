@@ -1,8 +1,7 @@
-import { beforeEach, afterEach, mock } from 'bun:test';
+import {mock} from 'bun:test';
 import fs from 'fs/promises';
 import path from 'path';
 import jwt from 'jsonwebtoken';
-import { setupTestDb, teardownTestDb } from './utils/testDb';
 
 // Set up test-specific environment
 export const TEST_DATA_DIR = path.join(__dirname, 'test-data');
@@ -22,63 +21,54 @@ process.env.ADMIN_PASSWORD = 'secure_password';
 // Set this early to ensure it's available before any imports
 process.env.JWT_SECRET = TEST_JWT_SECRET;
 
-// Set up test database URL for PostgreSQL tests
-process.env.POSTGRES_URL = process.env.POSTGRES_URL?.replace(/\/[^/]+$/, '/yelm_country_carvings_test') || 
-  'postgres://yelm:yelm_password@localhost:5432/yelm_country_carvings_test';
-
-// Create test data directory and files if they don't exist
-// Also set up test database
-beforeEach(async () => {
+// Helper functions for test setup and teardown
+export const setupFilesystem = async () => {
   try {
     // Set up filesystem test data
     await fs.mkdir(TEST_DATA_DIR, { recursive: true });
     await fs.writeFile(TEST_EVENTS_FILE, JSON.stringify([]));
     await fs.writeFile(TEST_GALLERY_FILE, JSON.stringify([]));
-
-    // Set up test database
-    await setupTestDb();
   } catch (error) {
-    console.error('Error setting up test environment:', error);
+    console.error('Error setting up filesystem test data:', error);
   }
-});
+};
 
-// Clean up test data after each test
-afterEach(async () => {
+export const cleanupFilesystem = async () => {
   try {
     // Clean up filesystem test data
     await fs.writeFile(TEST_EVENTS_FILE, JSON.stringify([]));
     await fs.writeFile(TEST_GALLERY_FILE, JSON.stringify([]));
+  } catch (error) {
+    console.error('Error cleaning up filesystem test data:', error);
+  }
+};
 
+export const cleanupImageDirectories = async () => {
+  try {
     // Clean up temporary image directories
     const testImgDir = path.join(TEST_DATA_DIR, 'test-img');
-    try {
-      // Remove all files in the events and gallery subdirectories
-      const eventsDir = path.join(testImgDir, 'events');
-      const galleryDir = path.join(testImgDir, 'gallery');
 
-      // Get all files in the directories
-      const eventFiles = await fs.readdir(eventsDir).catch(() => []);
-      const galleryFiles = await fs.readdir(galleryDir).catch(() => []);
+    // Remove all files in the events and gallery subdirectories
+    const eventsDir = path.join(testImgDir, 'events');
+    const galleryDir = path.join(testImgDir, 'gallery');
 
-      // Delete each file
-      for (const file of eventFiles) {
-        await fs.unlink(path.join(eventsDir, file)).catch(() => {});
-      }
+    // Get all files in the directories
+    const eventFiles = await fs.readdir(eventsDir).catch(() => []);
+    const galleryFiles = await fs.readdir(galleryDir).catch(() => []);
 
-      for (const file of galleryFiles) {
-        await fs.unlink(path.join(galleryDir, file)).catch(() => {});
-      }
-    } catch (error) {
-      // Ignore errors if directories don't exist
-      console.warn('Warning: Could not clean up test image directories:', error);
+    // Delete each file
+    for (const file of eventFiles) {
+      await fs.unlink(path.join(eventsDir, file)).catch(() => {});
     }
 
-    // Clean up test database
-    await teardownTestDb();
+    for (const file of galleryFiles) {
+      await fs.unlink(path.join(galleryDir, file)).catch(() => {});
+    }
   } catch (error) {
-    console.error('Error cleaning up test environment:', error);
+    // Ignore errors if directories don't exist
+    console.warn('Warning: Could not clean up test image directories:', error);
   }
-});
+};
 
 // Helper to create real requests with test data
 export const createTestRequest = (options: {

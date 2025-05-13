@@ -1,20 +1,25 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'bun:test';
-import { setupTestDb, teardownTestDb, closeTestDb } from '../utils/testDb';
-import {SQL} from "bun";
+import {describe, it, expect, afterEach, beforeEach, beforeAll, afterAll} from 'bun:test';
+import {closeTestDb, setupTestDb, teardownTestDb} from '../utils/testDb';
+import {cleanupFilesystem, setupFilesystem} from "../setup";
 
 describe('Event Repository', () => {
-  let testSql: SQL;
+  let testSql: Bun.SQL;
 
   beforeAll(async () => {
     testSql = await setupTestDb();
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
+    await closeTestDb(testSql);
+  });
+
+  beforeEach(async () => {
+    await setupFilesystem();
     await teardownTestDb(testSql);
   });
 
-  afterAll(async () => {
-    await closeTestDb(testSql);
+  afterEach(async () => {
+    await cleanupFilesystem();
   });
 
   it('should create and retrieve an event', async () => {

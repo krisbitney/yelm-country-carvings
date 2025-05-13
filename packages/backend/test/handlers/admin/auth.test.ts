@@ -19,7 +19,7 @@ describe('Auth Handler', () => {
         method: 'POST',
         body: {
           username: 'admin',
-          password: 'secure_password'
+          password: 'password'
         }
       });
 
@@ -39,7 +39,7 @@ describe('Auth Handler', () => {
         method: 'POST',
         body: {
           username: 'invalid',
-          password: 'secure_password'
+          password: 'password'
         }
       });
 

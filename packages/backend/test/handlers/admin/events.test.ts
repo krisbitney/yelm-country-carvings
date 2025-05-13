@@ -1,9 +1,9 @@
 // Import setup first to ensure environment variables are set
 import '../../setup';
-import { describe, test, expect, beforeEach } from 'bun:test';
+import {describe, test, expect, beforeEach, afterEach, beforeAll, afterAll} from 'bun:test';
 import { getEvents, createEvent, updateEvent, deleteEvent } from '../../../src/handlers/admin/events';
-import { createTestRequest, createTestToken } from '../../setup';
-import testSql from '../../utils/testDb';
+import {createTestRequest, createTestToken, setupFilesystem, cleanupFilesystem} from '../../setup';
+import {closeTestDb, setupTestDb, teardownTestDb} from "../../utils/testDb";
 
 describe('Events Handler', () => {
   // Sample event data for testing
@@ -14,12 +14,32 @@ describe('Events Handler', () => {
     description: 'Test Description',
     image: 'events/test.webp'
   };
-
   // Setup valid auth token
   const validToken = createTestToken({ username: 'admin' });
   const validAuthHeader = { 'Authorization': `Bearer ${validToken}` };
 
-  // Helper function to insert test events into the database
+  let testSql: Bun.SQL;
+
+  beforeAll(async () => {
+    testSql = await setupTestDb();
+  });
+
+  afterAll(async () => {
+    await closeTestDb(testSql);
+  });
+
+  // Set up test environment before each test
+  beforeEach(async () => {
+    await setupFilesystem();
+    await teardownTestDb(testSql);
+  });
+
+  // Clean up test environment after each test
+  afterEach(async () => {
+    await cleanupFilesystem();
+  });
+
+    // Helper function to insert test events into the database
   const insertTestEvents = async (events) => {
     for (const event of events) {
       await testSql`
