@@ -1,7 +1,9 @@
+// Import setup first to ensure environment variables are set
+import '../../setup';
 import { describe, test, expect, mock, beforeEach, afterEach } from 'bun:test';
 import { handleImageUpload } from '../../../src/handlers/admin/upload';
-import {createTestRequest, createTestToken, TEST_IMAGE, setupFilesystem, cleanupImageDirectories} from '../../setup';
-import '../../setup';
+import {TEST_IMAGE, cleanupImageDirectories} from '../../setup';
+import {createTestRequest, createTestToken} from "../../utils/helpers";
 
 describe('Image Upload Handler', () => {
   // Setup valid auth token
@@ -11,8 +13,6 @@ describe('Image Upload Handler', () => {
   beforeEach(async () => {
     // Reset mocks between tests
     mock.restore();
-    // Set up filesystem for tests
-    await setupFilesystem();
   });
 
   afterEach(async () => {

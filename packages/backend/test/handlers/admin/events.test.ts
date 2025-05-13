@@ -2,8 +2,8 @@
 import '../../setup';
 import {describe, test, expect, beforeEach, afterEach, beforeAll, afterAll} from 'bun:test';
 import { getEvents, createEvent, updateEvent, deleteEvent } from '../../../src/handlers/admin/events';
-import {createTestRequest, createTestToken, setupFilesystem, cleanupFilesystem} from '../../setup';
 import {closeTestDb, setupTestDb, teardownTestDb} from "../../utils/testDb";
+import {createTestRequest, createTestToken} from "../../utils/helpers";
 
 describe('Events Handler', () => {
   // Sample event data for testing
@@ -30,13 +30,7 @@ describe('Events Handler', () => {
 
   // Set up test environment before each test
   beforeEach(async () => {
-    await setupFilesystem();
     await teardownTestDb(testSql);
-  });
-
-  // Clean up test environment after each test
-  afterEach(async () => {
-    await cleanupFilesystem();
   });
 
     // Helper function to insert test events into the database

@@ -1,8 +1,9 @@
+// Import setup first to ensure environment variables are set
+import '../setup';
 import { describe, test, expect } from 'bun:test';
 import { authenticateJWT, authenticateAdmin } from '../../src/middleware/auth';
-import { createTestRequest } from '../setup';
 import { generateToken } from '../../src/utils/jwt';
-import '../setup';
+import {createTestRequest} from "../utils/helpers";
 
 describe('Authentication Middleware', () => {
   describe('authenticateJWT', () => {

@@ -1,6 +1,8 @@
-import { createTestRequest, createTestToken } from '../../setup';
+// Import setup first to ensure environment variables are set
+import '../../setup';
 import { describe, test, expect, mock, beforeEach } from 'bun:test';
 import { handleAdminLogin, handleVerifyToken } from '../../../src/handlers/admin/auth';
+import {createTestRequest, createTestToken} from "../../utils/helpers";
 
 describe('Auth Handler', () => {
   // Setup valid auth token

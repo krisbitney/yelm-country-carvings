@@ -1,6 +1,7 @@
-import {describe, it, expect, afterEach, beforeEach, beforeAll, afterAll} from 'bun:test';
+// Import setup first to ensure environment variables are set
+import '../setup';
+import {describe, it, expect, beforeEach, beforeAll, afterAll} from 'bun:test';
 import {closeTestDb, setupTestDb, teardownTestDb} from '../utils/testDb';
-import {cleanupFilesystem, setupFilesystem} from "../setup";
 
 describe('Event Repository', () => {
   let testSql: Bun.SQL;
@@ -14,12 +15,7 @@ describe('Event Repository', () => {
   });
 
   beforeEach(async () => {
-    await setupFilesystem();
     await teardownTestDb(testSql);
-  });
-
-  afterEach(async () => {
-    await cleanupFilesystem();
   });
 
   it('should create and retrieve an event', async () => {

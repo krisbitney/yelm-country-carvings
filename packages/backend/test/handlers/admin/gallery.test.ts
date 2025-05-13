@@ -1,9 +1,9 @@
 // Import setup first to ensure environment variables are set
 import '../../setup';
-import {describe, test, expect, beforeEach, afterEach, beforeAll, afterAll} from 'bun:test';
+import {describe, test, expect, beforeEach, beforeAll, afterAll} from 'bun:test';
 import { getGallery, addGalleryImage, deleteGalleryImage, reorderGallery } from '../../../src/handlers/admin/gallery';
-import {createTestRequest, createTestToken, setupFilesystem, cleanupFilesystem} from '../../setup';
 import {closeTestDb, setupTestDb, teardownTestDb} from '../../utils/testDb';
+import {createTestRequest, createTestToken} from "../../utils/helpers";
 
 describe('Gallery Handler', () => {
   // Sample gallery image data for testing
@@ -29,13 +29,7 @@ describe('Gallery Handler', () => {
 
   // Set up test environment before each test
   beforeEach(async () => {
-    await setupFilesystem();
     await teardownTestDb(testSql);
-  });
-
-  // Clean up test environment after each test
-  afterEach(async () => {
-    await cleanupFilesystem();
   });
 
   // Helper function to insert test gallery images into the database

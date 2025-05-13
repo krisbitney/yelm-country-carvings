@@ -2,7 +2,8 @@
 import '../setup';
 import { describe, test, expect, mock } from 'bun:test';
 import { handleContactForm } from '../../src/handlers/handleContactForm';
-import { createTestRequest } from '../setup';
+
+import {createTestRequest} from "../utils/helpers";
 
 describe('Contact Form Handler', () => {
   test('should successfully process a valid contact form submission', async () => {

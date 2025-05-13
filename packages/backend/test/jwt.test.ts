@@ -1,6 +1,7 @@
+// Import setup first to ensure environment variables are set
+import './setup';
 import {describe, test, expect, beforeEach} from 'bun:test';
-import { generateToken, verifyToken, extractTokenFromHeader } from '../../src/utils/jwt';
-import '../setup';
+import { generateToken, verifyToken, extractTokenFromHeader } from '../src/utils/jwt';
 
 describe('JWT Utilities', () => {
   const testPayload = { username: 'testuser' };
