@@ -1,9 +1,6 @@
 import { SQL } from "bun";
-import dotenv from 'dotenv';
 import fs from 'fs/promises';
 import path from 'path';
-
-dotenv.config();
 
 // Setup function to create test database and tables
 export async function setupTestDb(): Promise<SQL> {

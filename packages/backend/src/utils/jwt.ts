@@ -1,8 +1,4 @@
 import jwt, {Secret} from 'jsonwebtoken';
-import dotenv from 'dotenv';
-
-// Load environment variables
-dotenv.config();
 
 // Use test-specific secret in test mode, otherwise use the environment variable
 const JWT_SECRET: Secret = process.env.JWT_SECRET || 'test-secret';

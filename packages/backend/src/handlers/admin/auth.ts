@@ -1,8 +1,4 @@
-import dotenv from 'dotenv';
 import { generateToken, verifyToken, extractTokenFromHeader } from '../../utils/jwt';
-
-// Load environment variables
-dotenv.config();
 
 // Get admin credentials from environment variables
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';

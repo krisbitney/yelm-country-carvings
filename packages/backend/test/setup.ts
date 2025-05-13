@@ -2,24 +2,17 @@ import {mock} from 'bun:test';
 import fs from 'fs/promises';
 import path from 'path';
 import jwt from 'jsonwebtoken';
+import dotenv from "dotenv";
+
+dotenv.config();
+// Set environment variables for test mode
+process.env.NODE_ENV = 'test';
 
 // Set up test-specific environment
 export const TEST_DATA_DIR = path.join(__dirname, 'test-data');
 export const TEST_EVENTS_FILE = path.join(TEST_DATA_DIR, 'events.json');
 export const TEST_GALLERY_FILE = path.join(TEST_DATA_DIR, 'gallery.json');
 export const TEST_IMAGE = path.join(TEST_DATA_DIR, "test.webp");
-export const TEST_JWT_SECRET = 'test-secret';
-
-// Set environment variables for test mode
-process.env.NODE_ENV = 'test';
-process.env.TEST_EVENTS_FILE = TEST_EVENTS_FILE;
-process.env.TEST_GALLERY_FILE = TEST_GALLERY_FILE;
-// Set environment variables for testing
-process.env.ADMIN_USERNAME = 'admin';
-process.env.ADMIN_PASSWORD = 'secure_password';
-// Patch the JWT verification to use our test secret
-// Set this early to ensure it's available before any imports
-process.env.JWT_SECRET = TEST_JWT_SECRET;
 
 // Helper functions for test setup and teardown
 export const setupFilesystem = async () => {
@@ -113,5 +106,5 @@ export const createTestRequest = (options: {
 
 // Helper to create a valid JWT token for testing
 export const createTestToken = (payload = { username: 'admin' }, expiresIn = '1h') => {
-  return jwt.sign(payload, TEST_JWT_SECRET, { expiresIn });
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
 };

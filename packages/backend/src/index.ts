@@ -14,7 +14,6 @@ import {galleryRepository} from "./repositories/galleryRepository";
 dotenv.config();
 
 const FRONTEND_DIR = path.join(import.meta.dir, '../../frontend/dist');
-const DATA_DIR = path.join(import.meta.dir, '../data');
 const IMAGES_DIR = path.join(import.meta.dir, '../img');
 
 const imageExtensions = ['.webp', '.png', '.jpg', '.jpeg', '.gif'];

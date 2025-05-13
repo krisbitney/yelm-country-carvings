@@ -1,7 +1,4 @@
 import { SQL } from "bun";
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 // Create a SQL instance using environment variables
 // Bun automatically uses POSTGRES_URL or DATABASE_URL if available

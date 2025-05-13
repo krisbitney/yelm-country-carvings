@@ -1,9 +1,6 @@
 import { exec } from 'child_process';
-import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs/promises';
-
-dotenv.config();
 
 async function backupDatabase() {
   try {
