@@ -4,7 +4,9 @@ import "../../../src/index";
 import { describe, test, expect, mock, beforeEach, afterEach } from 'bun:test';
 import { handleImageUpload } from '../../../src/handlers/admin/upload';
 import {createTestRequest, createTestToken} from "../../utils/helpers";
-import {cleanupImageDirectories, TEST_IMAGE} from "../../utils/imageUtils";
+import {cleanupImageDirectories, TEST_IMAGE, TEST_IMAGE_DIR} from "../../utils/imageUtils";
+import fs from "fs/promises";
+import path from "path";
 
 describe('Image Upload Handler', () => {
   // Setup valid auth token
@@ -50,6 +52,8 @@ describe('Image Upload Handler', () => {
     expect(data.imagePath).toBeDefined();
     expect(data.imagePath).toContain('events/');
     expect(data.imagePath).toContain('.webp');
+    const absImagePath = path.join(TEST_IMAGE_DIR, data.imagePath);
+    await fs.unlink(absImagePath);
   });
 
   test('should return 401 when not authenticated', async () => {

@@ -1,30 +1,7 @@
 import path from 'path';
-import fs from 'fs/promises';
 import sharp from 'sharp';
 import { authenticateAdmin } from '../../middleware/auth';
-
-// Determine if we're in test mode
-const isTestMode = process.env.NODE_ENV === 'test';
-
-// Get the appropriate file paths based on environment
-let IMG_DIR: string;
-
-if (isTestMode && process.env.TEST_EVENTS_FILE) {
-  // Use test-specific paths - create a temporary directory for test images
-  const testDataDir = path.dirname(process.env.TEST_EVENTS_FILE);
-  IMG_DIR = path.join(testDataDir, 'test-img');
-} else {
-  // Use production paths
-  IMG_DIR = path.join(import.meta.dir, '../../../img');
-}
-
-// Ensure the image directories exist
-try {
-  await fs.mkdir(path.join(IMG_DIR, 'events'), { recursive: true });
-  await fs.mkdir(path.join(IMG_DIR, 'gallery'), { recursive: true });
-} catch (error) {
-  console.error('Error creating image directories:', error);
-}
+import {IMAGES_DIR} from "../../index";
 
 /**
  * Process and save an uploaded image
@@ -44,7 +21,7 @@ const processAndSaveImage = async (
   const uniqueFilename = `${path.basename(filename, path.extname(filename))}_${timestamp}${extension}`;
 
   // Determine the directory and path
-  const directory = path.join(IMG_DIR, type);
+  const directory = path.join(IMAGES_DIR, type);
   const imagePath = path.join(directory, uniqueFilename);
 
   // Process the image with sharp

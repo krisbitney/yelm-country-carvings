@@ -6,10 +6,11 @@ export const TEST_IMAGE = path.join(TEST_IMAGE_DIR, "test.webp");
 
 export const setupTestEventImage = async (subdir: "gallery" | "events") => {
   try {
-    const filename = path.basename(TEST_IMAGE);
-    const destDir = path.join(TEST_IMAGE_DIR, subdir, filename);
+    const destDir = path.join(TEST_IMAGE_DIR, subdir);
     await fs.mkdir(destDir, {recursive: true});
-    await fs.copyFile(TEST_IMAGE, destDir);
+    const filename = path.basename(TEST_IMAGE);
+    const filepath = path.join(destDir, filename);
+    await fs.copyFile(TEST_IMAGE, filepath);
   } catch (error) {
     console.error('Error setting up test event image:', error);
   }
