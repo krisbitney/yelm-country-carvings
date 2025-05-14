@@ -5,6 +5,7 @@ import {describe, test, expect, beforeEach, beforeAll, afterAll} from 'bun:test'
 import { getGallery, addGalleryImage, deleteGalleryImage, reorderGallery } from '../../../src/handlers/admin/gallery';
 import {closeTestDb, setupTestDb, teardownTestDb} from '../../utils/testDb';
 import {createTestRequest, createTestToken} from "../../utils/helpers";
+import {setupTestEventImage} from "../../utils/imageUtils";
 
 describe('Gallery Handler', () => {
   // Sample gallery image data for testing
@@ -165,6 +166,7 @@ describe('Gallery Handler', () => {
       // Setup existing gallery
       const existingGallery = [sampleImage];
       await insertTestGallery(existingGallery);
+      await setupTestEventImage("gallery");
 
       // Create a request with valid auth
       const request = createTestRequest({

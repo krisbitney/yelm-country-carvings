@@ -3,8 +3,8 @@ import '../../setup';
 import "../../../src/index";
 import { describe, test, expect, mock, beforeEach, afterEach } from 'bun:test';
 import { handleImageUpload } from '../../../src/handlers/admin/upload';
-import {TEST_IMAGE, cleanupImageDirectories} from '../../setup';
 import {createTestRequest, createTestToken} from "../../utils/helpers";
+import {cleanupImageDirectories, TEST_IMAGE} from "../../utils/imageUtils";
 
 describe('Image Upload Handler', () => {
   // Setup valid auth token

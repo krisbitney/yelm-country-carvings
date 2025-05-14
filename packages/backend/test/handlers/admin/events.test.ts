@@ -5,6 +5,7 @@ import {describe, test, expect, beforeEach, beforeAll, afterAll} from 'bun:test'
 import { getEvents, createEvent, updateEvent, deleteEvent } from '../../../src/handlers/admin/events';
 import {closeTestDb, setupTestDb, teardownTestDb} from "../../utils/testDb";
 import {createTestRequest, createTestToken} from "../../utils/helpers";
+import {setupTestEventImage} from "../../utils/imageUtils";
 
 describe('Events Handler', () => {
   // Sample event data for testing
@@ -261,6 +262,7 @@ describe('Events Handler', () => {
         { id: 1, ...sampleEvent }
       ];
       await insertTestEvents(existingEvents);
+      await setupTestEventImage("events");
 
       // Create a request with valid auth
       const request = createTestRequest({
