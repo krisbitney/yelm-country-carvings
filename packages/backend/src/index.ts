@@ -6,7 +6,7 @@ import {handleAdminLogin, handleVerifyToken} from "./handlers/admin/auth";
 import {getEvents, createEvent, updateEvent, deleteEvent} from "./handlers/admin/events";
 import {getGallery, addGalleryImage, deleteGalleryImage, reorderGallery} from "./handlers/admin/gallery";
 import {handleImageUpload} from "./handlers/admin/upload";
-import {authenticateAdmin} from "./middleware/auth";
+import {authenticateJWT} from "./middleware/auth";
 import {eventRepository} from "./repositories/eventRepository";
 import {galleryRepository} from "./repositories/galleryRepository";
 
@@ -14,11 +14,16 @@ import {galleryRepository} from "./repositories/galleryRepository";
 dotenv.config();
 
 const FRONTEND_DIR = path.join(import.meta.dir, '../../frontend/dist');
+// Check if the frontend build directory exists
+if (!fs.existsSync(FRONTEND_DIR)) {
+  console.error('Frontend build directory not found. Please run "bun run build" in the frontend workspace first.');
+  process.exit(1);
+}
+
 // Get the appropriate file paths based on environment
 export const IMAGES_DIR: string = process.env.NODE_ENV === 'test'
   ? path.join(import.meta.dir, '../test/test-images')
   : path.join(import.meta.dir, '../img');
-
 // Ensure the gallery images directory exists
 try {
   fs.mkdirSync(path.join(IMAGES_DIR, "gallery"), { recursive: true });
@@ -28,12 +33,6 @@ try {
 }
 
 const imageExtensions = ['.webp', '.png', '.jpg', '.jpeg', '.gif'];
-
-// Check if the frontend build directory exists
-if (!fs.existsSync(FRONTEND_DIR)) {
-  console.error('Frontend build directory not found. Please run "bun run build" in the frontend workspace first.');
-  process.exit(1);
-}
 
 // Define the server
 const server = Bun.serve({
@@ -71,68 +70,64 @@ const server = Bun.serve({
     // Admin authentication endpoints
     "/api/auth/login": {
       POST: async (req) => {
-        return await handleAdminLogin(req);
+        return authenticateJWT(req) ?? await handleAdminLogin(req);
       }
     },
 
     "/api/auth/verify": {
       GET: (req) => {
-        // This endpoint is protected by the authenticateAdmin middleware
-        const authResponse = authenticateAdmin(req);
-        if (authResponse) return authResponse;
-
-        return handleVerifyToken(req);
+        return authenticateJWT(req) ?? handleVerifyToken(req);
       }
     },
 
     // Admin events endpoints
     "/api/admin/events": {
       GET: async (req) => {
-        return await getEvents(req);
+        return authenticateJWT(req) ?? await getEvents();
       },
       POST: async (req) => {
-        return await createEvent(req);
+        return authenticateJWT(req) ?? await createEvent(req);
       }
     },
 
     "/api/admin/events/:id": {
       PUT: async (req) => {
         const id = parseInt(req.params.id);
-        return await updateEvent(req, id);
+        return authenticateJWT(req) ?? await updateEvent(req, id);
       },
       DELETE: async (req) => {
         const id = parseInt(req.params.id);
-        return await deleteEvent(req, id);
+        return authenticateJWT(req) ?? await deleteEvent(id);
       }
     },
 
     // Admin gallery endpoints
     "/api/admin/gallery": {
       GET: async (req) => {
-        return await getGallery(req);
+        return authenticateJWT(req) ?? await getGallery();
       },
       POST: async (req) => {
-        return await addGalleryImage(req);
+        return authenticateJWT(req) ?? await addGalleryImage(req);
       }
     },
 
     "/api/admin/gallery/:id": {
       DELETE: async (req) => {
         const id = parseInt(req.params.id);
-        return await deleteGalleryImage(req, id);
+        return authenticateJWT(req) ?? await deleteGalleryImage(id);
       }
     },
 
     "/api/admin/gallery/reorder": {
       POST: async (req) => {
-        return await reorderGallery(req);
+        return authenticateJWT(req) ?? await reorderGallery(req);
       }
     },
 
     // Admin image upload endpoint
     "/api/admin/upload": {
       POST: async (req) => {
-        return await handleImageUpload(req);
+        return authenticateJWT(req) ?? await handleImageUpload(req);
       }
     }
   },
@@ -140,15 +135,10 @@ const server = Bun.serve({
   // Fallback handler for non-API routes
   fetch(req) {
     const url = new URL(req.url);
-    let requestPath = url.pathname;
+    const requestPath = url.pathname;
 
-    // Default to index.html for the root path
-    if (requestPath === '/') {
-      requestPath = '/index.html';
-    }
-
-    // Handle admin routes - serve the same index.html for SPA routing
-    if (requestPath.startsWith('/admin')) {
+    // Default to index.html for the root or admin paths
+    if (requestPath === '/' || requestPath.startsWith('/admin')) {
       return new Response(Bun.file(path.join(FRONTEND_DIR, 'index.html')));
     }
 
@@ -189,6 +179,7 @@ const server = Bun.serve({
           });
         }
 
+        // TODO: move assets to public dir?
         // Also check in the assets directory for hashed filenames
         if (requestPath.startsWith('/assets/')) {
           const assetsPath = path.join(FRONTEND_DIR, requestPath);

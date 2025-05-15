@@ -27,23 +27,24 @@ export const handleAdminLogin = async (req: Request): Promise<Response> => {
     // Validate the password using Bun's native password utilities
     const isPasswordValid = await Bun.password.verify(password, ADMIN_PASSWORD_HASH);
 
-    if (isPasswordValid) {
-      // Generate a JWT token
-      const token = generateToken({ username });
-
-      // Return the token
-      return Response.json({ 
-        success: true, 
-        token,
-        message: 'Login successful' 
-      });
+    // Check if credentials are valid
+    if (!isPasswordValid) {
+      return Response.json({
+        success: false,
+        message: 'Invalid username or password'
+      }, { status: 401 });
     }
 
-    // Invalid credentials
-    return Response.json({ 
-      success: false, 
-      message: 'Invalid username or password' 
-    }, { status: 401 });
+    // Generate a JWT token
+    const token = generateToken({ username });
+
+    // Return the token
+    return Response.json({
+      success: true,
+      token,
+      message: 'Login successful'
+    });
+
   } catch (error) {
     console.error('Login error:', error);
 

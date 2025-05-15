@@ -7,7 +7,7 @@ const sql = new SQL({
   url: process.env.POSTGRES_URL,
   
   // Optional configuration
-  max: 20, // Maximum connections in pool
+  max: 10, // Maximum connections in pool
   idleTimeout: 30, // Close idle connections after 30s
   connectionTimeout: 30, // Connection timeout in seconds
   
@@ -28,6 +28,7 @@ const sql = new SQL({
 
 // Test the connection
 try {
+  await sql.connect();
   const [{ now }] = await sql`SELECT NOW() as now`;
   console.log('Database connected successfully at', now);
 } catch (error) {

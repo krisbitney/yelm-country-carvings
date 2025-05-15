@@ -2,7 +2,7 @@
 import '../setup';
 import "../../src/index";
 import { describe, test, expect } from 'bun:test';
-import { authenticateJWT, authenticateAdmin } from '../../src/middleware/auth';
+import { authenticateJWT } from '../../src/middleware/auth';
 import { generateToken } from '../../src/utils/jwt';
 import {createTestRequest} from "../utils/helpers";
 
@@ -54,13 +54,13 @@ describe('Authentication Middleware', () => {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
-      const response = authenticateAdmin(request);
+      const response = authenticateJWT(request);
       expect(response).toBeUndefined();
     });
 
     test('should return 401 response when no token is provided', () => {
       const request = createTestRequest({});
-      const response = authenticateAdmin(request);
+      const response = authenticateJWT(request);
 
       expect(response).toBeDefined();
       expect(response?.status).toBe(401);
@@ -71,7 +71,7 @@ describe('Authentication Middleware', () => {
         headers: { 'Authorization': 'Bearer invalid.token.here' }
       });
 
-      const response = authenticateAdmin(request);
+      const response = authenticateJWT(request);
       expect(response).toBeDefined();
       expect(response?.status).toBe(401);
     });

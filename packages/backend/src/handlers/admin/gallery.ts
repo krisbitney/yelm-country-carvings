@@ -1,19 +1,13 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { authenticateAdmin } from '../../middleware/auth';
 import { galleryRepository } from '../../repositories/galleryRepository';
 import {IMAGES_DIR} from "../../index";
 
 /**
  * Get all gallery images
- * @param req - The request object
  * @returns A Response object with the gallery images
  */
-export const getGallery = async (req: Request): Promise<Response> => {
-  // Authenticate the request
-  const authResponse = authenticateAdmin(req);
-  if (authResponse) return authResponse;
-
+export const getGallery = async (): Promise<Response> => {
   try {
     const gallery = await galleryRepository.getAll();
     return Response.json(gallery);
@@ -32,10 +26,6 @@ export const getGallery = async (req: Request): Promise<Response> => {
  * @returns A Response object with the result
  */
 export const addGalleryImage = async (req: Request): Promise<Response> => {
-  // Authenticate the request
-  const authResponse = authenticateAdmin(req);
-  if (authResponse) return authResponse;
-
   try {
     // Parse the request body
     const imageData = await req.json();
@@ -51,6 +41,7 @@ export const addGalleryImage = async (req: Request): Promise<Response> => {
       }
     }
 
+    // TODO: i can do this just by counting the images and adding 1
     // Get all gallery images to determine the next order
     const gallery = await galleryRepository.getAll();
 
@@ -81,15 +72,10 @@ export const addGalleryImage = async (req: Request): Promise<Response> => {
 
 /**
  * Delete a gallery image
- * @param req - The request object
  * @param id - The ID of the image to delete
  * @returns A Response object with the result
  */
-export const deleteGalleryImage = async (req: Request, id: number): Promise<Response> => {
-  // Authenticate the request
-  const authResponse = authenticateAdmin(req);
-  if (authResponse) return authResponse;
-
+export const deleteGalleryImage = async (id: number): Promise<Response> => {
   try {
     // Get the image to delete (for file cleanup)
     const imageToDelete = await galleryRepository.getById(id);
@@ -142,10 +128,6 @@ export const deleteGalleryImage = async (req: Request, id: number): Promise<Resp
  * @returns A Response object with the result
  */
 export const reorderGallery = async (req: Request): Promise<Response> => {
-  // Authenticate the request
-  const authResponse = authenticateAdmin(req);
-  if (authResponse) return authResponse;
-
   try {
     // Parse the request body to get the new order of image IDs
     const { imageIds } = await req.json();

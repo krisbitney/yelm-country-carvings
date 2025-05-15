@@ -1,6 +1,5 @@
 import path from 'path';
 import sharp from 'sharp';
-import { authenticateAdmin } from '../../middleware/auth';
 import {IMAGES_DIR} from "../../index";
 
 /**
@@ -40,10 +39,6 @@ const processAndSaveImage = async (
  * @returns A Response object with the result
  */
 export const handleImageUpload = async (req: Request): Promise<Response> => {
-  // Authenticate the request
-  const authResponse = authenticateAdmin(req);
-  if (authResponse) return authResponse;
-
   try {
     // Check if the request is multipart/form-data
     const contentType = req.headers.get('Content-Type') || '';
@@ -57,21 +52,21 @@ export const handleImageUpload = async (req: Request): Promise<Response> => {
     // Parse the form data
     const formData = await req.formData();
 
-    // Get the image file
-    const imageFile = formData.get('image') as File | null;
-    if (!imageFile) {
-      return Response.json({
-        success: false,
-        message: 'No image file provided'
-      }, { status: 400 });
-    }
-
     // Get the image type (events or gallery)
     const type = formData.get('type') as 'events' | 'gallery' | null;
     if (!type || (type !== 'events' && type !== 'gallery')) {
       return Response.json({
         success: false,
         message: 'Invalid or missing image type (must be "events" or "gallery")'
+      }, { status: 400 });
+    }
+
+    // Get the image file
+    const imageFile = formData.get('image') as File | null;
+    if (!imageFile) {
+      return Response.json({
+        success: false,
+        message: 'No image file provided'
       }, { status: 400 });
     }
 

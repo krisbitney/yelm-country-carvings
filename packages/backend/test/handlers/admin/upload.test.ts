@@ -23,7 +23,7 @@ describe('Image Upload Handler', () => {
     await cleanupImageDirectories();
   });
 
-  test('should upload an image successfully when authenticated', async () => {
+  test('should upload an image successfully', async () => {
     // Create a mock FormData with file
     const formData = new FormData();
 
@@ -54,19 +54,6 @@ describe('Image Upload Handler', () => {
     expect(data.imagePath).toContain('.webp');
     const absImagePath = path.join(TEST_IMAGE_DIR, data.imagePath);
     await fs.unlink(absImagePath);
-  });
-
-  test('should return 401 when not authenticated', async () => {
-    // Create a mock request without auth
-    const request = createTestRequest({
-      method: 'POST'
-    });
-
-    // Call the handler
-    const response = await handleImageUpload(request);
-
-    // Verify the response
-    expect(response.status).toBe(401);
   });
 
   test('should return 400 when no file is provided', async () => {

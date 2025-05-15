@@ -1,6 +1,5 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { authenticateAdmin } from '../../middleware/auth';
 import { eventRepository } from '../../repositories/eventRepository';
 import {IMAGES_DIR} from "../../index";
 
@@ -9,11 +8,7 @@ import {IMAGES_DIR} from "../../index";
  * @param req - The request object
  * @returns A Response object with the events
  */
-export const getEvents = async (req: Request): Promise<Response> => {
-  // Authenticate the request
-  const authResponse = authenticateAdmin(req);
-  if (authResponse) return authResponse;
-
+export const getEvents = async (): Promise<Response> => {
   try {
     const events = await eventRepository.getAll();
     return Response.json(events);
@@ -32,10 +27,6 @@ export const getEvents = async (req: Request): Promise<Response> => {
  * @returns A Response object with the result
  */
 export const createEvent = async (req: Request): Promise<Response> => {
-  // Authenticate the request
-  const authResponse = authenticateAdmin(req);
-  if (authResponse) return authResponse;
-
   try {
     // Parse the request body
     const eventData = await req.json();
@@ -44,9 +35,9 @@ export const createEvent = async (req: Request): Promise<Response> => {
     const requiredFields = ['title', 'date', 'location', 'description', 'image'];
     for (const field of requiredFields) {
       if (!eventData[field]) {
-        return Response.json({ 
-          success: false, 
-          message: `Missing required field: ${field}` 
+        return Response.json({
+          success: false,
+          message: `Missing required field: ${field}`
         }, { status: 400 });
       }
     }
@@ -54,16 +45,16 @@ export const createEvent = async (req: Request): Promise<Response> => {
     // Create the new event
     const newEvent = await eventRepository.create(eventData);
 
-    return Response.json({ 
-      success: true, 
+    return Response.json({
+      success: true,
       event: newEvent,
-      message: 'Event created successfully' 
+      message: 'Event created successfully'
     }, { status: 201 });
   } catch (error) {
     console.error('Error creating event:', error);
-    return Response.json({ 
-      success: false, 
-      message: 'Failed to create event' 
+    return Response.json({
+      success: false,
+      message: 'Failed to create event'
     }, { status: 500 });
   }
 };
@@ -75,10 +66,6 @@ export const createEvent = async (req: Request): Promise<Response> => {
  * @returns A Response object with the result
  */
 export const updateEvent = async (req: Request, id: number): Promise<Response> => {
-  // Authenticate the request
-  const authResponse = authenticateAdmin(req);
-  if (authResponse) return authResponse;
-
   try {
     // Parse the request body
     const eventData = await req.json();
@@ -87,37 +74,32 @@ export const updateEvent = async (req: Request, id: number): Promise<Response> =
     const updatedEvent = await eventRepository.update(id, eventData);
 
     if (!updatedEvent) {
-      return Response.json({ 
-        success: false, 
-        message: 'Event not found' 
+      return Response.json({
+        success: false,
+        message: 'Event not found'
       }, { status: 404 });
     }
 
-    return Response.json({ 
-      success: true, 
+    return Response.json({
+      success: true,
       event: updatedEvent,
-      message: 'Event updated successfully' 
+      message: 'Event updated successfully'
     });
   } catch (error) {
     console.error('Error updating event:', error);
-    return Response.json({ 
-      success: false, 
-      message: 'Failed to update event' 
+    return Response.json({
+      success: false,
+      message: 'Failed to update event'
     }, { status: 500 });
   }
 };
 
 /**
  * Delete an event
- * @param req - The request object
  * @param id - The ID of the event to delete
  * @returns A Response object with the result
  */
-export const deleteEvent = async (req: Request, id: number): Promise<Response> => {
-  // Authenticate the request
-  const authResponse = authenticateAdmin(req);
-  if (authResponse) return authResponse;
-
+export const deleteEvent = async (id: number): Promise<Response> => {
   try {
     // Get the event to delete (for image cleanup)
     const eventToDelete = await eventRepository.getById(id);

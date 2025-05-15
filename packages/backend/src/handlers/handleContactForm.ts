@@ -100,7 +100,8 @@ export const handleContactForm = async (req: Request) => {
         success: true,
         message: 'Your message has been sent successfully!'
       });
-    } catch (sendError) {
+    } catch (e) {
+      const sendError = e as Error;
       console.error('Error sending email with SMTP2GO:', sendError);
 
       // Check if the error is related to the API key
@@ -115,7 +116,8 @@ export const handleContactForm = async (req: Request) => {
 
       throw sendError; // Re-throw to be caught by the outer try-catch
     }
-  } catch (error) {
+  } catch (e) {
+    const error = e as Error;
     console.error('Error in contact form handler:', error);
 
     // Provide a more detailed error message in development

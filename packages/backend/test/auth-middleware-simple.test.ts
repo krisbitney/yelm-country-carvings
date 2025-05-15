@@ -2,7 +2,7 @@
 import './setup';
 import "../src/index";
 import { describe, test, expect, spyOn } from 'bun:test';
-import { authenticateJWT, authenticateAdmin } from '../src/middleware/auth';
+import { authenticateJWT } from '../src/middleware/auth';
 import * as jwtUtils from '../src/utils/jwt';
 
 describe('Authentication Middleware - Simple Tests', () => {
@@ -76,7 +76,7 @@ describe('Authentication Middleware - Simple Tests', () => {
       });
 
       // Call the middleware
-      const response = authenticateAdmin(request);
+      const response = authenticateJWT(request);
 
       // Verify the response
       expect(response).toBeUndefined();
@@ -90,7 +90,7 @@ describe('Authentication Middleware - Simple Tests', () => {
       const request = new Request('http://localhost');
 
       // Call the middleware
-      const response = authenticateAdmin(request);
+      const response = authenticateJWT(request);
 
       // Verify the response
       expect(response).toBeDefined();
