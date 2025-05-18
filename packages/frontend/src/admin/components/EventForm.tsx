@@ -54,6 +54,7 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
           endDate: format(new Date(), 'yyyy-MM-dd'),
           image: '',
         },
+    mode: 'onChange', // Enable validation on change
   });
 
   // Watch the start and end date fields
@@ -94,11 +95,11 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
           id="title"
           type="text"
           {...register('title')}
-          className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
+          className={`w-full px-4 py-2 border ${errors.title ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]`}
           disabled={isSubmitting}
         />
         {errors.title && (
-          <p className="mt-1 text-red-600 text-sm">{errors.title.message}</p>
+          <p className="mt-1 text-red-600 text-sm font-bold">{errors.title.message}</p>
         )}
       </div>
 
@@ -112,11 +113,11 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
             id="startDate"
             type="date"
             {...register('startDate')}
-            className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
+            className={`w-full px-4 py-2 border ${errors.startDate ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]`}
             disabled={isSubmitting}
           />
           {errors.startDate && (
-            <p className="mt-1 text-red-600 text-sm">{errors.startDate.message}</p>
+            <p className="mt-1 text-red-600 text-sm font-bold">{errors.startDate.message}</p>
           )}
         </div>
         <div>
@@ -127,11 +128,11 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
             id="endDate"
             type="date"
             {...register('endDate')}
-            className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
+            className={`w-full px-4 py-2 border ${errors.endDate ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]`}
             disabled={isSubmitting}
           />
           {errors.endDate && (
-            <p className="mt-1 text-red-600 text-sm">{errors.endDate.message}</p>
+            <p className="mt-1 text-red-600 text-sm font-bold">{errors.endDate.message}</p>
           )}
         </div>
       </div>
@@ -161,11 +162,11 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
           id="location"
           type="text"
           {...register('location')}
-          className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
+          className={`w-full px-4 py-2 border ${errors.location ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]`}
           disabled={isSubmitting}
         />
         {errors.location && (
-          <p className="mt-1 text-red-600 text-sm">{errors.location.message}</p>
+          <p className="mt-1 text-red-600 text-sm font-bold">{errors.location.message}</p>
         )}
       </div>
 
@@ -178,11 +179,11 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
           id="description"
           {...register('description')}
           rows={4}
-          className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
+          className={`w-full px-4 py-2 border ${errors.description ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]`}
           disabled={isSubmitting}
         />
         {errors.description && (
-          <p className="mt-1 text-red-600 text-sm">{errors.description.message}</p>
+          <p className="mt-1 text-red-600 text-sm font-bold">{errors.description.message}</p>
         )}
       </div>
 

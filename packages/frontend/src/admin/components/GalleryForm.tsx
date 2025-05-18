@@ -35,6 +35,7 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ onSubmit, onCancel, uploadIma
       alt: '',
       src: '',
     },
+    mode: 'onChange', // Enable validation on change
   });
 
   // Handle image upload
@@ -90,7 +91,7 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ onSubmit, onCancel, uploadIma
           <button
             type="button"
             onClick={() => document.getElementById('imageUpload')?.click()}
-            className="px-4 py-2 bg-[#4A6151] text-white font-['Lato'] rounded-md hover:bg-[#3D5142] transition-colors duration-300 disabled:opacity-50"
+            className={`px-4 py-2 ${errors.src ? 'bg-red-500 hover:bg-red-600' : 'bg-[#4A6151] hover:bg-[#3D5142]'} text-white font-['Lato'] rounded-md transition-colors duration-300 disabled:opacity-50`}
             disabled={isSubmitting || uploadProgress}
           >
             {uploadProgress ? 'Uploading...' : 'Upload Image'}
@@ -101,7 +102,7 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ onSubmit, onCancel, uploadIma
             className="hidden"
           />
           {errors.src && (
-            <p className="mt-1 text-red-600 text-sm">{errors.src.message}</p>
+            <p className="mt-1 text-red-600 text-sm font-bold">{errors.src.message}</p>
           )}
         </div>
 
@@ -129,12 +130,12 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ onSubmit, onCancel, uploadIma
           id="alt"
           type="text"
           {...register('alt')}
-          className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
+          className={`w-full px-4 py-2 border ${errors.alt ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]`}
           disabled={isSubmitting}
           placeholder="Brief description of the image"
         />
         {errors.alt && (
-          <p className="mt-1 text-red-600 text-sm">{errors.alt.message}</p>
+          <p className="mt-1 text-red-600 text-sm font-bold">{errors.alt.message}</p>
         )}
       </div>
 

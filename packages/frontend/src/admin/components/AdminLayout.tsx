@@ -54,6 +54,26 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
               >
                 Dashboard
               </Link>
+              <Link
+                to="/admin/events"
+                className={`px-4 py-2 rounded-md transition-colors duration-300 mr-2 ${
+                  location.pathname.includes('/admin/events')
+                    ? 'bg-[#3D5142] text-white cursor-default'
+                    : 'hover:bg-[#3D5142] text-white'
+                }`}
+              >
+                Events
+              </Link>
+              <Link
+                to="/admin/gallery"
+                className={`px-4 py-2 rounded-md transition-colors duration-300 mr-2 ${
+                  location.pathname.includes('/admin/gallery')
+                    ? 'bg-[#3D5142] text-white cursor-default'
+                    : 'hover:bg-[#3D5142] text-white'
+                }`}
+              >
+                Gallery
+              </Link>
               <button
                 onClick={logout}
                 className="px-4 py-2 bg-[#B87351] text-white rounded-md hover:bg-[#A07E5D] transition-colors duration-300"
