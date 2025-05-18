@@ -25,6 +25,33 @@ export const eventRepository = {
     }
   },
 
+  // Get upcoming events (3 nearest in the future)
+  async getUpcoming(): Promise<MarketEvent[]> {
+    try {
+      const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+
+      const events = await sql`
+        SELECT 
+          id, 
+          title, 
+          date, 
+          location, 
+          description, 
+          image, 
+          start_date as "startDate", 
+          end_date as "endDate" 
+        FROM events 
+        WHERE start_date >= ${currentDate}
+        ORDER BY start_date ASC
+        LIMIT 3
+      `;
+      return events;
+    } catch (error) {
+      console.error('Database error in getUpcoming events:', error);
+      throw new Error('Failed to retrieve upcoming events');
+    }
+  },
+
   // Get event by ID
   async getById(id: number): Promise<MarketEvent | null> {
     try {
@@ -119,7 +146,7 @@ export const eventRepository = {
           start_date as "startDate", 
           end_date as "endDate"
       `;
-      
+
       return updatedEvent;
     } catch (error) {
       console.error(`Database error in update event(${id}):`, error);

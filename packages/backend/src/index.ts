@@ -47,6 +47,16 @@ const server = Bun.serve({
       }
     },
 
+    "/api/upcoming-events": async () => {
+      try {
+        const upcomingEvents = await eventRepository.getUpcoming();
+        return Response.json(upcomingEvents);
+      } catch (error) {
+        console.error('Error getting upcoming events:', error);
+        return Response.json({ success: false, message: 'Failed to get upcoming events' }, { status: 500 });
+      }
+    },
+
     "/api/gallery": async () => {
       try {
         const gallery = await galleryRepository.getAll();
