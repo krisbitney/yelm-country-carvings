@@ -19,7 +19,7 @@ services:
 
   backend:
     build:
-      context: ./packages/backend
+      context: .
     environment:
       - PORT=3000
       - POSTGRES_URL=postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
@@ -27,6 +27,8 @@ services:
       - ADMIN_PASSWORD_HASH=${ADMIN_PASSWORD_HASH}
       - JWT_SECRET=${JWT_SECRET}
       - SMTP2GO_API_KEY=${SMTP2GO_API_KEY}
+    ports:
+      - "3000:3000"
     volumes:
       - ./packages/backend/img:/app/img
     depends_on:

@@ -1,0 +1,52 @@
+# Dependency directories
+node_modules
+**/node_modules
+
+# Build outputs
+dist
+**/dist
+dist-ssr
+**/dist-ssr
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment variables
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Editor directories and files
+.vscode
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Test coverage
+coverage
+**/coverage
+
+# Temporary files
+*.local
+.cache
+tmp
+temp
+
+# Version control
+.git
+.gitignore
+.github
+
+# Docker files (not needed in build context)
+docker-compose*.yml
