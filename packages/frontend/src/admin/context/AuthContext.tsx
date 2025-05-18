@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
 
 // Define the authentication state interface
 interface AuthState {
@@ -88,7 +88,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   // Login function
-  const login = async (username: string, password: string): Promise<boolean> => {
+  const login = useCallback(async (username: string, password: string): Promise<boolean> => {
     try {
       setAuthState(prev => ({ ...prev, loading: true, error: null }));
 
@@ -139,10 +139,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       return false;
     }
-  };
+  }, []);
 
   // Logout function
-  const logout = () => {
+  const logout = useCallback(() => {
     // Remove the token from localStorage
     localStorage.removeItem('adminToken');
 
@@ -153,20 +153,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       loading: false,
       error: null,
     });
-  };
+  }, []);
 
   // Clear error function
-  const clearError = () => {
+  const clearError = useCallback(() => {
     setAuthState(prev => ({ ...prev, error: null }));
-  };
+  }, []);
 
   // Create the context value
-  const contextValue: AuthContextType = {
+  const contextValue = useMemo<AuthContextType>(() => ({
     ...authState,
     login,
     logout,
     clearError,
-  };
+  }), [authState, login, logout, clearError]);
 
   // Provide the context to children
   return (

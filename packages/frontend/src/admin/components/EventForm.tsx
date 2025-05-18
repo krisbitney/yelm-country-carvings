@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { MarketEvent } from '../../types.ts';
 import { format } from 'date-fns';
-import {generateDateString} from "../../utils/generateDateString.ts";
+import { generateDateString } from "../../utils/generateDateString.ts";
+import ImageUpload from './ImageUpload';
 
 // Define the form validation schema
 const eventSchema = z.object({
@@ -29,8 +30,6 @@ interface EventFormProps {
 
 const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, uploadImage }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(event?.image || null);
-  const [uploadProgress, setUploadProgress] = useState<boolean>(false);
 
   // Initialize the form with default values or existing event data
   const {
@@ -38,6 +37,7 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
     handleSubmit,
     control,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<EventFormData>({
     resolver: zodResolver(eventSchema),
@@ -56,46 +56,28 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
         },
   });
 
-  // Handle image upload
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // Watch the start and end date fields
+  const startDate = watch('startDate');
+  const endDate = watch('endDate');
 
-    try {
-      setUploadProgress(true);
-      const imagePath = await uploadImage(file);
-      
-      if (imagePath) {
-        setValue('image', imagePath);
-        setImagePreview(imagePath);
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    } finally {
-      setUploadProgress(false);
-    }
-  };
 
   // Handle form submission
-  const handleFormSubmit = async (data: EventFormData) => {
+  const handleFormSubmit = useCallback(async (data: EventFormData) => {
     try {
       setIsSubmitting(true);
       await onSubmit(data);
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [onSubmit, setIsSubmitting]);
 
   // Update the date string when start or end date changes
-  const updateDateString = () => {
-    const startDate = document.getElementById('startDate') as HTMLInputElement;
-    const endDate = document.getElementById('endDate') as HTMLInputElement;
-    
-    if (startDate?.value && endDate?.value) {
-      const dateString = generateDateString(startDate.value, endDate.value);
+  useEffect(() => {
+    if (startDate && endDate) {
+      const dateString = generateDateString(startDate, endDate);
       setValue('date', dateString);
     }
-  };
+  }, [startDate, endDate, setValue]);
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6 bg-white p-6 rounded-lg shadow-md">
@@ -132,7 +114,6 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
             {...register('startDate')}
             className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
             disabled={isSubmitting}
-            onChange={updateDateString}
           />
           {errors.startDate && (
             <p className="mt-1 text-red-600 text-sm">{errors.startDate.message}</p>
@@ -148,7 +129,6 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
             {...register('endDate')}
             className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
             disabled={isSubmitting}
-            onChange={updateDateString}
           />
           {errors.endDate && (
             <p className="mt-1 text-red-600 text-sm">{errors.endDate.message}</p>
@@ -208,49 +188,17 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
 
       {/* Image Upload */}
       <div>
-        <label htmlFor="image" className="block text-[#3E3C3B] font-['Lato'] mb-1">
-          Event Image
-        </label>
-        <div className="flex items-center space-x-4">
-          <input
-            type="file"
-            id="imageUpload"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="hidden"
-            disabled={isSubmitting || uploadProgress}
-          />
-          <button
-            type="button"
-            onClick={() => document.getElementById('imageUpload')?.click()}
-            className="px-4 py-2 bg-[#4A6151] text-white font-['Lato'] rounded-md hover:bg-[#3D5142] transition-colors duration-300 disabled:opacity-50"
-            disabled={isSubmitting || uploadProgress}
-          >
-            {uploadProgress ? 'Uploading...' : 'Upload Image'}
-          </button>
-          <input
-            type="text"
-            {...register('image')}
-            className="hidden"
-          />
-          {errors.image && (
-            <p className="mt-1 text-red-600 text-sm">{errors.image.message}</p>
-          )}
-        </div>
-
-        {/* Image Preview */}
-        {imagePreview && (
-          <div className="mt-4">
-            <p className="text-[#3E3C3B] font-['Lato'] mb-2">Image Preview:</p>
-            <div className="w-full max-w-md h-48 bg-[#A07E5D]/20 relative overflow-hidden rounded-md">
-              <img
-                src={imagePreview}
-                alt="Event preview"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        )}
+        <ImageUpload
+          initialImage={event?.image}
+          onImageUpload={uploadImage}
+          onImageChange={(imagePath) => setValue('image', imagePath)}
+          error={errors.image?.message}
+        />
+        <input
+          type="text"
+          {...register('image')}
+          className="hidden"
+        />
       </div>
 
       {/* Form Actions */}
