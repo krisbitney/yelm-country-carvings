@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import AdminLayout from '../components/AdminLayout';
 import EventForm from '../components/EventForm';
@@ -11,6 +11,48 @@ const EventsPage: React.FC = () => {
   const [isAddingEvent, setIsAddingEvent] = useState(false);
   const [isEditingEvent, setIsEditingEvent] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
+
+  // Categorize events into past, upcoming, and future
+  const { pastEvents, upcomingEvents, futureEvents } = useMemo(() => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Start of today
+
+    // Sort events by date (ascending)
+    const sortedEvents = [...events].sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateA.getTime() - dateB.getTime();
+    });
+
+    // Categorize events
+    const past: MarketEvent[] = [];
+    const upcoming: MarketEvent[] = [];
+    const future: MarketEvent[] = [];
+
+    sortedEvents.forEach(event => {
+      const eventDate = new Date(event.date);
+
+      if (eventDate < today) {
+        // Past events
+        past.push(event);
+      } else {
+        // Future events (will be split into upcoming and future)
+        if (upcoming.length < 3) {
+          // Three nearest future events
+          upcoming.push(event);
+        } else {
+          // Beyond the nearest three
+          future.push(event);
+        }
+      }
+    });
+
+    return {
+      pastEvents: past,
+      upcomingEvents: upcoming,
+      futureEvents: future
+    };
+  }, [events]);
 
   // Fetch events on component mount
   useEffect(() => {
@@ -120,91 +162,297 @@ const EventsPage: React.FC = () => {
               </button>
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <table className="min-w-full divide-y divide-[#A07E5D]/20">
-                <thead className="bg-[#4A6151]">
-                  <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                      Event
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                      Location
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-[#A07E5D]/20">
-                  {events.map((event) => (
-                    <tr key={event.id} className="hover:bg-[#F5F1E9]">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="h-10 w-10 flex-shrink-0 mr-4">
-                            <img
-                              className="h-10 w-10 rounded-full object-cover"
-                              src={event.image.startsWith('/') ? event.image : `/${event.image}`}
-                              alt={event.title}
-                            />
-                          </div>
-                          <div>
-                            <div className="text-sm font-medium text-[#3E3C3B]">{event.title}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-[#3E3C3B]">{event.date}</div>
-                        <div className="text-xs text-[#6B4F41]">
-                          {event.startDate && `From: ${formatDate(event.startDate)}`}
-                        </div>
-                        <div className="text-xs text-[#6B4F41]">
-                          {event.endDate && `To: ${formatDate(event.endDate)}`}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-[#3E3C3B]">{event.location}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        {confirmDelete === event.id ? (
-                          <div className="flex justify-end items-center space-x-2">
-                            <span className="text-[#3E3C3B]">Confirm?</span>
-                            <button
-                              onClick={() => handleDeleteEvent(event.id)}
-                              className="text-red-600 hover:text-red-800"
-                            >
-                              Yes
-                            </button>
-                            <button
-                              onClick={() => setConfirmDelete(null)}
-                              className="text-[#4A6151] hover:text-[#3D5142]"
-                            >
-                              No
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="flex justify-end items-center space-x-4">
-                            <button
-                              onClick={() => startEditEvent(event)}
-                              className="text-[#4A6151] hover:text-[#3D5142]"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => setConfirmDelete(event.id)}
-                              className="text-red-600 hover:text-red-800"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="space-y-8">
+              {/* Upcoming Events Section (three nearest future events) */}
+              <div>
+                <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41] mb-4">Upcoming Events</h3>
+                {upcomingEvents.length === 0 ? (
+                  <div className="text-center py-4 bg-[#F5F1E9] rounded-lg">
+                    <p className="text-[#3E3C3B] font-['Lato']">No upcoming events scheduled.</p>
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                    <table className="min-w-full divide-y divide-[#A07E5D]/20">
+                      <thead className="bg-[#4A6151]">
+                        <tr>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                            Event
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                            Date
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                            Location
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-[#A07E5D]/20">
+                        {upcomingEvents.map((event) => (
+                          <tr key={event.id} className="hover:bg-[#F5F1E9]">
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="flex items-center">
+                                <div className="h-10 w-10 flex-shrink-0 mr-4">
+                                  <img
+                                    className="h-10 w-10 rounded-full object-cover"
+                                    src={event.image.startsWith('/') ? event.image : `/${event.image}`}
+                                    alt={event.title}
+                                  />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-[#3E3C3B]">{event.title}</div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-[#3E3C3B]">{event.date}</div>
+                              <div className="text-xs text-[#6B4F41]">
+                                {event.startDate && `From: ${formatDate(event.startDate)}`}
+                              </div>
+                              <div className="text-xs text-[#6B4F41]">
+                                {event.endDate && `To: ${formatDate(event.endDate)}`}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-[#3E3C3B]">{event.location}</div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                              {confirmDelete === event.id ? (
+                                <div className="flex justify-end items-center space-x-2">
+                                  <span className="text-[#3E3C3B]">Confirm?</span>
+                                  <button
+                                    onClick={() => handleDeleteEvent(event.id)}
+                                    className="text-red-600 hover:text-red-800"
+                                  >
+                                    Yes
+                                  </button>
+                                  <button
+                                    onClick={() => setConfirmDelete(null)}
+                                    className="text-[#4A6151] hover:text-[#3D5142]"
+                                  >
+                                    No
+                                  </button>
+                                </div>
+                              ) : (
+                                <div className="flex justify-end items-center space-x-4">
+                                  <button
+                                    onClick={() => startEditEvent(event)}
+                                    className="text-[#4A6151] hover:text-[#3D5142]"
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    onClick={() => setConfirmDelete(event.id)}
+                                    className="text-red-600 hover:text-red-800"
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              {/* Future Events Section (beyond the nearest three) */}
+              <div>
+                <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41] mb-4">Future Events</h3>
+                {futureEvents.length === 0 ? (
+                  <div className="text-center py-4 bg-[#F5F1E9] rounded-lg">
+                    <p className="text-[#3E3C3B] font-['Lato']">No additional future events scheduled.</p>
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                    <table className="min-w-full divide-y divide-[#A07E5D]/20">
+                      <thead className="bg-[#4A6151]">
+                        <tr>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                            Event
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                            Date
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                            Location
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-[#A07E5D]/20">
+                        {futureEvents.map((event) => (
+                          <tr key={event.id} className="hover:bg-[#F5F1E9]">
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="flex items-center">
+                                <div className="h-10 w-10 flex-shrink-0 mr-4">
+                                  <img
+                                    className="h-10 w-10 rounded-full object-cover"
+                                    src={event.image.startsWith('/') ? event.image : `/${event.image}`}
+                                    alt={event.title}
+                                  />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-[#3E3C3B]">{event.title}</div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-[#3E3C3B]">{event.date}</div>
+                              <div className="text-xs text-[#6B4F41]">
+                                {event.startDate && `From: ${formatDate(event.startDate)}`}
+                              </div>
+                              <div className="text-xs text-[#6B4F41]">
+                                {event.endDate && `To: ${formatDate(event.endDate)}`}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-[#3E3C3B]">{event.location}</div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                              {confirmDelete === event.id ? (
+                                <div className="flex justify-end items-center space-x-2">
+                                  <span className="text-[#3E3C3B]">Confirm?</span>
+                                  <button
+                                    onClick={() => handleDeleteEvent(event.id)}
+                                    className="text-red-600 hover:text-red-800"
+                                  >
+                                    Yes
+                                  </button>
+                                  <button
+                                    onClick={() => setConfirmDelete(null)}
+                                    className="text-[#4A6151] hover:text-[#3D5142]"
+                                  >
+                                    No
+                                  </button>
+                                </div>
+                              ) : (
+                                <div className="flex justify-end items-center space-x-4">
+                                  <button
+                                    onClick={() => startEditEvent(event)}
+                                    className="text-[#4A6151] hover:text-[#3D5142]"
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    onClick={() => setConfirmDelete(event.id)}
+                                    className="text-red-600 hover:text-red-800"
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              {/* Past Events Section */}
+              <div>
+                <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41] mb-4">Past Events</h3>
+                {pastEvents.length === 0 ? (
+                  <div className="text-center py-4 bg-[#F5F1E9] rounded-lg">
+                    <p className="text-[#3E3C3B] font-['Lato']">No past events found.</p>
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                    <table className="min-w-full divide-y divide-[#A07E5D]/20">
+                      <thead className="bg-[#4A6151]">
+                        <tr>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                            Event
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                            Date
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                            Location
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-[#A07E5D]/20">
+                        {pastEvents.map((event) => (
+                          <tr key={event.id} className="hover:bg-[#F5F1E9]">
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="flex items-center">
+                                <div className="h-10 w-10 flex-shrink-0 mr-4">
+                                  <img
+                                    className="h-10 w-10 rounded-full object-cover"
+                                    src={event.image.startsWith('/') ? event.image : `/${event.image}`}
+                                    alt={event.title}
+                                  />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-[#3E3C3B]">{event.title}</div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-[#3E3C3B]">{event.date}</div>
+                              <div className="text-xs text-[#6B4F41]">
+                                {event.startDate && `From: ${formatDate(event.startDate)}`}
+                              </div>
+                              <div className="text-xs text-[#6B4F41]">
+                                {event.endDate && `To: ${formatDate(event.endDate)}`}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-[#3E3C3B]">{event.location}</div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                              {confirmDelete === event.id ? (
+                                <div className="flex justify-end items-center space-x-2">
+                                  <span className="text-[#3E3C3B]">Confirm?</span>
+                                  <button
+                                    onClick={() => handleDeleteEvent(event.id)}
+                                    className="text-red-600 hover:text-red-800"
+                                  >
+                                    Yes
+                                  </button>
+                                  <button
+                                    onClick={() => setConfirmDelete(null)}
+                                    className="text-[#4A6151] hover:text-[#3D5142]"
+                                  >
+                                    No
+                                  </button>
+                                </div>
+                              ) : (
+                                <div className="flex justify-end items-center space-x-4">
+                                  <button
+                                    onClick={() => startEditEvent(event)}
+                                    className="text-[#4A6151] hover:text-[#3D5142]"
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    onClick={() => setConfirmDelete(event.id)}
+                                    className="text-red-600 hover:text-red-800"
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </>

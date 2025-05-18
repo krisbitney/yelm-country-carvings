@@ -1,12 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../components/AdminLayout';
 
 const DashboardPage: React.FC = () => {
+  // Admin name from environment variable or default to "Admin"
+  const adminName = import.meta.env.VITE_ADMIN_NAME || "Admin";
+
+  // Collection of inspirational quotes
+  const inspirationalQuotes = [
+    "Creativity is intelligence having fun. - Albert Einstein",
+    "The best way to predict the future is to create it. - Peter Drucker",
+    "Your work is going to fill a large part of your life, and the only way to be truly satisfied is to do what you believe is great work. - Steve Jobs",
+    "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
+    "Success is not the key to happiness. Happiness is the key to success. - Albert Schweitzer"
+  ];
+
+  // State for the current inspirational quote
+  const [quote, setQuote] = useState<string>("");
+
+  // Set a random inspirational quote on component mount
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * inspirationalQuotes.length);
+    setQuote(inspirationalQuotes[randomIndex]);
+  }, []);
+
   return (
     <AdminLayout title="Admin Portal">
       <div className="mb-8">
-        <h2 className="font-['Cinzel'] text-3xl font-bold text-[#6B4F41] mb-4">Welcome to the Admin Portal</h2>
+        <h2 className="font-['Cinzel'] text-3xl font-bold text-[#6B4F41] mb-4">Welcome, {adminName}!</h2>
         <p className="text-[#3E3C3B] font-['Lato']">
           Use this dashboard to manage your website content. Select a section below to get started.
         </p>
@@ -57,11 +78,11 @@ const DashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Help Section */}
+      {/* Inspirational Message Section */}
       <div className="mt-12 bg-white rounded-lg shadow-md p-6">
-        <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4">Need Help?</h3>
-        <p className="text-[#3E3C3B] font-['Lato'] mb-4">
-          If you need assistance with managing your website content, refer to the documentation or contact your website administrator.
+        <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4">Daily Inspiration</h3>
+        <p className="text-[#3E3C3B] font-['Lato'] mb-4 italic">
+          "{quote}"
         </p>
         <div className="flex flex-wrap gap-4">
           <a
