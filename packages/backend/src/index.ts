@@ -76,7 +76,7 @@ const server = Bun.serve({
     // Admin authentication endpoints
     "/api/auth/login": {
       POST: async (req) => {
-        return authenticateJWT(req) ?? await handleAdminLogin(req);
+        return await handleAdminLogin(req);
       }
     },
 
