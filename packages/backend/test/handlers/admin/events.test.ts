@@ -1,5 +1,3 @@
-// Import setup first to ensure environment variables are set
-import '../../setup';
 import "../../../src/index";
 import {describe, test, expect, beforeEach, beforeAll, afterAll} from 'bun:test';
 import { getEvents, createEvent, updateEvent, deleteEvent } from '../../../src/handlers/admin/events';

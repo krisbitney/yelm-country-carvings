@@ -1,6 +1,5 @@
 import path from 'path';
 import fs from 'fs';
-import dotenv from 'dotenv';
 import {handleContactForm} from "./handlers/handleContactForm";
 import {handleAdminLogin, handleVerifyToken} from "./handlers/admin/auth";
 import {getEvents, createEvent, updateEvent, deleteEvent} from "./handlers/admin/events";
@@ -9,9 +8,6 @@ import {handleImageUpload} from "./handlers/admin/upload";
 import {authenticateJWT} from "./middleware/auth";
 import {eventRepository} from "./repositories/eventRepository";
 import {galleryRepository} from "./repositories/galleryRepository";
-
-// Load environment variables
-dotenv.config();
 
 const FRONTEND_DIR = path.join(import.meta.dir, '../../frontend/dist');
 // Check if the frontend build directory exists

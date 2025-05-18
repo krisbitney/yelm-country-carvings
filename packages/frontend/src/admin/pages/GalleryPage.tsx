@@ -77,7 +77,7 @@ const GalleryPage: React.FC = () => {
   };
 
   return (
-    <AdminLayout title="Gallery Management">
+    <AdminLayout>
       <div className="mb-6 flex justify-between items-center">
         <h2 className="font-['Cinzel'] text-3xl font-bold text-[#6B4F41]">Gallery Management</h2>
         <button

@@ -1,5 +1,3 @@
-// Import setup first to ensure environment variables are set
-import './setup';
 import "../src/index";
 import { describe, test, expect } from 'bun:test';
 import { extractTokenFromHeader } from '../src/utils/jwt';

@@ -1,5 +1,3 @@
-// Import setup first to ensure environment variables are set
-import '../../setup';
 import "../../../src/index";
 import { describe, test, expect, mock, beforeEach } from 'bun:test';
 import { handleAdminLogin, handleVerifyToken } from '../../../src/handlers/admin/auth';

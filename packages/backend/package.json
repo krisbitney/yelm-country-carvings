@@ -19,7 +19,6 @@
     "docker:down": "docker-compose -f ../../docker-compose.yml down"
   },
   "dependencies": {
-    "dotenv": "^16.5.0",
     "frontend": "workspace:*",
     "jsonwebtoken": "^9.0.2",
     "sharp": "^0.34.1",

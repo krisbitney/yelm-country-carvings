@@ -1,5 +1,5 @@
 import {atcb_action, ATCBActionEventConfig} from 'add-to-calendar-button';
-import {MarketEvent} from "../../types.ts";
+import {MarketEvent} from "../types.ts";
 
 // Add event to calendar function using add-to-calendar-button library
 export const addToCalendar = async (event: MarketEvent, e: React.MouseEvent) => {

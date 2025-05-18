@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {useEvents} from "../../hooks/useEvents.tsx";
-import {addToCalendar} from "../../utils/addToCalendar.ts";
+import {addToCalendar} from "../../../utils/addToCalendar.ts";
 
 interface EventsSectionProps {
   // Add any props if needed
