@@ -4,7 +4,7 @@ import AdminLayout from '../components/AdminLayout';
 
 const DashboardPage: React.FC = () => {
   return (
-    <AdminLayout>
+    <AdminLayout title="Admin Portal">
       <div className="mb-8">
         <h2 className="font-['Cinzel'] text-3xl font-bold text-[#6B4F41] mb-4">Welcome to the Admin Portal</h2>
         <p className="text-[#3E3C3B] font-['Lato']">
