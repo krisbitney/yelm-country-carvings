@@ -9,7 +9,6 @@ export const eventRepository = {
         SELECT 
           id, 
           title, 
-          date, 
           location, 
           description, 
           image, 
@@ -34,7 +33,6 @@ export const eventRepository = {
         SELECT 
           id, 
           title, 
-          date, 
           location, 
           description, 
           image, 
@@ -59,7 +57,6 @@ export const eventRepository = {
         SELECT 
           id, 
           title, 
-          date, 
           location, 
           description, 
           image, 
@@ -81,7 +78,6 @@ export const eventRepository = {
       const [newEvent] = await sql`
         INSERT INTO events (
           title, 
-          date, 
           location, 
           description, 
           image, 
@@ -90,7 +86,6 @@ export const eventRepository = {
         ) 
         VALUES (
           ${event.title}, 
-          ${event.date}, 
           ${event.location}, 
           ${event.description}, 
           ${event.image}, 
@@ -100,7 +95,6 @@ export const eventRepository = {
         RETURNING 
           id, 
           title, 
-          date, 
           location, 
           description, 
           image, 
@@ -124,7 +118,6 @@ export const eventRepository = {
       // Update the event using object helper for cleaner syntax
       const updateData = {
         title: event.title || currentEvent.title,
-        date: event.date || currentEvent.date,
         location: event.location || currentEvent.location,
         description: event.description || currentEvent.description,
         image: event.image || currentEvent.image,
@@ -139,7 +132,6 @@ export const eventRepository = {
         RETURNING 
           id, 
           title, 
-          date, 
           location, 
           description, 
           image, 

@@ -12,7 +12,9 @@ describe('Events Handler', () => {
     date: '2023-12-25',
     location: 'Test Location',
     description: 'Test Description',
-    image: 'events/test.webp'
+    image: 'events/test.webp',
+    startDate: "2023-12-25",
+    endDate: "2023-12-25",
   };
   // Setup valid auth token
   const validToken = createTestToken({ username: 'admin' });

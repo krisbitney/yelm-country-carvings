@@ -5,7 +5,6 @@ import {MarketEvent} from "../../types.ts";
 const loadingEvent: MarketEvent = {
   id: 0,
   title: 'Loading...',
-  date: 'Loading...',
   location: 'Loading...',
   description: 'Loading...',
   image: loadingImage,

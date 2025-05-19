@@ -4,12 +4,11 @@
 export interface MarketEvent {
   id: number;
   title: string;
-  date: string;
   location: string;
   description: string;
   image: string;
-  startDate?: string;
-  endDate?: string;
+  startDate: string;
+  endDate: string;
 }
 
 /**

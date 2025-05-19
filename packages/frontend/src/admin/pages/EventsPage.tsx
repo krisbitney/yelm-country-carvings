@@ -4,6 +4,7 @@ import AdminLayout from '../components/AdminLayout';
 import EventForm from '../components/EventForm';
 import { useAdminEvents } from '../hooks/useAdminEvents';
 import { MarketEvent } from '../../types.ts';
+import {formatDateRange} from "../../utils/dateUtils.ts";
 
 const EventsPage: React.FC = () => {
   const { events, loading, error, fetchEvents, createEvent, updateEvent, deleteEvent, uploadEventImage } = useAdminEvents();
@@ -19,8 +20,8 @@ const EventsPage: React.FC = () => {
 
     // Sort events by date (ascending)
     const sortedEvents = [...events].sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
+      const dateA = new Date(a.startDate);
+      const dateB = new Date(b.startDate);
       return dateA.getTime() - dateB.getTime();
     });
 
@@ -30,7 +31,7 @@ const EventsPage: React.FC = () => {
     const future: MarketEvent[] = [];
 
     sortedEvents.forEach(event => {
-      const eventDate = new Date(event.date);
+      const eventDate = new Date(event.startDate);
 
       if (eventDate < today) {
         // Past events
@@ -207,7 +208,7 @@ const EventsPage: React.FC = () => {
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-[#3E3C3B]">{event.date}</div>
+                              <div className="text-sm text-[#3E3C3B]">{formatDateRange(event.startDate, event.endDate)}</div>
                               <div className="text-xs text-[#6B4F41]">
                                 {event.startDate && `From: ${formatDate(event.startDate)}`}
                               </div>
@@ -304,7 +305,7 @@ const EventsPage: React.FC = () => {
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-[#3E3C3B]">{event.date}</div>
+                              <div className="text-sm text-[#3E3C3B]">{formatDateRange(event.startDate, event.endDate)}</div>
                               <div className="text-xs text-[#6B4F41]">
                                 {event.startDate && `From: ${formatDate(event.startDate)}`}
                               </div>
@@ -401,7 +402,7 @@ const EventsPage: React.FC = () => {
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-[#3E3C3B]">{event.date}</div>
+                              <div className="text-sm text-[#3E3C3B]">{formatDateRange(event.startDate, event.endDate)}</div>
                               <div className="text-xs text-[#6B4F41]">
                                 {event.startDate && `From: ${formatDate(event.startDate)}`}
                               </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {useEvents} from "../../hooks/useEvents.tsx";
 import {addToCalendar} from "../../../utils/addToCalendar.ts";
+import {formatDateRange} from "../../../utils/dateUtils.ts";
 
 interface EventsSectionProps {
   // Add any props if needed
@@ -11,6 +12,7 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
   const [expandedEvents, setExpandedEvents] = useState<number[]>([]);
 
   const { data: events } = useEvents();
+  console.log(events.length)
 
   // Toggle event details expansion
   const toggleEventDetails = (eventId: number) => {
@@ -55,7 +57,7 @@ const EventsSection: React.FC<EventsSectionProps> = () => {
                 {/* Event Content */}
                 <div className="p-6">
                   <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-2 min-h-[3.5rem] flex items-start">{event.title}</h3>
-                  <p className="font-['Lato'] text-[#4A6151] font-semibold mb-2">{event.date}</p>
+                  <p className="font-['Lato'] text-[#4A6151] font-semibold mb-2">{formatDateRange(event.startDate, event.endDate)}</p>
                   <p className="font-['Lato'] text-[#3E3C3B] mb-4">{event.location}</p>
 
                   {/* Expandable Description */}

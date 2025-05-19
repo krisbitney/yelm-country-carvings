@@ -8,8 +8,8 @@ export interface MarketEvent {
   location: string;
   description: string;
   image: string;
-  startDate?: string;
-  endDate?: string;
+  startDate: string;
+  endDate: string;
 }
 
 /**

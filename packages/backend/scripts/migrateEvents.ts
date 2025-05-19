@@ -16,7 +16,7 @@ async function migrateEvents() {
 
     // Validate events data
     const validEvents = events.filter(event => {
-      const isValid = event.title && event.date && event.location && event.description && event.image;
+      const isValid = event.title && event.location && event.description && event.image;
       if (!isValid) {
         console.warn(`Skipping invalid event: ${JSON.stringify(event)}`);
       }
@@ -32,7 +32,6 @@ async function migrateEvents() {
         await tx`
           INSERT INTO events (
             title, 
-            date, 
             location, 
             description, 
             image, 
@@ -41,7 +40,6 @@ async function migrateEvents() {
           ) 
           VALUES (
             ${event.title}, 
-            ${event.date}, 
             ${event.location}, 
             ${event.description}, 
             ${event.image}, 

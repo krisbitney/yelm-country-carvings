@@ -4,8 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { MarketEvent } from '../../types.ts';
 import { format } from 'date-fns';
-import { generateDateString } from "../../utils/generateDateString.ts";
 import ImageUpload from './ImageUpload';
+import {formatDateRange} from "../../utils/dateUtils.ts";
 
 // Define the form validation schema
 const eventSchema = z.object({
@@ -47,7 +47,6 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
         }
       : {
           title: '',
-          date: '',
           location: '',
           description: '',
           startDate: format(new Date(), 'yyyy-MM-dd'),
@@ -75,7 +74,7 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
   // Update the date string when start or end date changes
   useEffect(() => {
     if (startDate && endDate) {
-      const dateString = generateDateString(startDate, endDate);
+      const dateString = formatDateRange(startDate, endDate);
       setValue('date', dateString);
     }
   }, [startDate, endDate, setValue]);

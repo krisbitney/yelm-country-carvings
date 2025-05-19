@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "bun run docker:up && wait-on tcp:localhost:5432 && echo \"sleeping 5 seconds...\" && sleep 5 && bun run db:migrate:all && bun run --watch src/index.ts",
+    "dev": "bun run docker:up && wait-on tcp:localhost:5432 && echo \"sleeping 3 seconds...\" && sleep 5 && bun run db:migrate:all && bun run --watch src/index.ts",
     "build": "bun build src/index.ts --outdir dist --target bun",
     "start": "bun run dist/index.js",
-    "test": "echo $POSTGRES_URL && bun run docker:up && wait-on tcp:localhost:5432 && sleep 5 && bun test && bun run docker:down",
+    "test": "echo $POSTGRES_URL && bun run docker:up && wait-on tcp:localhost:5432 && sleep 3 && bun test && bun run docker:down",
     "test:watch": "bun test --watch",
     "test:coverage": "bun test --coverage",
     "db:create-schema": "bun run scripts/createSchema.ts",
