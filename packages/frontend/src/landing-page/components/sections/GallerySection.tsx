@@ -196,6 +196,7 @@ const GallerySection: React.FC = () => {
               alt={selectedImage.alt}
               className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-xl"
               onClick={(e) => e.stopPropagation()}
+              loading={"lazy"}
             />
             <p className="mt-2 text-center text-white font-['Lato'] text-lg">{selectedImage.alt}</p>
           </div>

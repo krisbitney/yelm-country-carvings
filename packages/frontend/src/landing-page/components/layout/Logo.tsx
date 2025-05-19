@@ -12,6 +12,7 @@ const Logo: React.FC<LogoProps> = ({ className = 'h-12' }) => {
         src={logoImage} 
         alt="Yelm Country Carvings Logo" 
         className="h-full object-contain"
+        loading={"lazy"}
       />
     </div>
   );

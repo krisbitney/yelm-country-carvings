@@ -90,6 +90,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               src={imagePreview}
               alt="Preview"
               className="w-full h-full object-cover"
+              loading={"lazy"}
             />
           </div>
         </div>

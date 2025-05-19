@@ -310,6 +310,7 @@ const EventsPage: React.FC = () => {
                                     className="h-10 w-10 rounded-full object-cover"
                                     src={event.image.startsWith('/') ? event.image : `/${event.image}`}
                                     alt={event.title}
+                                    loading={"lazy"}
                                   />
                                 </div>
                                 <div>
@@ -459,6 +460,7 @@ const EventsPage: React.FC = () => {
                                     className="h-10 w-10 rounded-full object-cover"
                                     src={event.image.startsWith('/') ? event.image : `/${event.image}`}
                                     alt={event.title}
+                                    loading={"lazy"}
                                   />
                                 </div>
                                 <div>
@@ -608,6 +610,7 @@ const EventsPage: React.FC = () => {
                                     className="h-10 w-10 rounded-full object-cover"
                                     src={event.image.startsWith('/') ? event.image : `/${event.image}`}
                                     alt={event.title}
+                                    loading={"lazy"}
                                   />
                                 </div>
                                 <div>

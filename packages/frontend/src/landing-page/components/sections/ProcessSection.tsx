@@ -112,6 +112,7 @@ const ProcessSection: React.FC<ProcessSectionProps> = () => {
               src={processSteps[activeStep].image} 
               alt={processSteps[activeStep].title} 
               className="w-full h-full object-contain"
+              loading={"lazy"}
             />
 
             {/* Caption */}
@@ -170,6 +171,7 @@ const ProcessSection: React.FC<ProcessSectionProps> = () => {
                   src={step.image} 
                   alt={`Thumbnail for ${step.title}`} 
                   className="w-full h-full object-cover"
+                  loading={"lazy"}
                 />
               </div>
             ))}
@@ -213,6 +215,7 @@ const ProcessSection: React.FC<ProcessSectionProps> = () => {
                   src={processSteps[activeStep].image} 
                   alt={processSteps[activeStep].title} 
                   className="w-full h-auto max-h-[50vh] object-contain mx-auto"
+                  loading={"lazy"}
                 />
               </div>
 

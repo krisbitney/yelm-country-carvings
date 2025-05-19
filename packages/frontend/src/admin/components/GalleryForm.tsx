@@ -115,6 +115,7 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ onSubmit, onCancel, uploadIma
                 src={imagePreview.startsWith('/') ? imagePreview : `/${imagePreview}`}
                 alt="Gallery preview"
                 className="w-full h-full object-cover"
+                loading={"lazy"}
               />
             </div>
           </div>
