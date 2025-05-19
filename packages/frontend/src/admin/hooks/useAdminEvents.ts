@@ -32,7 +32,7 @@ export const useAdminEvents = (): UseAdminEventsReturn => {
       setError(null);
 
       const response = await authFetch('/api/admin/events');
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch events');
       }
@@ -70,10 +70,10 @@ export const useAdminEvents = (): UseAdminEventsReturn => {
         }
 
         const data = await response.json();
-        
+
         // Update the local state with the new event
         setEvents((prevEvents) => [...prevEvents, data.event]);
-        
+
         toast.success('Event created successfully');
         return true;
       } catch (error) {
@@ -111,12 +111,12 @@ export const useAdminEvents = (): UseAdminEventsReturn => {
         }
 
         const data = await response.json();
-        
+
         // Update the local state with the updated event
         setEvents((prevEvents) =>
           prevEvents.map((e) => (e.id === id ? data.event : e))
         );
-        
+
         toast.success('Event updated successfully');
         return true;
       } catch (error) {
@@ -150,10 +150,10 @@ export const useAdminEvents = (): UseAdminEventsReturn => {
           const errorData = await response.json();
           throw new Error(errorData.message || 'Failed to delete event');
         }
-        
+
         // Update the local state by removing the deleted event
         setEvents((prevEvents) => prevEvents.filter((e) => e.id !== id));
-        
+
         toast.success('Event deleted successfully');
         return true;
       } catch (error) {
@@ -179,23 +179,43 @@ export const useAdminEvents = (): UseAdminEventsReturn => {
         setLoading(true);
         setError(null);
 
+        console.log('uploadEventImage called with file:', file.name, file.type, file.size);
+
         // Create a FormData object to send the file
         const formData = new FormData();
         formData.append('image', file);
         formData.append('type', 'events');
+
+        // Log FormData contents (for debugging)
+        console.log('FormData created with:');
+        for (const pair of formData.entries()) {
+          console.log(`- ${pair[0]}: ${pair[1]}`);
+        }
 
         const response = await authFetch('/api/admin/upload', {
           method: 'POST',
           body: formData,
         });
 
+        console.log('Upload response status:', response.status);
+
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to upload image');
+          const errorText = await response.text();
+          console.error('Upload error response:', errorText);
+          let errorMessage = 'Failed to upload image';
+          try {
+            const errorData = JSON.parse(errorText);
+            errorMessage = errorData.message || errorMessage;
+          } catch (e) {
+            // If the response is not valid JSON, use the error text
+            errorMessage = errorText || errorMessage;
+          }
+          throw new Error(errorMessage);
         }
 
         const data = await response.json();
-        
+        console.log('Upload success response:', data);
+
         toast.success('Image uploaded successfully');
         return data.imagePath;
       } catch (error) {

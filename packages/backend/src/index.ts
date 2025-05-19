@@ -185,7 +185,6 @@ const server = Bun.serve({
           });
         }
 
-        // TODO: move assets to public dir?
         // Also check in the assets directory for hashed filenames
         if (requestPath.startsWith('/assets/')) {
           const assetsPath = path.join(FRONTEND_DIR, requestPath);

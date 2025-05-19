@@ -44,6 +44,9 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
     defaultValues: event
       ? {
           ...event,
+          // Explicitly set startDate and endDate to ensure they're populated
+          startDate: event.startDate,
+          endDate: event.endDate,
         }
       : {
           title: '',
@@ -59,6 +62,14 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
   // Watch the start and end date fields
   const startDate = watch('startDate');
   const endDate = watch('endDate');
+
+  // Log form values for debugging
+  useEffect(() => {
+    if (event) {
+      console.log('Event prop:', event);
+      console.log('Form values - startDate:', startDate, 'endDate:', endDate);
+    }
+  }, [event, startDate, endDate]);
 
 
   // Handle form submission
@@ -94,7 +105,7 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
           id="title"
           type="text"
           {...register('title')}
-          className={`w-full px-4 py-2 border ${errors.title ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]`}
+          className={`w-full px-4 py-2 border ${errors.title ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151] text-[#3E3C3B]`}
           disabled={isSubmitting}
         />
         {errors.title && (
@@ -112,7 +123,7 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
             id="startDate"
             type="date"
             {...register('startDate')}
-            className={`w-full px-4 py-2 border ${errors.startDate ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]`}
+            className={`w-full px-4 py-2 border ${errors.startDate ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151] text-[#3E3C3B]`}
             disabled={isSubmitting}
           />
           {errors.startDate && (
@@ -127,7 +138,7 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
             id="endDate"
             type="date"
             {...register('endDate')}
-            className={`w-full px-4 py-2 border ${errors.endDate ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]`}
+            className={`w-full px-4 py-2 border ${errors.endDate ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151] text-[#3E3C3B]`}
             disabled={isSubmitting}
           />
           {errors.endDate && (
@@ -161,7 +172,7 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
           id="location"
           type="text"
           {...register('location')}
-          className={`w-full px-4 py-2 border ${errors.location ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]`}
+          className={`w-full px-4 py-2 border ${errors.location ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151] text-[#3E3C3B]`}
           disabled={isSubmitting}
         />
         {errors.location && (
@@ -178,7 +189,7 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
           id="description"
           {...register('description')}
           rows={4}
-          className={`w-full px-4 py-2 border ${errors.description ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]`}
+          className={`w-full px-4 py-2 border ${errors.description ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151] text-[#3E3C3B]`}
           disabled={isSubmitting}
         />
         {errors.description && (

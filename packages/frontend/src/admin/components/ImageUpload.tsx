@@ -18,7 +18,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   error,
   label = 'Image'
 }) => {
-  const [imagePreview, setImagePreview] = useState<string | null>(initialImage || null);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    initialImage ? (initialImage.startsWith('/') ? initialImage : `/${initialImage}`) : null
+  );
   const [uploadProgress, setUploadProgress] = useState<boolean>(false);
 
   // Handle image upload
@@ -28,11 +30,17 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
     try {
       setUploadProgress(true);
+      console.log('Uploading file:', file.name, file.type, file.size);
       const imagePath = await onImageUpload(file);
+      console.log('Image upload response:', imagePath);
 
       if (imagePath) {
-        setImagePreview(imagePath);
-        onImageChange(imagePath);
+        // Ensure the image path starts with a slash for proper display
+        const formattedPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+        setImagePreview(formattedPath);
+        onImageChange(imagePath); // Keep the original path for the form value
+      } else {
+        console.error('No image path returned from upload');
       }
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -57,7 +65,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         />
         <button
           type="button"
-          onClick={() => document.getElementById('imageUpload')?.click()}
+          onClick={() => {
+            const fileInput = document.getElementById('imageUpload') as HTMLInputElement;
+            if (fileInput) {
+              fileInput.click();
+            }
+          }}
           className="px-4 py-2 bg-[#4A6151] text-white font-['Lato'] rounded-md hover:bg-[#3D5142] transition-colors duration-300 disabled:opacity-50"
           disabled={uploadProgress}
         >
