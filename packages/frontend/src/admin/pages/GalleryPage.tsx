@@ -165,14 +165,6 @@ const GalleryPage: React.FC = () => {
                                 cursor: snapshot.isDragging ? 'grabbing' : 'grab',
                               }}
                             >
-                              <div 
-                                className="bg-[#4A6151]/10 text-[#4A6151] p-2 rounded-md mr-4 flex-shrink-0"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
-                                </svg>
-                              </div>
-
                               <img
                                 src={image.src.startsWith('/') ? image.src : `/${image.src}`}
                                 alt={image.alt}
