@@ -12,6 +12,8 @@ const EventsPage: React.FC = () => {
   const [isAddingEvent, setIsAddingEvent] = useState(false);
   const [isEditingEvent, setIsEditingEvent] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
+  const [selectedEventIds, setSelectedEventIds] = useState<number[]>([]);
+  const [confirmBulkDelete, setConfirmBulkDelete] = useState(false);
 
   // Categorize events into past, upcoming, and future
   const { pastEvents, upcomingEvents, futureEvents } = useMemo(() => {
@@ -116,6 +118,62 @@ const EventsPage: React.FC = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  // Handle bulk selection
+  const toggleEventSelection = (id: number) => {
+    setSelectedEventIds(prev => 
+      prev.includes(id) 
+        ? prev.filter(eventId => eventId !== id) 
+        : [...prev, id]
+    );
+  };
+
+  // Select all events in a category
+  const selectAllEvents = (categoryEvents: MarketEvent[]) => {
+    const categoryIds = categoryEvents.map(event => event.id);
+    setSelectedEventIds(prev => {
+      const newSelection = [...prev];
+      categoryIds.forEach(id => {
+        if (!newSelection.includes(id)) {
+          newSelection.push(id);
+        }
+      });
+      return newSelection;
+    });
+  };
+
+  // Deselect all events in a category
+  const deselectAllEvents = (categoryEvents: MarketEvent[]) => {
+    const categoryIds = categoryEvents.map(event => event.id);
+    setSelectedEventIds(prev => prev.filter(id => !categoryIds.includes(id)));
+  };
+
+  // Handle bulk delete
+  const handleBulkDelete = async () => {
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const id of selectedEventIds) {
+      const success = await deleteEvent(id);
+      if (success) {
+        successCount++;
+      } else {
+        failCount++;
+      }
+    }
+
+    if (successCount > 0) {
+      toast.success(`Successfully deleted ${successCount} event${successCount !== 1 ? 's' : ''}`);
+    }
+
+    if (failCount > 0) {
+      toast.error(`Failed to delete ${failCount} event${failCount !== 1 ? 's' : ''}`);
+    }
+
+    setSelectedEventIds([]);
+    setConfirmBulkDelete(false);
+    void fetchEvents();
+  };
+
   return (
     <AdminLayout title="Events Management">
       <div className="mb-6 flex justify-between items-center">
@@ -166,7 +224,37 @@ const EventsPage: React.FC = () => {
             <div className="space-y-8">
               {/* Upcoming Events Section (three nearest future events) */}
               <div>
-                <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41] mb-4">Upcoming Events</h3>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41]">Upcoming Events</h3>
+                  {upcomingEvents.length > 0 && selectedEventIds.filter(id => upcomingEvents.some(e => e.id === id)).length > 0 && (
+                    <div className="flex items-center space-x-2">
+                      {confirmBulkDelete ? (
+                        <>
+                          <span className="text-sm text-[#3E3C3B]">Delete {selectedEventIds.filter(id => upcomingEvents.some(e => e.id === id)).length} events?</span>
+                          <button
+                            onClick={handleBulkDelete}
+                            className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                          >
+                            Confirm
+                          </button>
+                          <button
+                            onClick={() => setConfirmBulkDelete(false)}
+                            className="px-3 py-1 bg-[#4A6151] text-white text-sm rounded hover:bg-[#3D5142]"
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          onClick={() => setConfirmBulkDelete(true)}
+                          className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                        >
+                          Delete Selected
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
                 {upcomingEvents.length === 0 ? (
                   <div className="text-center py-4 bg-[#F5F1E9] rounded-lg">
                     <p className="text-[#3E3C3B] font-['Lato']">No upcoming events scheduled.</p>
@@ -176,6 +264,20 @@ const EventsPage: React.FC = () => {
                     <table className="min-w-full divide-y divide-[#A07E5D]/20">
                       <thead className="bg-[#4A6151]">
                         <tr>
+                          <th scope="col" className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-10">
+                            <input
+                              type="checkbox"
+                              className="h-4 w-4 rounded border-gray-300 text-[#4A6151] focus:ring-[#4A6151]"
+                              checked={upcomingEvents.length > 0 && upcomingEvents.every(event => selectedEventIds.includes(event.id))}
+                              onChange={() => {
+                                if (upcomingEvents.every(event => selectedEventIds.includes(event.id))) {
+                                  deselectAllEvents(upcomingEvents);
+                                } else {
+                                  selectAllEvents(upcomingEvents);
+                                }
+                              }}
+                            />
+                          </th>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                             Event
                           </th>
@@ -193,6 +295,14 @@ const EventsPage: React.FC = () => {
                       <tbody className="bg-white divide-y divide-[#A07E5D]/20">
                         {upcomingEvents.map((event) => (
                           <tr key={event.id} className="hover:bg-[#F5F1E9]">
+                            <td className="px-2 py-4 whitespace-nowrap text-center">
+                              <input
+                                type="checkbox"
+                                className="h-4 w-4 rounded border-gray-300 text-[#4A6151] focus:ring-[#4A6151]"
+                                checked={selectedEventIds.includes(event.id)}
+                                onChange={() => toggleEventSelection(event.id)}
+                              />
+                            </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center">
                                 <div className="h-10 w-10 flex-shrink-0 mr-4">
@@ -263,7 +373,37 @@ const EventsPage: React.FC = () => {
 
               {/* Future Events Section (beyond the nearest three) */}
               <div>
-                <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41] mb-4">Future Events</h3>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41]">Future Events</h3>
+                  {futureEvents.length > 0 && selectedEventIds.filter(id => futureEvents.some(e => e.id === id)).length > 0 && (
+                    <div className="flex items-center space-x-2">
+                      {confirmBulkDelete ? (
+                        <>
+                          <span className="text-sm text-[#3E3C3B]">Delete {selectedEventIds.filter(id => futureEvents.some(e => e.id === id)).length} events?</span>
+                          <button
+                            onClick={handleBulkDelete}
+                            className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                          >
+                            Confirm
+                          </button>
+                          <button
+                            onClick={() => setConfirmBulkDelete(false)}
+                            className="px-3 py-1 bg-[#4A6151] text-white text-sm rounded hover:bg-[#3D5142]"
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          onClick={() => setConfirmBulkDelete(true)}
+                          className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                        >
+                          Delete Selected
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
                 {futureEvents.length === 0 ? (
                   <div className="text-center py-4 bg-[#F5F1E9] rounded-lg">
                     <p className="text-[#3E3C3B] font-['Lato']">No additional future events scheduled.</p>
@@ -273,6 +413,20 @@ const EventsPage: React.FC = () => {
                     <table className="min-w-full divide-y divide-[#A07E5D]/20">
                       <thead className="bg-[#4A6151]">
                         <tr>
+                          <th scope="col" className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-10">
+                            <input
+                              type="checkbox"
+                              className="h-4 w-4 rounded border-gray-300 text-[#4A6151] focus:ring-[#4A6151]"
+                              checked={futureEvents.length > 0 && futureEvents.every(event => selectedEventIds.includes(event.id))}
+                              onChange={() => {
+                                if (futureEvents.every(event => selectedEventIds.includes(event.id))) {
+                                  deselectAllEvents(futureEvents);
+                                } else {
+                                  selectAllEvents(futureEvents);
+                                }
+                              }}
+                            />
+                          </th>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                             Event
                           </th>
@@ -290,6 +444,14 @@ const EventsPage: React.FC = () => {
                       <tbody className="bg-white divide-y divide-[#A07E5D]/20">
                         {futureEvents.map((event) => (
                           <tr key={event.id} className="hover:bg-[#F5F1E9]">
+                            <td className="px-2 py-4 whitespace-nowrap text-center">
+                              <input
+                                type="checkbox"
+                                className="h-4 w-4 rounded border-gray-300 text-[#4A6151] focus:ring-[#4A6151]"
+                                checked={selectedEventIds.includes(event.id)}
+                                onChange={() => toggleEventSelection(event.id)}
+                              />
+                            </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center">
                                 <div className="h-10 w-10 flex-shrink-0 mr-4">
@@ -360,7 +522,37 @@ const EventsPage: React.FC = () => {
 
               {/* Past Events Section */}
               <div>
-                <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41] mb-4">Past Events</h3>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41]">Past Events</h3>
+                  {pastEvents.length > 0 && selectedEventIds.filter(id => pastEvents.some(e => e.id === id)).length > 0 && (
+                    <div className="flex items-center space-x-2">
+                      {confirmBulkDelete ? (
+                        <>
+                          <span className="text-sm text-[#3E3C3B]">Delete {selectedEventIds.filter(id => pastEvents.some(e => e.id === id)).length} events?</span>
+                          <button
+                            onClick={handleBulkDelete}
+                            className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                          >
+                            Confirm
+                          </button>
+                          <button
+                            onClick={() => setConfirmBulkDelete(false)}
+                            className="px-3 py-1 bg-[#4A6151] text-white text-sm rounded hover:bg-[#3D5142]"
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          onClick={() => setConfirmBulkDelete(true)}
+                          className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                        >
+                          Delete Selected
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
                 {pastEvents.length === 0 ? (
                   <div className="text-center py-4 bg-[#F5F1E9] rounded-lg">
                     <p className="text-[#3E3C3B] font-['Lato']">No past events found.</p>
@@ -370,6 +562,20 @@ const EventsPage: React.FC = () => {
                     <table className="min-w-full divide-y divide-[#A07E5D]/20">
                       <thead className="bg-[#4A6151]">
                         <tr>
+                          <th scope="col" className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-10">
+                            <input
+                              type="checkbox"
+                              className="h-4 w-4 rounded border-gray-300 text-[#4A6151] focus:ring-[#4A6151]"
+                              checked={pastEvents.length > 0 && pastEvents.every(event => selectedEventIds.includes(event.id))}
+                              onChange={() => {
+                                if (pastEvents.every(event => selectedEventIds.includes(event.id))) {
+                                  deselectAllEvents(pastEvents);
+                                } else {
+                                  selectAllEvents(pastEvents);
+                                }
+                              }}
+                            />
+                          </th>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                             Event
                           </th>
@@ -387,6 +593,14 @@ const EventsPage: React.FC = () => {
                       <tbody className="bg-white divide-y divide-[#A07E5D]/20">
                         {pastEvents.map((event) => (
                           <tr key={event.id} className="hover:bg-[#F5F1E9]">
+                            <td className="px-2 py-4 whitespace-nowrap text-center">
+                              <input
+                                type="checkbox"
+                                className="h-4 w-4 rounded border-gray-300 text-[#4A6151] focus:ring-[#4A6151]"
+                                checked={selectedEventIds.includes(event.id)}
+                                onChange={() => toggleEventSelection(event.id)}
+                              />
+                            </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center">
                                 <div className="h-10 w-10 flex-shrink-0 mr-4">

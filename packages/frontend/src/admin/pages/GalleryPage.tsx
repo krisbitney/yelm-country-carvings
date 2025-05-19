@@ -67,12 +67,11 @@ const GalleryPage: React.FC = () => {
     const imageIds = newGallery.map(img => img.id);
 
     // Update the order in the backend
+    // Note: reorderGallery already updates the gallery state internally
     const success = await reorderGallery(imageIds);
 
     if (!success) {
-      toast.error("Failed to reorder images. Reverting changes.");
-      // If reordering failed, fetch the original order
-      void fetchGallery();
+      toast.error("Failed to reorder images.");
     }
   };
 
@@ -131,7 +130,7 @@ const GalleryPage: React.FC = () => {
                   <div>
                     <p className="text-[#3E3C3B] font-['Lato'] font-bold mb-1">Gallery Arrangement</p>
                     <p className="text-[#3E3C3B] font-['Lato']">
-                      To rearrange images in this list, click and hold on the drag handle, then move it up or down to a new position. Release to drop it in place.
+                      To rearrange images in this list, click and hold anywhere on an image row, then move it up or down to a new position. Release to drop it in place.
                       <br />
                       The order you set here will be reflected on the public gallery page of your website.
                     </p>
@@ -157,19 +156,17 @@ const GalleryPage: React.FC = () => {
                             <div
                               ref={provided.innerRef}
                               {...provided.draggableProps}
+                              {...provided.dragHandleProps}
                               className={`bg-[#F5F1E9] rounded-lg shadow-md transition-all duration-200 flex items-center p-3 ${
                                 snapshot.isDragging ? 'shadow-xl ring-2 ring-[#4A6151] scale-[1.02] z-10' : 'hover:shadow-lg'
-                              }`}
+                              } cursor-grab`}
                               style={{
                                 ...provided.draggableProps.style,
+                                cursor: snapshot.isDragging ? 'grabbing' : 'grab',
                               }}
                             >
                               <div 
-                                {...provided.dragHandleProps}
-                                className="bg-[#4A6151]/10 text-[#4A6151] p-2 rounded-md mr-4 cursor-grab flex-shrink-0"
-                                style={{
-                                  cursor: snapshot.isDragging ? 'grabbing' : 'grab',
-                                }}
+                                className="bg-[#4A6151]/10 text-[#4A6151] p-2 rounded-md mr-4 flex-shrink-0"
                               >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
