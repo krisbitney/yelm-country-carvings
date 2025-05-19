@@ -1,20 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../components/AdminLayout';
+import {adminName, inspirationalQuotes} from "../../constants.ts";
 
 const DashboardPage: React.FC = () => {
-  // Admin name from environment variable or default to "Admin"
-  const adminName = import.meta.env.VITE_ADMIN_NAME || "Admin";
-
-  // Collection of inspirational quotes
-  const inspirationalQuotes = [
-    "Creativity is intelligence having fun. - Albert Einstein",
-    "The best way to predict the future is to create it. - Peter Drucker",
-    "Your work is going to fill a large part of your life, and the only way to be truly satisfied is to do what you believe is great work. - Steve Jobs",
-    "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
-    "Success is not the key to happiness. Happiness is the key to success. - Albert Schweitzer"
-  ];
-
   // State for the current inspirational quote
   const [quote, setQuote] = useState<string>("");
 
