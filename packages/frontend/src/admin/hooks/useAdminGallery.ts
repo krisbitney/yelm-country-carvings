@@ -133,7 +133,6 @@ export const useAdminGallery = (): UseAdminGalleryReturn => {
   const reorderGallery = useCallback(
     async (imageIds: number[]): Promise<boolean> => {
       try {
-        setLoading(true);
         setError(null);
 
         const response = await authFetch('/api/admin/gallery/reorder', {
