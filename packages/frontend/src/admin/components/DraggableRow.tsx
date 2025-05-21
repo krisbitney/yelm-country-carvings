@@ -40,6 +40,7 @@ export const DraggableRow: React.FC<
         src={image.src.startsWith('/') ? image.src : `/${image.src}`}
         alt={image.alt}
         className="w-20 h-20 object-cover rounded-md flex-shrink-0"
+        loading="lazy"
       />
 
       <div className="ml-4 flex-grow">
