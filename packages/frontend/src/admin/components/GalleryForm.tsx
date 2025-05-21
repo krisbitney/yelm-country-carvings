@@ -71,7 +71,7 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ onSubmit, onCancel, uploadIma
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
-      className="space-y-6 bg-white p-6 rounded-lg shadow-md"
+      className="space-y-6 bg-white p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg"
     >
       <h2 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41] mb-4">
         Add New Gallery Image
@@ -94,10 +94,36 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ onSubmit, onCancel, uploadIma
           <button
             type="button"
             onClick={() => document.getElementById('imageUpload')?.click()}
-            className={`px-4 py-2 ${errors.src ? 'bg-red-500 hover:bg-red-600' : 'bg-[#4A6151] hover:bg-[#3D5142]'} text-white font-['Lato'] rounded-md transition-colors duration-300 disabled:opacity-50`}
+            className={`px-4 py-2 ${errors.src ? 'bg-red-500 hover:bg-red-600' : 'bg-[#4A6151] hover:bg-[#3D5142]'} text-white font-['Lato'] rounded-md transition-all duration-300 disabled:opacity-50 cursor-pointer hover:shadow`}
             disabled={isSubmitting || uploadProgress}
           >
-            {uploadProgress ? 'Uploading...' : 'Upload Image'}
+            {uploadProgress ? (
+              <span className="flex items-center">
+                <svg
+                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Uploading...
+              </span>
+            ) : (
+              'Upload Image'
+            )}
           </button>
           <input type="text" {...register('src')} className="hidden" />
           {errors.src && (
@@ -130,7 +156,7 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ onSubmit, onCancel, uploadIma
           id="alt"
           type="text"
           {...register('alt')}
-          className={`w-full px-4 py-2 border ${errors.alt ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]`}
+          className={`w-full px-4 py-2 border ${errors.alt ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151] transition-all duration-300 hover:border-[#4A6151] disabled:opacity-50`}
           disabled={isSubmitting}
           placeholder="Brief description of the image"
         />
@@ -142,7 +168,7 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ onSubmit, onCancel, uploadIma
         <button
           type="button"
           onClick={onCancel}
-          className="px-6 py-2 border border-[#A07E5D] text-[#A07E5D] font-['Lato'] font-bold rounded-md hover:bg-[#A07E5D] hover:text-white transition-colors duration-300"
+          className="px-6 py-2 border border-[#A07E5D] text-[#A07E5D] font-['Lato'] font-bold rounded-md hover:bg-[#A07E5D] hover:text-white transition-all duration-300 cursor-pointer hover:shadow disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={isSubmitting}
         >
           Cancel
@@ -150,7 +176,7 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ onSubmit, onCancel, uploadIma
         <button
           type="submit"
           disabled={isSubmitting || !imagePreview}
-          className="px-6 py-2 bg-[#4A6151] text-white font-['Lato'] font-bold rounded-md hover:bg-[#3D5142] transition-colors duration-300 disabled:opacity-50"
+          className="px-6 py-2 bg-[#4A6151] text-white font-['Lato'] font-bold rounded-md hover:bg-[#3D5142] transition-all duration-300 disabled:opacity-50 cursor-pointer hover:shadow disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
         >
           {isSubmitting ? (
             <span className="flex items-center justify-center">

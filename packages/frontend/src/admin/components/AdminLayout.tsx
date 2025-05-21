@@ -30,16 +30,16 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
   return (
     <div className="min-h-screen bg-[#F5F1E9] flex flex-col">
       {/* Header */}
-      <header className="bg-[#4A6151] text-white shadow-md">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <header className="bg-[#4A6151] text-white shadow-md transition-all duration-300">
+        <div className="container mx-auto px-6 py-5 flex justify-between items-center">
           <div className="flex items-center">
             <button
               onClick={handleBack}
-              className="mr-4 hover:text-gray-200 transition-colors duration-300"
+              className="mr-4 hover:text-gray-200 transition-all duration-300 cursor-pointer"
               aria-label={isDashboard ? 'Go to website' : 'Go to dashboard'}
             >
               <svg
-                className="w-6 h-6"
+                className="w-6 h-6 transform transition-transform duration-300 hover:scale-110"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -53,42 +53,44 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
                 />
               </svg>
             </button>
-            <h1 className="font-['Cinzel'] text-2xl font-bold">{title}</h1>
+            <h1 className="font-['Cinzel'] text-2xl font-bold transition-all duration-300">
+              {title}
+            </h1>
           </div>
           <div className="flex items-center">
             <Link
               to="/admin"
-              className={`px-4 py-2 rounded-md transition-colors duration-300 mr-2 ${
+              className={`px-4 py-2 rounded-md transition-all duration-300 mr-3 ${
                 isDashboard
-                  ? 'bg-[#3D5142] text-white cursor-default'
-                  : 'hover:bg-[#3D5142] text-white'
+                  ? 'bg-[#3D5142] text-white cursor-default shadow-inner'
+                  : 'hover:bg-[#3D5142] text-white cursor-pointer hover:shadow'
               }`}
             >
               Dashboard
             </Link>
             <Link
               to="/admin/events"
-              className={`px-4 py-2 rounded-md transition-colors duration-300 mr-2 ${
+              className={`px-4 py-2 rounded-md transition-all duration-300 mr-3 ${
                 location.pathname.includes('/admin/events')
-                  ? 'bg-[#3D5142] text-white cursor-default'
-                  : 'hover:bg-[#3D5142] text-white'
+                  ? 'bg-[#3D5142] text-white cursor-default shadow-inner'
+                  : 'hover:bg-[#3D5142] text-white cursor-pointer hover:shadow'
               }`}
             >
               Events
             </Link>
             <Link
               to="/admin/gallery"
-              className={`px-4 py-2 rounded-md transition-colors duration-300 mr-2 ${
+              className={`px-4 py-2 rounded-md transition-all duration-300 mr-3 ${
                 location.pathname.includes('/admin/gallery')
-                  ? 'bg-[#3D5142] text-white cursor-default'
-                  : 'hover:bg-[#3D5142] text-white'
+                  ? 'bg-[#3D5142] text-white cursor-default shadow-inner'
+                  : 'hover:bg-[#3D5142] text-white cursor-pointer hover:shadow'
               }`}
             >
               Gallery
             </Link>
             <button
               onClick={logout}
-              className="px-4 py-2 bg-[#B87351] text-white rounded-md hover:bg-[#A07E5D] transition-colors duration-300"
+              className="px-4 py-2 bg-[#B87351] text-white rounded-md hover:bg-[#A07E5D] transition-all duration-300 cursor-pointer hover:shadow"
             >
               Logout
             </button>
@@ -97,12 +99,14 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 flex-grow">{children}</main>
+      <main className="container mx-auto px-6 py-8 flex-grow transition-all duration-300">
+        {children}
+      </main>
 
       {/* Footer */}
-      <footer className="bg-[#3E3C3B] text-white py-4 mt-auto">
-        <div className="container mx-auto px-4 text-center">
-          <p className="font-['Lato']">
+      <footer className="bg-[#3E3C3B] text-white py-5 mt-auto shadow-inner transition-all duration-300">
+        <div className="container mx-auto px-6 text-center">
+          <p className="font-['Lato'] transition-all duration-300">
             &copy; {new Date().getFullYear()} Yelm Country Carvings - Admin Portal
           </p>
         </div>

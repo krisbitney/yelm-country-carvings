@@ -26,10 +26,10 @@ export const DraggableRow: React.FC<
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
-      className={`bg-[#F5F1E9] rounded-lg shadow-md transition-all duration-200 flex items-center p-3 ${
+      className={`bg-[#F5F1E9] rounded-lg shadow-md transition-all duration-300 flex items-center p-4 ${
         snapshot.isDragging
-          ? 'shadow-xl ring-2 ring-[#4A6151] scale-[1.02] z-10'
-          : 'hover:shadow-lg'
+          ? 'shadow-xl ring-2 ring-[#4A6151] scale-[1.02] z-10 bg-[#F5F1E9]/95'
+          : 'hover:shadow-lg hover:bg-[#F5F1E9]/90'
       } cursor-grab`}
       style={{
         ...provided.draggableProps.style,
@@ -49,7 +49,7 @@ export const DraggableRow: React.FC<
 
       <button
         onClick={() => setConfirmDelete(image.id)}
-        className="text-red-600 hover:text-red-800 text-sm px-3 py-1 ml-4 flex-shrink-0"
+        className="text-red-600 hover:text-red-800 text-sm px-3 py-1 ml-4 flex-shrink-0 transition-all duration-300 cursor-pointer hover:bg-red-50 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
         disabled={confirmDelete !== null}
       >
         Delete
@@ -57,18 +57,20 @@ export const DraggableRow: React.FC<
 
       {/* Delete Confirmation Overlay */}
       {confirmDelete === image.id && (
-        <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center p-4 text-white rounded-lg">
-          <p className="text-center mb-4">Are you sure you want to delete this image?</p>
+        <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center p-4 text-white rounded-lg transition-all duration-300 backdrop-blur-sm">
+          <p className="text-center mb-4 font-['Lato']">
+            Are you sure you want to delete this image?
+          </p>
           <div className="flex space-x-4">
             <button
               onClick={() => handleDeleteImage?.(image.id)}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-all duration-300 cursor-pointer hover:shadow transform hover:scale-[1.02] active:scale-[0.98]"
             >
               Delete
             </button>
             <button
               onClick={() => setConfirmDelete(null)}
-              className="px-4 py-2 bg-[#4A6151] text-white rounded-md hover:bg-[#3D5142]"
+              className="px-4 py-2 bg-[#4A6151] text-white rounded-md hover:bg-[#3D5142] transition-all duration-300 cursor-pointer hover:shadow transform hover:scale-[1.02] active:scale-[0.98]"
             >
               Cancel
             </button>

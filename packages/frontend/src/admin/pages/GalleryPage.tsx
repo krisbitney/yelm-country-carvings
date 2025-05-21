@@ -81,7 +81,7 @@ const GalleryPage: React.FC = () => {
         <h2 className="font-['Cinzel'] text-3xl font-bold text-[#6B4F41]">Gallery Management</h2>
         <button
           onClick={() => setIsAddingImage(true)}
-          className="px-4 py-2 bg-[#4A6151] text-white font-['Lato'] rounded-md hover:bg-[#3D5142] transition-colors duration-300"
+          className="px-4 py-2 bg-[#4A6151] text-white font-['Lato'] rounded-md hover:bg-[#3D5142] transition-all duration-300 cursor-pointer hover:shadow transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={isAddingImage}
         >
           Add New Image
@@ -117,18 +117,18 @@ const GalleryPage: React.FC = () => {
               </p>
               <button
                 onClick={() => setIsAddingImage(true)}
-                className="px-4 py-2 bg-[#4A6151] text-white font-['Lato'] rounded-md hover:bg-[#3D5142] transition-colors duration-300"
+                className="px-4 py-2 bg-[#4A6151] text-white font-['Lato'] rounded-md hover:bg-[#3D5142] transition-all duration-300 cursor-pointer hover:shadow transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 Add New Image
               </button>
             </div>
           ) : (
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <div className="mb-6 bg-[#4A6151]/10 p-4 rounded-lg border border-[#4A6151]/20">
+            <div className="bg-white p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
+              <div className="mb-6 bg-[#4A6151]/10 p-5 rounded-lg border border-[#4A6151]/20 transition-all duration-300 hover:bg-[#4A6151]/15">
                 <div className="flex items-start">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-[#4A6151] mr-3 flex-shrink-0 mt-0.5"
+                    className="h-6 w-6 text-[#4A6151] mr-3 flex-shrink-0 mt-0.5 transition-transform duration-300 hover:scale-110"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -141,10 +141,10 @@ const GalleryPage: React.FC = () => {
                     />
                   </svg>
                   <div>
-                    <p className="text-[#3E3C3B] font-['Lato'] font-bold mb-1">
+                    <p className="text-[#3E3C3B] font-['Lato'] font-bold mb-2 transition-all duration-300">
                       Gallery Arrangement
                     </p>
-                    <p className="text-[#3E3C3B] font-['Lato']">
+                    <p className="text-[#3E3C3B] font-['Lato'] transition-all duration-300">
                       To rearrange images in this list, click and hold anywhere on an image row,
                       then move it up or down to a new position. Release to drop it in place.
                       <br />
@@ -161,8 +161,10 @@ const GalleryPage: React.FC = () => {
                     <div
                       {...provided.droppableProps}
                       ref={provided.innerRef}
-                      className={`flex flex-col gap-4 ${
-                        snapshot.isDraggingOver ? 'bg-[#4A6151]/5 rounded-lg p-2' : ''
+                      className={`flex flex-col gap-4 transition-all duration-300 ${
+                        snapshot.isDraggingOver
+                          ? 'bg-[#4A6151]/10 rounded-lg p-4 shadow-inner'
+                          : 'p-1'
                       }`}
                     >
                       {gallery.map((image, index) => (
