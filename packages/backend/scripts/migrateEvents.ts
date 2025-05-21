@@ -26,7 +26,7 @@ async function migrateEvents() {
     console.log(`Found ${validEvents.length} valid events to migrate`);
 
     // Use transaction for atomic migration
-    await sql.begin(async (tx) => {
+    await sql.begin(async tx => {
       // Insert each event into the database
       for (const event of validEvents) {
         await tx`
@@ -50,7 +50,7 @@ async function migrateEvents() {
         console.log(`Migrated event: ${event.title}`);
       }
     });
-    
+
     console.log('Events migration completed successfully');
   } catch (error) {
     console.error('Error migrating events:', error);

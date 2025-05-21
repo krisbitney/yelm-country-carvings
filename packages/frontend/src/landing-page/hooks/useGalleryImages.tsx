@@ -1,15 +1,16 @@
-import {useEffect, useState} from "react";
-import {GalleryImage} from "../../types.ts";
+import { useEffect, useState } from 'react';
+import { GalleryImage } from '../../types.ts';
 
 // TODO: replace loading.png with high quality loading and error indicator images
 // Import gallery images for fallback
 import loadingIndicator from '../../assets/img/fallback/loading.png';
 import errorIndicator from '../../assets/img/fallback/loading.png';
 
-
 export const useGalleryImages = () => {
   // State for gallery images
-  const [data, setData] = useState<GalleryImage[]>([{ id: 0, src: loadingIndicator, alt: 'Loading indicator' }]);
+  const [data, setData] = useState<GalleryImage[]>([
+    { id: 0, src: loadingIndicator, alt: 'Loading indicator' },
+  ]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,5 +40,5 @@ export const useGalleryImages = () => {
     void fetchGalleryImages();
   }, []);
 
-  return { data, loading, error }
-}
+  return { data, loading, error };
+};

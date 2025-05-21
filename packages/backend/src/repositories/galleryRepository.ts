@@ -86,7 +86,7 @@ export const galleryRepository = {
   async reorder(orderedIds: number[]): Promise<boolean> {
     try {
       // Use transaction for atomic operation
-      await sql.begin(async (tx) => {
+      await sql.begin(async tx => {
         // Update the order of each image
         for (let i = 0; i < orderedIds.length; i++) {
           await tx`
@@ -96,11 +96,11 @@ export const galleryRepository = {
           `;
         }
       });
-      
+
       return true;
     } catch (error) {
       console.error('Error reordering gallery:', error);
       throw new Error('Failed to reorder gallery images');
     }
-  }
+  },
 };

@@ -32,7 +32,7 @@ export const useAdminGallery = (): UseAdminGalleryReturn => {
       setError(null);
 
       const response = await authFetch('/api/admin/gallery');
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch gallery images');
       }
@@ -70,10 +70,10 @@ export const useAdminGallery = (): UseAdminGalleryReturn => {
         }
 
         const data = await response.json();
-        
+
         // Update the local state with the new image
-        setGallery((prevGallery) => [...prevGallery, data.image]);
-        
+        setGallery(prevGallery => [...prevGallery, data.image]);
+
         toast.success('Gallery image added successfully');
         return true;
       } catch (error) {
@@ -107,10 +107,10 @@ export const useAdminGallery = (): UseAdminGalleryReturn => {
           const errorData = await response.json();
           throw new Error(errorData.message || 'Failed to delete gallery image');
         }
-        
+
         // Update the local state by removing the deleted image
-        setGallery((prevGallery) => prevGallery.filter((img) => img.id !== id));
-        
+        setGallery(prevGallery => prevGallery.filter(img => img.id !== id));
+
         toast.success('Gallery image deleted successfully');
         return true;
       } catch (error) {
@@ -146,10 +146,10 @@ export const useAdminGallery = (): UseAdminGalleryReturn => {
         }
 
         const data = await response.json();
-        
+
         // Update the local state with the reordered gallery
         setGallery(data.gallery);
-        
+
         toast.success('Gallery reordered successfully');
         return true;
       } catch (error) {
@@ -191,7 +191,7 @@ export const useAdminGallery = (): UseAdminGalleryReturn => {
         }
 
         const data = await response.json();
-        
+
         toast.success('Image uploaded successfully');
         return data.imagePath;
       } catch (error) {

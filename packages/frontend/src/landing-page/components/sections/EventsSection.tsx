@@ -1,27 +1,24 @@
 import { useState } from 'react';
-import {useEvents} from "../../hooks/useEvents.tsx";
-import {addToCalendar} from "../../../utils/addToCalendar.ts";
-import {formatDateRange} from "../../../utils/dateUtils.ts";
+import { useEvents } from '../../hooks/useEvents.tsx';
+import { addToCalendar } from '../../../utils/addToCalendar.ts';
+import { formatDateRange } from '../../../utils/dateUtils.ts';
 
 const EventsSection = () => {
   // State to track which event details are expanded
   const [expandedEvents, setExpandedEvents] = useState<number[]>([]);
 
   const { data: events } = useEvents();
-  console.log(events.length)
+  console.log(events.length);
 
   // Toggle event details expansion
   const toggleEventDetails = (eventId: number) => {
     setExpandedEvents(prev =>
-      prev.includes(eventId)
-        ? prev.filter(id => id !== eventId)
-        : [...prev, eventId]
+      prev.includes(eventId) ? prev.filter(id => id !== eventId) : [...prev, eventId]
     );
   };
 
   return (
     <section id="events" className="pt-16 pb-16 bg-[#F5F1E9]">
-
       <div className="container mx-auto px-4">
         {/* Section Heading */}
         <div className="text-center mb-12">
@@ -46,20 +43,26 @@ const EventsSection = () => {
                     src={event.image}
                     alt={event.title}
                     className="w-full h-full object-cover"
-                    loading={"lazy"}
+                    loading={'lazy'}
                   />
                 </div>
 
                 {/* Event Content */}
                 <div className="p-6">
-                  <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-2 min-h-[3.5rem] flex items-start">{event.title}</h3>
-                  <p className="font-['Lato'] text-[#4A6151] font-semibold mb-2">{formatDateRange(event.startDate, event.endDate)}</p>
+                  <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-2 min-h-[3.5rem] flex items-start">
+                    {event.title}
+                  </h3>
+                  <p className="font-['Lato'] text-[#4A6151] font-semibold mb-2">
+                    {formatDateRange(event.startDate, event.endDate)}
+                  </p>
                   <p className="font-['Lato'] text-[#3E3C3B] mb-4">{event.location}</p>
 
                   {/* Expandable Description */}
-                  <div className={`overflow-hidden transition-all duration-300 ${
-                    expandedEvents.includes(event.id) ? 'max-h-40' : 'max-h-0'
-                  }`}>
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ${
+                      expandedEvents.includes(event.id) ? 'max-h-40' : 'max-h-0'
+                    }`}
+                  >
                     <p className="font-['Lato'] text-[#3E3C3B] mb-4">{event.description}</p>
                   </div>
 
@@ -73,10 +76,21 @@ const EventsSection = () => {
                     </button>
                     <button
                       className="px-4 py-2 bg-[#A07E5D] text-[#F5F1E9] font-['Lato'] rounded-md hover:bg-[#B87351] hover:cursor-pointer transition-colors duration-300 text-sm flex items-center"
-                      onClick={(e) => addToCalendar(event, e)}
+                      onClick={e => addToCalendar(event, e)}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 mr-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
                       </svg>
                       Add to Calendar
                     </button>
@@ -90,7 +104,9 @@ const EventsSection = () => {
           // Changed bg-opacity-10 to /10 modifier
           <div className="text-center py-12 bg-[#A07E5D]/10 rounded-lg">
             <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41] mb-4">Stay Tuned!</h3>
-            <p className="font-['Lato'] text-[#3E3C3B] mb-6">We're planning exciting events. Sign up to be notified when new events are scheduled.</p>
+            <p className="font-['Lato'] text-[#3E3C3B] mb-6">
+              We're planning exciting events. Sign up to be notified when new events are scheduled.
+            </p>
 
             {/* Event Notification Signup Form */}
             <form className="max-w-md mx-auto">

@@ -1,8 +1,8 @@
 // Helper to create real requests with test data
-import {mock} from "bun:test";
-import jwt from "jsonwebtoken";
-import {SQL} from "bun";
-import {GalleryImage, MarketEvent} from "../../src/types";
+import { mock } from 'bun:test';
+import jwt from 'jsonwebtoken';
+import { SQL } from 'bun';
+import { GalleryImage, MarketEvent } from '../../src/types';
 
 export const createTestRequest = (options: {
   method?: string;
@@ -16,13 +16,13 @@ export const createTestRequest = (options: {
     url = 'http://localhost:3000',
     headers = {},
     body = null,
-    formData = null
+    formData = null,
   } = options;
 
   // Create request options
   const requestOptions: RequestInit = {
     method,
-    headers: new Headers(headers)
+    headers: new Headers(headers),
   };
 
   // Add body if provided
@@ -44,8 +44,8 @@ export const createTestRequest = (options: {
   return request;
 };
 // Helper to create a valid JWT token for testing
-export const createTestToken = (payload = {username: 'admin'}, expiresIn = '1h') => {
-  return jwt.sign(payload, process.env.JWT_SECRET, {expiresIn});
+export const createTestToken = (payload = { username: 'admin' }, expiresIn = '1h') => {
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
 };
 
 // Helper function to insert test events into the database

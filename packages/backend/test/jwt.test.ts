@@ -1,5 +1,5 @@
-import "../src/index";
-import {describe, test, expect, beforeEach} from 'bun:test';
+import '../src/index';
+import { describe, test, expect, beforeEach } from 'bun:test';
 import { generateToken, verifyToken, extractTokenFromHeader } from '../src/utils/jwt';
 
 describe('JWT Utilities', () => {

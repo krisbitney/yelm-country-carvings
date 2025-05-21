@@ -1,34 +1,39 @@
-import React, {useState, useCallback} from 'react';
+import React, { useState, useCallback } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import {useGalleryImages} from "../../hooks/useGalleryImages.tsx";
+import { useGalleryImages } from '../../hooks/useGalleryImages.tsx';
 
 const GallerySection: React.FC = () => {
-
   // State to track the selected image for the modal
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
 
   const { data: galleryImages } = useGalleryImages();
 
   // Function to navigate to the next image
-  const navigateToNextImage = useCallback((e?: React.MouseEvent) => {
-    if (e) e.stopPropagation();
-    if (selectedImage) {
-      const currentIndex = galleryImages.findIndex(img => img.src === selectedImage.src);
-      const nextIndex = (currentIndex + 1) % galleryImages.length;
-      setSelectedImage(galleryImages[nextIndex]);
-    }
-  }, [galleryImages, selectedImage]);
+  const navigateToNextImage = useCallback(
+    (e?: React.MouseEvent) => {
+      if (e) e.stopPropagation();
+      if (selectedImage) {
+        const currentIndex = galleryImages.findIndex(img => img.src === selectedImage.src);
+        const nextIndex = (currentIndex + 1) % galleryImages.length;
+        setSelectedImage(galleryImages[nextIndex]);
+      }
+    },
+    [galleryImages, selectedImage]
+  );
 
   // Function to navigate to the previous image
-  const navigateToPrevImage = useCallback((e?: React.MouseEvent) => {
-    if (e) e.stopPropagation();
-    if (selectedImage) {
-      const currentIndex = galleryImages.findIndex(img => img.src === selectedImage.src);
-      const prevIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-      setSelectedImage(galleryImages[prevIndex]);
-    }
-  }, [galleryImages, selectedImage]);
+  const navigateToPrevImage = useCallback(
+    (e?: React.MouseEvent) => {
+      if (e) e.stopPropagation();
+      if (selectedImage) {
+        const currentIndex = galleryImages.findIndex(img => img.src === selectedImage.src);
+        const prevIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+        setSelectedImage(galleryImages[prevIndex]);
+      }
+    },
+    [galleryImages, selectedImage]
+  );
 
   // Handle keyboard navigation
   React.useEffect(() => {
@@ -52,20 +57,20 @@ const GallerySection: React.FC = () => {
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
-      items: 5
+      items: 5,
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 3
+      items: 3,
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
-      items: 2
+      items: 2,
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
-      items: 1
-    }
+      items: 1,
+    },
   };
 
   return (
@@ -74,18 +79,18 @@ const GallerySection: React.FC = () => {
         {/* Section Heading */}
         <div className="text-center mb-12">
           {/* Gallery Icon */}
-          <svg 
-            className="w-12 h-12 mx-auto mb-4 text-[#6B4F41]" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
+          <svg
+            className="w-12 h-12 mx-auto mb-4 text-[#6B4F41]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" 
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
             />
           </svg>
 
@@ -108,19 +113,19 @@ const GallerySection: React.FC = () => {
             pauseOnHover={true}
             customTransition="all .5s"
             transitionDuration={500}
-            removeArrowOnDeviceType={["tablet", "mobile"]}
-            containerClass={"carousel-container"}
+            removeArrowOnDeviceType={['tablet', 'mobile']}
+            containerClass={'carousel-container'}
             dotListClass="carousel-dot-list"
             itemClass="carousel-item-list"
             showDots={true}
             aria-label="Gallery of chainsaw carvings"
           >
-            {galleryImages.map((image) => (
+            {galleryImages.map(image => (
               <div key={image.id} className="px-2" role="group" aria-roledescription="slide">
                 <div className="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                   <div className="aspect-w-4 aspect-h-3 overflow-hidden rounded-md">
-                    <img 
-                      src={image.src.startsWith('/') ? image.src : `/${image.src}`} 
+                    <img
+                      src={image.src.startsWith('/') ? image.src : `/${image.src}`}
                       alt={image.alt}
                       className="w-full h-64 object-cover rounded-md cursor-pointer"
                       loading="lazy"
@@ -139,8 +144,8 @@ const GallerySection: React.FC = () => {
           <p className="font-['Lato'] text-lg text-[#3E3C3B] mb-4">
             Interested in a custom carving? Contact us to discuss your ideas!
           </p>
-          <a 
-            href="#contact" 
+          <a
+            href="#contact"
             className="inline-block px-6 py-3 bg-[#B87351] text-[#F5F1E9] font-['Lato'] font-bold rounded-md shadow-md hover:bg-[#A07E5D] transition-colors duration-300"
           >
             Get in Touch
@@ -150,7 +155,7 @@ const GallerySection: React.FC = () => {
 
       {/* Full-size Image Modal */}
       {selectedImage && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/85 z-1001 flex items-center justify-center p-4 animate-fadeIn"
           onClick={() => setSelectedImage(null)}
           aria-modal="true"
@@ -158,14 +163,25 @@ const GallerySection: React.FC = () => {
         >
           <button
             className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-lg z-10 cursor-pointer"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               setSelectedImage(null);
             }}
             aria-label="Close modal"
           >
-            <svg className="w-6 h-6 text-[#3E3C3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-6 h-6 text-[#3E3C3B]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
 
@@ -175,8 +191,19 @@ const GallerySection: React.FC = () => {
             onClick={navigateToPrevImage}
             aria-label="Previous image"
           >
-            <svg className="w-6 h-6 text-[#3E3C3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg
+              className="w-6 h-6 text-[#3E3C3B]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
           </button>
 
@@ -186,17 +213,23 @@ const GallerySection: React.FC = () => {
             onClick={navigateToNextImage}
             aria-label="Next image"
           >
-            <svg className="w-6 h-6 text-[#3E3C3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              className="w-6 h-6 text-[#3E3C3B]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
           <div className="relative max-w-4xl max-h-[90vh] overflow-auto">
-            <img 
-              src={selectedImage.src.startsWith('/') ? selectedImage.src : `/${selectedImage.src}`} 
+            <img
+              src={selectedImage.src.startsWith('/') ? selectedImage.src : `/${selectedImage.src}`}
               alt={selectedImage.alt}
               className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-xl"
-              onClick={(e) => e.stopPropagation()}
-              loading={"lazy"}
+              onClick={e => e.stopPropagation()}
+              loading={'lazy'}
             />
             <p className="mt-2 text-center text-white font-['Lato'] text-lg">{selectedImage.alt}</p>
           </div>

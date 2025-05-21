@@ -1,8 +1,8 @@
-import "../../src/index";
+import '../../src/index';
 import { describe, test, expect, mock } from 'bun:test';
 import { handleContactForm } from '../../src/handlers/handleContactForm';
 
-import {createTestRequest} from "../utils/helpers";
+import { createTestRequest } from '../utils/helpers';
 
 describe('Contact Form Handler', () => {
   test('should successfully process a valid contact form submission', async () => {
@@ -16,7 +16,7 @@ describe('Contact Form Handler', () => {
     // Create a request with the form data
     const request = createTestRequest({
       method: 'POST',
-      formData
+      formData,
     });
 
     // Mock the formData method to return our form data
@@ -50,7 +50,7 @@ describe('Contact Form Handler', () => {
     // Create a request with the form data
     const request = createTestRequest({
       method: 'POST',
-      formData
+      formData,
     });
 
     // Mock the formData method to return our form data

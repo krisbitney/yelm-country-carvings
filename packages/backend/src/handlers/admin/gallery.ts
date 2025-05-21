@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { galleryRepository } from '../../repositories/galleryRepository';
-import {IMAGES_DIR} from "../../index";
+import { IMAGES_DIR } from '../../index';
 
 /**
  * Get all gallery images
@@ -13,10 +13,13 @@ export const getGallery = async (): Promise<Response> => {
     return Response.json(gallery);
   } catch (error) {
     console.error('Error getting gallery:', error);
-    return Response.json({ 
-      success: false, 
-      message: 'Failed to get gallery' 
-    }, { status: 500 });
+    return Response.json(
+      {
+        success: false,
+        message: 'Failed to get gallery',
+      },
+      { status: 500 }
+    );
   }
 };
 
@@ -34,10 +37,13 @@ export const addGalleryImage = async (req: Request): Promise<Response> => {
     const requiredFields = ['src', 'alt'];
     for (const field of requiredFields) {
       if (!imageData[field]) {
-        return Response.json({ 
-          success: false, 
-          message: `Missing required field: ${field}` 
-        }, { status: 400 });
+        return Response.json(
+          {
+            success: false,
+            message: `Missing required field: ${field}`,
+          },
+          { status: 400 }
+        );
       }
     }
 
@@ -46,27 +52,31 @@ export const addGalleryImage = async (req: Request): Promise<Response> => {
     const gallery = await galleryRepository.getAll();
 
     // Generate the next order number
-    const nextOrder = gallery.length > 0
-      ? Math.max(...gallery.map(img => img.order || 0)) + 1
-      : 1;
+    const nextOrder = gallery.length > 0 ? Math.max(...gallery.map(img => img.order || 0)) + 1 : 1;
 
     // Create the new gallery image
     const newImage = await galleryRepository.create({
       ...imageData,
-      order: nextOrder
+      order: nextOrder,
     });
 
-    return Response.json({ 
-      success: true, 
-      image: newImage,
-      message: 'Gallery image added successfully' 
-    }, { status: 201 });
+    return Response.json(
+      {
+        success: true,
+        image: newImage,
+        message: 'Gallery image added successfully',
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('Error adding gallery image:', error);
-    return Response.json({ 
-      success: false, 
-      message: 'Failed to add gallery image' 
-    }, { status: 500 });
+    return Response.json(
+      {
+        success: false,
+        message: 'Failed to add gallery image',
+      },
+      { status: 500 }
+    );
   }
 };
 
@@ -82,20 +92,26 @@ export const deleteGalleryImage = async (id: number): Promise<Response> => {
 
     // If the image doesn't exist, return 404
     if (!imageToDelete) {
-      return Response.json({ 
-        success: false, 
-        message: 'Gallery image not found' 
-      }, { status: 404 });
+      return Response.json(
+        {
+          success: false,
+          message: 'Gallery image not found',
+        },
+        { status: 404 }
+      );
     }
 
     // Delete the image from the database
     const deleted = await galleryRepository.delete(id);
 
     if (!deleted) {
-      return Response.json({ 
-        success: false, 
-        message: 'Failed to delete gallery image' 
-      }, { status: 500 });
+      return Response.json(
+        {
+          success: false,
+          message: 'Failed to delete gallery image',
+        },
+        { status: 500 }
+      );
     }
 
     // Try to delete the associated image file if it exists
@@ -109,16 +125,19 @@ export const deleteGalleryImage = async (id: number): Promise<Response> => {
       }
     }
 
-    return Response.json({ 
-      success: true, 
-      message: 'Gallery image deleted successfully' 
+    return Response.json({
+      success: true,
+      message: 'Gallery image deleted successfully',
     });
   } catch (error) {
     console.error('Error deleting gallery image:', error);
-    return Response.json({ 
-      success: false, 
-      message: 'Failed to delete gallery image' 
-    }, { status: 500 });
+    return Response.json(
+      {
+        success: false,
+        message: 'Failed to delete gallery image',
+      },
+      { status: 500 }
+    );
   }
 };
 
@@ -134,10 +153,13 @@ export const reorderGallery = async (req: Request): Promise<Response> => {
 
     // Validate the input
     if (!Array.isArray(imageIds)) {
-      return Response.json({ 
-        success: false, 
-        message: 'Invalid input: imageIds must be an array' 
-      }, { status: 400 });
+      return Response.json(
+        {
+          success: false,
+          message: 'Invalid input: imageIds must be an array',
+        },
+        { status: 400 }
+      );
     }
 
     // Reorder the gallery
@@ -146,16 +168,19 @@ export const reorderGallery = async (req: Request): Promise<Response> => {
     // Get the updated gallery
     const reorderedGallery = await galleryRepository.getAll();
 
-    return Response.json({ 
-      success: true, 
+    return Response.json({
+      success: true,
       gallery: reorderedGallery,
-      message: 'Gallery reordered successfully' 
+      message: 'Gallery reordered successfully',
     });
   } catch (error) {
     console.error('Error reordering gallery:', error);
-    return Response.json({ 
-      success: false, 
-      message: 'Failed to reorder gallery' 
-    }, { status: 500 });
+    return Response.json(
+      {
+        success: false,
+        message: 'Failed to reorder gallery',
+      },
+      { status: 500 }
+    );
   }
 };

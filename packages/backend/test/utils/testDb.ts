@@ -1,4 +1,4 @@
-import { SQL } from "bun";
+import { SQL } from 'bun';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -30,10 +30,14 @@ export async function setupTestDb(): Promise<SQL> {
 // Teardown function to clean test tables
 export async function teardownTestDb(testSql: SQL) {
   try {
-    await testSql.unsafe(`
+    await testSql
+      .unsafe(
+        `
       TRUNCATE TABLE events RESTART IDENTITY CASCADE;
       TRUNCATE TABLE gallery RESTART IDENTITY CASCADE;
-    `).simple();
+    `
+      )
+      .simple();
     console.log('Test database cleaned successfully');
   } catch (error) {
     console.error('Error cleaning test database:', error);

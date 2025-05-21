@@ -52,25 +52,29 @@ bun run db:backup
 ## Migration Process
 
 1. Start the PostgreSQL database:
+
    ```bash
    docker-compose up -d
    ```
 
 2. Create the database schema:
+
    ```bash
    bun run db:create-schema
    ```
 
 3. Migrate the data:
+
    ```bash
    bun run db:migrate:all
    ```
 
 4. Verify the migration:
+
    ```bash
    # Start the application
    bun run dev
-   
+
    # Check that data is accessible through the API
    curl http://localhost:3000/api/events
    curl http://localhost:3000/api/gallery

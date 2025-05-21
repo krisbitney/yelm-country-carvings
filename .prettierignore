@@ -1,0 +1,23 @@
+# Build outputs
+dist
+build
+coverage
+
+# Package manager files
+node_modules
+bun.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment files
+.env
+.env.*
+
+# Generated files
+*.generated.*
+
+# Docker files
+docker-compose.yml
+docker-compose.*.yml
+Dockerfile

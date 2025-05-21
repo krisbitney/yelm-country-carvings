@@ -26,13 +26,13 @@ async function migrateGallery() {
     console.log(`Found ${validImages.length} valid gallery images to migrate`);
 
     // Use transaction for atomic migration
-    await sql.begin(async (tx) => {
+    await sql.begin(async tx => {
       // Insert each gallery image into the database
       for (let i = 0; i < validImages.length; i++) {
         const image = validImages[i];
         // Add order property if it doesn't exist
         const order = image.order || i + 1;
-        
+
         await tx`
           INSERT INTO gallery (
             src, 
@@ -48,7 +48,7 @@ async function migrateGallery() {
         console.log(`Migrated gallery image: ${image.alt}`);
       }
     });
-    
+
     console.log('Gallery migration completed successfully');
   } catch (error) {
     console.error('Error migrating gallery:', error);

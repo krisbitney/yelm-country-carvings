@@ -1,7 +1,7 @@
 Bun provides native bindings for working with PostgreSQL databases with a modern, Promise-based API. The interface is designed to be simple and performant, using tagged template literals for queries and offering features like connection pooling, transactions, and prepared statements.
 
 ```ts
-import { sql } from "bun";
+import { sql } from 'bun';
 
 const users = await sql`
   SELECT * FROM users
@@ -49,7 +49,7 @@ const activeUsers = await sql`
 You can pass JavaScript values directly to the SQL template literal and escaping will be handled for you.
 
 ```ts
-import { sql } from "bun";
+import { sql } from 'bun';
 
 // Basic insert with direct values
 const [user] = await sql`
@@ -60,8 +60,8 @@ const [user] = await sql`
 
 // Using object helper for cleaner syntax
 const userData = {
-  name: "Alice",
-  email: "alice@example.com",
+  name: 'Alice',
+  email: 'alice@example.com',
 };
 
 const [newUser] = await sql`
@@ -77,9 +77,9 @@ You can also pass arrays of objects to the SQL template literal and it will be e
 
 ```ts
 const users = [
-  { name: "Alice", email: "alice@example.com" },
-  { name: "Bob", email: "bob@example.com" },
-  { name: "Charlie", email: "charlie@example.com" },
+  { name: 'Alice', email: 'alice@example.com' },
+  { name: 'Bob', email: 'bob@example.com' },
+  { name: 'Charlie', email: 'charlie@example.com' },
 ];
 
 await sql`INSERT INTO users ${sql(users)}`;
@@ -91,12 +91,12 @@ You can use `sql(object, ...string)` to pick which columns to insert. Each of th
 
 ```ts
 const user = {
-  name: "Alice",
-  email: "alice@example.com",
+  name: 'Alice',
+  email: 'alice@example.com',
   age: 25,
 };
 
-await sql`INSERT INTO users ${sql(user, "name", "email")}`;
+await sql`INSERT INTO users ${sql(user, 'name', 'email')}`;
 // Only inserts name and email columns, ignoring other fields
 ```
 
@@ -117,8 +117,8 @@ This returns something like:
 
 ```ts
 [
-  ["Alice", "alice@example.com"],
-  ["Bob", "bob@example.com"],
+  ['Alice', 'alice@example.com'],
+  ['Bob', 'bob@example.com'],
 ];
 ```
 
@@ -143,10 +143,10 @@ When you need to reference tables or schemas dynamically, use the `sql()` helper
 
 ```ts
 // Safely reference tables dynamically
-await sql`SELECT * FROM ${sql("users")}`;
+await sql`SELECT * FROM ${sql('users')}`;
 
 // With schema qualification
-await sql`SELECT * FROM ${sql("public.users")}`;
+await sql`SELECT * FROM ${sql('public.users')}`;
 ```
 
 ### Conditional Queries
@@ -170,7 +170,7 @@ await sql`
 You can use `sql(object, ...string)` to pick which columns to update. Each of the columns must be defined on the object. If the columns are not informed all keys will be used to update the row.
 
 ```ts
-await sql`UPDATE users SET ${sql(user, "name", "email")} WHERE id = ${user.id}`;
+await sql`UPDATE users SET ${sql(user, 'name', 'email')} WHERE id = ${user.id}`;
 // uses all keys from the object to update the row
 await sql`UPDATE users SET ${sql(user)} WHERE id = ${user.id}`;
 ```
@@ -183,11 +183,11 @@ Value lists can also be created dynamically, making where in queries simple too.
 await sql`SELECT * FROM users WHERE id IN ${sql([1, 2, 3])}`;
 
 const users = [
-  { id: 1, name: "Alice" },
-  { id: 2, name: "Bob" },
-  { id: 3, name: "Charlie" },
+  { id: 1, name: 'Alice' },
+  { id: 2, name: 'Bob' },
+  { id: 3, name: 'Charlie' },
 ];
-await sql`SELECT * FROM users WHERE id IN ${sql(users, "id")}`;
+await sql`SELECT * FROM users WHERE id IN ${sql(users, 'id')}`;
 ```
 
 ## `sql``.simple()`
@@ -213,7 +213,7 @@ Note that simple queries cannot use parameters (`${value}`). If you need paramet
 You can use the `sql.file` method to read a query from a file and execute it, if the file includes $1, $2, etc you can pass parameters to the query. If no parameters are used it can execute multiple commands per file.
 
 ```ts
-const result = await sql.file("query.sql", [1, 2, 3]);
+const result = await sql.file('query.sql', [1, 2, 3]);
 ```
 
 ### Unsafe Queries
@@ -228,10 +228,7 @@ const result = await sql.unsafe(`
 `);
 
 // Using parameters (only one command is allowed)
-const result = await sql.unsafe(
-  "SELECT " + dangerous + " FROM users WHERE id = $1",
-  [id],
-);
+const result = await sql.unsafe('SELECT ' + dangerous + ' FROM users WHERE id = $1', [id]);
 ```
 
 #### What is SQL Injection?
@@ -279,18 +276,18 @@ If no connection URL is provided, the system checks for the following individual
 You can configure your database connection manually by passing options to the SQL constructor:
 
 ```ts
-import { SQL } from "bun";
+import { SQL } from 'bun';
 
 const db = new SQL({
   // Required
-  url: "postgres://user:pass@localhost:5432/dbname",
+  url: 'postgres://user:pass@localhost:5432/dbname',
 
   // Optional configuration
-  hostname: "localhost",
+  hostname: 'localhost',
   port: 5432,
-  database: "myapp",
-  username: "dbuser",
-  password: "secretpass",
+  database: 'myapp',
+  username: 'dbuser',
+  password: 'secretpass',
 
   // Connection pool settings
   max: 20, // Maximum connections in pool
@@ -313,10 +310,10 @@ const db = new SQL({
 
   // Callbacks
   onconnect: client => {
-    console.log("Connected to database");
+    console.log('Connected to database');
   },
   onclose: client => {
-    console.log("Connection closed");
+    console.log('Connection closed');
   },
 });
 ```
@@ -347,7 +344,7 @@ The `BEGIN` command is sent automatically, including any optional configurations
 ```ts
 await sql.begin(async tx => {
   // All queries in this function run in a transaction
-  await tx`INSERT INTO users (name) VALUES (${"Alice"})`;
+  await tx`INSERT INTO users (name) VALUES (${'Alice'})`;
   await tx`UPDATE accounts SET balance = balance - 100 WHERE user_id = 1`;
 
   // Transaction automatically commits if no errors are thrown
@@ -360,7 +357,7 @@ It's also possible to pipeline the requests in a transaction if needed by return
 ```ts
 await sql.begin(async tx => {
   return [
-    tx`INSERT INTO users (name) VALUES (${"Alice"})`,
+    tx`INSERT INTO users (name) VALUES (${'Alice'})`,
     tx`UPDATE accounts SET balance = balance - 100 WHERE user_id = 1`,
   ];
 });
@@ -372,13 +369,13 @@ Savepoints in SQL create intermediate checkpoints within a transaction, enabling
 
 ```ts
 await sql.begin(async tx => {
-  await tx`INSERT INTO users (name) VALUES (${"Alice"})`;
+  await tx`INSERT INTO users (name) VALUES (${'Alice'})`;
 
   await tx.savepoint(async sp => {
     // This part can be rolled back separately
     await sp`UPDATE users SET status = 'active'`;
     if (someCondition) {
-      throw new Error("Rollback to savepoint");
+      throw new Error('Rollback to savepoint');
     }
   });
 
@@ -401,14 +398,14 @@ If any exceptions occur during the distributed transaction and aren't caught, th
 
 ```ts
 // Begin a distributed transaction
-await sql.beginDistributed("tx1", async tx => {
-  await tx`INSERT INTO users (name) VALUES (${"Alice"})`;
+await sql.beginDistributed('tx1', async tx => {
+  await tx`INSERT INTO users (name) VALUES (${'Alice'})`;
 });
 
 // Later, commit or rollback
-await sql.commitDistributed("tx1");
+await sql.commitDistributed('tx1');
 // or
-await sql.rollbackDistributed("tx1");
+await sql.rollbackDistributed('tx1');
 ```
 
 ## Authentication
@@ -421,10 +418,10 @@ PostgreSQL supports different SSL/TLS modes to control how secure connections ar
 
 ```ts
 const sql = new SQL({
-  hostname: "localhost",
-  username: "user",
-  password: "password",
-  ssl: "disable", // | "prefer" | "require" | "verify-ca" | "verify-full"
+  hostname: 'localhost',
+  username: 'user',
+  password: 'password',
+  ssl: 'disable', // | "prefer" | "require" | "verify-ca" | "verify-full"
 });
 ```
 
@@ -442,12 +439,10 @@ The SSL mode can also be specified in connection strings:
 
 ```ts
 // Using prefer mode
-const sql = new SQL("postgres://user:password@localhost/mydb?sslmode=prefer");
+const sql = new SQL('postgres://user:password@localhost/mydb?sslmode=prefer');
 
 // Using verify-full mode
-const sql = new SQL(
-  "postgres://user:password@localhost/mydb?sslmode=verify-full",
-);
+const sql = new SQL('postgres://user:password@localhost/mydb?sslmode=verify-full');
 ```
 
 ## Connection Pooling
@@ -474,7 +469,7 @@ await sql`...`; // previous connection is reused
 
 // two connections are used now at the same time
 await Promise.all([
-  sql`INSERT INTO users ${sql({ name: "Alice" })}`,
+  sql`INSERT INTO users ${sql({ name: 'Alice' })}`,
   sql`UPDATE users SET name = ${user.name} WHERE id = ${user.id}`,
 ]);
 
@@ -492,7 +487,7 @@ Bun enables you to reserve a connection from the pool, and returns a client that
 const reserved = await sql.reserve();
 
 try {
-  await reserved`INSERT INTO users (name) VALUES (${"Alice"})`;
+  await reserved`INSERT INTO users (name) VALUES (${'Alice'})`;
 } finally {
   // Important: Release connection back to pool
   reserved.release();
@@ -607,7 +602,7 @@ The client provides typed errors for different failure scenarios:
 Bun's SQL client includes special handling for large numbers that exceed the range of a 53-bit integer. Here's how it works:
 
 ```ts
-import { sql } from "bun";
+import { sql } from 'bun';
 
 const [{ x, y }] = await sql`SELECT 9223372036854777 as x, 12345 as y`;
 

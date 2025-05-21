@@ -1,4 +1,4 @@
-import "../src/index";
+import '../src/index';
 import { describe, test, expect } from 'bun:test';
 import { extractTokenFromHeader } from '../src/utils/jwt';
 

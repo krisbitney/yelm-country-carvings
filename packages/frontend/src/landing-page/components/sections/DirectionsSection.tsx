@@ -2,7 +2,10 @@ const DirectionsSection = () => {
   // Function to handle "Get Directions" button click
   const handleGetDirections = () => {
     // Open Google Maps with the address pre-filled
-    window.open('https://www.google.com/maps/search/?api=1&query=19438+Cook+Road+Southeast+Yelm+Washington+98597+United+States', '_blank');
+    window.open(
+      'https://www.google.com/maps/search/?api=1&query=19438+Cook+Road+Southeast+Yelm+Washington+98597+United+States',
+      '_blank'
+    );
   };
 
   return (
@@ -86,7 +89,9 @@ const DirectionsSection = () => {
 
           {/* Hours Information */}
           <div className="bg-white rounded-lg shadow-md p-6 flex-1">
-            <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41] mb-4">Workshop Hours</h3>
+            <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41] mb-4">
+              Workshop Hours
+            </h3>
             <div className="font-['Lato'] text-lg text-[#3E3C3B]">
               <div className="grid grid-cols-2 gap-2">
                 <div className="font-bold">Monday - Friday:</div>
@@ -130,7 +135,9 @@ const DirectionsSection = () => {
           {/* Nearby Landmarks */}
           {/* Changed bg-opacity-10 to /10 modifier */}
           <div className="bg-[#A07E5D]/10 p-6 rounded-lg">
-            <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4">Nearby Landmarks</h3>
+            <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4">
+              Nearby Landmarks
+            </h3>
             <ul className="list-disc list-inside font-['Lato'] text-[#3E3C3B] space-y-2">
               <li>Just 2 miles east of Yelm Prairie Park</li>
               <li>Across from the Nisqually River Nature Trail</li>

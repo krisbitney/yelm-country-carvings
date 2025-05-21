@@ -1,11 +1,14 @@
-import SMTP2GOApi from "smtp2go-nodejs";
-import {organizerEmail, smtpSenderEmail} from "frontend/src/constants";
+import SMTP2GOApi from 'smtp2go-nodejs';
+import { organizerEmail, smtpSenderEmail } from 'frontend/src/constants';
 
 // Initialize SMTP2GO with API key
 const smtp2go = SMTP2GOApi(process.env.SMTP2GO_API_KEY || '');
 
 // Log API key for debugging (redacted for security)
-console.log('SMTP2GO API Key configured:', process.env.SMTP2GO_API_KEY ? 'API key is set' : 'API key is missing');
+console.log(
+  'SMTP2GO API Key configured:',
+  process.env.SMTP2GO_API_KEY ? 'API key is set' : 'API key is missing'
+);
 
 // Class for handling file attachments
 class SimpleAttachment {
@@ -37,10 +40,7 @@ export const handleContactForm = async (req: Request) => {
 
     // Validate required fields
     if (!name || !email || !message) {
-      return Response.json(
-        { success: false, message: 'Missing required fields' },
-        { status: 400 }
-      );
+      return Response.json({ success: false, message: 'Missing required fields' }, { status: 400 });
     }
 
     // Prepare email content
@@ -53,10 +53,11 @@ export const handleContactForm = async (req: Request) => {
             <p>${message}</p>
           `;
 
-  // Send email using SMTP2GO
+    // Send email using SMTP2GO
     console.log('Preparing to send email from:', smtpSenderEmail, 'to:', organizerEmail);
 
-    const mailService = smtp2go.mail()
+    const mailService = smtp2go
+      .mail()
       .from({
         name: 'Yelm Country Carvings Website',
         email: smtpSenderEmail,
@@ -77,11 +78,7 @@ export const handleContactForm = async (req: Request) => {
         // Convert ArrayBuffer to base64 string
         const fileblob = Buffer.from(arrayBuffer).toString('base64');
         // Add attachment to the mail service
-        mailService.attach(new SimpleAttachment(
-          filename,
-          fileblob,
-          mimetype,
-        ));
+        mailService.attach(new SimpleAttachment(filename, fileblob, mimetype));
       } catch (attachError) {
         console.error('Error processing attachment:', attachError);
       }
@@ -98,7 +95,7 @@ export const handleContactForm = async (req: Request) => {
 
       return Response.json({
         success: true,
-        message: 'Your message has been sent successfully!'
+        message: 'Your message has been sent successfully!',
       });
     } catch (e) {
       const sendError = e as Error;
@@ -111,7 +108,9 @@ export const handleContactForm = async (req: Request) => {
 
       // Check if the error is related to the sender email
       if (sendError.message && sendError.message.includes('sender')) {
-        console.error('Sender email issue detected. Please verify your sender email is authorized in SMTP2GO.');
+        console.error(
+          'Sender email issue detected. Please verify your sender email is authorized in SMTP2GO.'
+        );
       }
 
       throw sendError; // Re-throw to be caught by the outer try-catch
@@ -121,13 +120,11 @@ export const handleContactForm = async (req: Request) => {
     console.error('Error in contact form handler:', error);
 
     // Provide a more detailed error message in development
-    const errorMessage = process.env.NODE_ENV === 'development' 
-      ? `Failed to send message: ${error.message}` 
-      : 'Failed to send message. Please try again later.';
+    const errorMessage =
+      process.env.NODE_ENV === 'development'
+        ? `Failed to send message: ${error.message}`
+        : 'Failed to send message. Please try again later.';
 
-    return Response.json(
-      { success: false, message: errorMessage },
-      { status: 500 }
-    );
+    return Response.json({ success: false, message: errorMessage }, { status: 500 });
   }
 };

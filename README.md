@@ -1,6 +1,7 @@
 # Yelm Country Carvings
 
 This project is a monorepo for the Yelm Country Carvings website, consisting of three main packages:
+
 - **frontend**: The main public-facing website
 - **admin-portal**: The admin portal for managing website content
 - **backend**: The server that handles API requests for both the frontend and admin portal
@@ -8,6 +9,7 @@ This project is a monorepo for the Yelm Country Carvings website, consisting of 
 ## Features
 
 ### Main Website
+
 - Responsive design for all devices
 - Information about Yelm Country Carvings services
 - Gallery of chainsaw carvings
@@ -15,6 +17,7 @@ This project is a monorepo for the Yelm Country Carvings website, consisting of 
 - Events calendar
 
 ### Admin Portal
+
 - Secure authentication system
 - Events management (add, edit, delete)
 - Gallery management (add, delete, reorder)
@@ -92,11 +95,13 @@ bun run dev:admin         # Start the admin portal development server
 ```
 
 When running in development mode:
+
 - The main website will be available at http://localhost:5173
 - The admin portal will be available at http://localhost:5174 (or another port if 5174 is in use)
 - The backend API will be available at http://localhost:3000
 
 In production, the backend server will serve both the frontend and admin portal:
+
 - The main website will be available at http://localhost:3000
 - The admin portal will be available at http://localhost:3000/admin
 

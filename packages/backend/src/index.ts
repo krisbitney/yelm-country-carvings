@@ -1,29 +1,37 @@
 import path from 'path';
 import fs from 'fs';
-import {handleContactForm} from "./handlers/handleContactForm";
-import {handleAdminLogin, handleVerifyToken} from "./handlers/admin/auth";
-import {getEvents, createEvent, updateEvent, deleteEvent} from "./handlers/admin/events";
-import {getGallery, addGalleryImage, deleteGalleryImage, reorderGallery} from "./handlers/admin/gallery";
-import {handleImageUpload} from "./handlers/admin/upload";
-import {authenticateJWT} from "./middleware/auth";
-import {eventRepository} from "./repositories/eventRepository";
-import {galleryRepository} from "./repositories/galleryRepository";
+import { handleContactForm } from './handlers/handleContactForm';
+import { handleAdminLogin, handleVerifyToken } from './handlers/admin/auth';
+import { getEvents, createEvent, updateEvent, deleteEvent } from './handlers/admin/events';
+import {
+  getGallery,
+  addGalleryImage,
+  deleteGalleryImage,
+  reorderGallery,
+} from './handlers/admin/gallery';
+import { handleImageUpload } from './handlers/admin/upload';
+import { authenticateJWT } from './middleware/auth';
+import { eventRepository } from './repositories/eventRepository';
+import { galleryRepository } from './repositories/galleryRepository';
 
 const FRONTEND_DIR = path.join(import.meta.dir, '../../frontend/dist');
 // Check if the frontend build directory exists
 if (!fs.existsSync(FRONTEND_DIR)) {
-  console.error('Frontend build directory not found. Please run "bun run build" in the frontend workspace first.');
+  console.error(
+    'Frontend build directory not found. Please run "bun run build" in the frontend workspace first.'
+  );
   process.exit(1);
 }
 
 // Get the appropriate file paths based on environment
-export const IMAGES_DIR: string = process.env.NODE_ENV === 'test'
-  ? path.join(import.meta.dir, '../test/test-images')
-  : path.join(import.meta.dir, '../img');
+export const IMAGES_DIR: string =
+  process.env.NODE_ENV === 'test'
+    ? path.join(import.meta.dir, '../test/test-images')
+    : path.join(import.meta.dir, '../img');
 // Ensure the gallery images directory exists
 try {
-  fs.mkdirSync(path.join(IMAGES_DIR, "gallery"), { recursive: true });
-  fs.mkdirSync(path.join(IMAGES_DIR, "events"), { recursive: true });
+  fs.mkdirSync(path.join(IMAGES_DIR, 'gallery'), { recursive: true });
+  fs.mkdirSync(path.join(IMAGES_DIR, 'events'), { recursive: true });
 } catch (error) {
   console.error('Error creating gallery or events images directory:', error);
 }
@@ -37,7 +45,7 @@ const server = Bun.serve({
   // Define API routes
   routes: {
     // Public API endpoints
-    "/api/events": async () => {
+    '/api/events': async () => {
       try {
         const events = await eventRepository.getAll();
         return Response.json(events);
@@ -47,17 +55,20 @@ const server = Bun.serve({
       }
     },
 
-    "/api/upcoming-events": async () => {
+    '/api/upcoming-events': async () => {
       try {
         const upcomingEvents = await eventRepository.getUpcoming();
         return Response.json(upcomingEvents);
       } catch (error) {
         console.error('Error getting upcoming events:', error);
-        return Response.json({ success: false, message: 'Failed to get upcoming events' }, { status: 500 });
+        return Response.json(
+          { success: false, message: 'Failed to get upcoming events' },
+          { status: 500 }
+        );
       }
     },
 
-    "/api/gallery": async () => {
+    '/api/gallery': async () => {
       try {
         const gallery = await galleryRepository.getAll();
         return Response.json(gallery);
@@ -67,75 +78,75 @@ const server = Bun.serve({
       }
     },
 
-    "/api/contact": {
-      POST: async (req) => {
+    '/api/contact': {
+      POST: async req => {
         return await handleContactForm(req);
-      }
+      },
     },
 
     // Admin authentication endpoints
-    "/api/auth/login": {
-      POST: async (req) => {
+    '/api/auth/login': {
+      POST: async req => {
         return await handleAdminLogin(req);
-      }
+      },
     },
 
-    "/api/auth/verify": {
-      GET: (req) => {
+    '/api/auth/verify': {
+      GET: req => {
         return authenticateJWT(req) ?? handleVerifyToken(req);
-      }
+      },
     },
 
     // Admin events endpoints
-    "/api/admin/events": {
-      GET: async (req) => {
-        return authenticateJWT(req) ?? await getEvents();
+    '/api/admin/events': {
+      GET: async req => {
+        return authenticateJWT(req) ?? (await getEvents());
       },
-      POST: async (req) => {
-        return authenticateJWT(req) ?? await createEvent(req);
-      }
+      POST: async req => {
+        return authenticateJWT(req) ?? (await createEvent(req));
+      },
     },
 
-    "/api/admin/events/:id": {
-      PUT: async (req) => {
+    '/api/admin/events/:id': {
+      PUT: async req => {
         const id = parseInt(req.params.id);
-        return authenticateJWT(req) ?? await updateEvent(req, id);
+        return authenticateJWT(req) ?? (await updateEvent(req, id));
       },
-      DELETE: async (req) => {
+      DELETE: async req => {
         const id = parseInt(req.params.id);
-        return authenticateJWT(req) ?? await deleteEvent(id);
-      }
+        return authenticateJWT(req) ?? (await deleteEvent(id));
+      },
     },
 
     // Admin gallery endpoints
-    "/api/admin/gallery": {
-      GET: async (req) => {
-        return authenticateJWT(req) ?? await getGallery();
+    '/api/admin/gallery': {
+      GET: async req => {
+        return authenticateJWT(req) ?? (await getGallery());
       },
-      POST: async (req) => {
-        return authenticateJWT(req) ?? await addGalleryImage(req);
-      }
+      POST: async req => {
+        return authenticateJWT(req) ?? (await addGalleryImage(req));
+      },
     },
 
-    "/api/admin/gallery/:id": {
-      DELETE: async (req) => {
+    '/api/admin/gallery/:id': {
+      DELETE: async req => {
         const id = parseInt(req.params.id);
-        return authenticateJWT(req) ?? await deleteGalleryImage(id);
-      }
+        return authenticateJWT(req) ?? (await deleteGalleryImage(id));
+      },
     },
 
-    "/api/admin/gallery/reorder": {
-      POST: async (req) => {
-        return authenticateJWT(req) ?? await reorderGallery(req);
-      }
+    '/api/admin/gallery/reorder': {
+      POST: async req => {
+        return authenticateJWT(req) ?? (await reorderGallery(req));
+      },
     },
 
     // Admin image upload endpoint
-    "/api/admin/upload": {
-      POST: async (req) => {
-        return authenticateJWT(req) ?? await handleImageUpload(req);
-      }
-    }
+    '/api/admin/upload': {
+      POST: async req => {
+        return authenticateJWT(req) ?? (await handleImageUpload(req));
+      },
+    },
   },
 
   // Fallback handler for non-API routes
@@ -156,9 +167,7 @@ const server = Bun.serve({
       let imagePath;
       if (requestPath.includes('/')) {
         // Extract the relative path from the request
-        const relativePath = requestPath.startsWith('/') 
-          ? requestPath.substring(1) 
-          : requestPath;
+        const relativePath = requestPath.startsWith('/') ? requestPath.substring(1) : requestPath;
 
         imagePath = path.join(IMAGES_DIR, relativePath);
       } else {

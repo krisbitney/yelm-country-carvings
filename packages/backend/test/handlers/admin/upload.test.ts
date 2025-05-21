@@ -1,15 +1,15 @@
-import "../../../src/index";
+import '../../../src/index';
 import { describe, test, expect, mock, beforeEach, afterEach } from 'bun:test';
 import { handleImageUpload } from '../../../src/handlers/admin/upload';
-import {createTestRequest, createTestToken} from "../../utils/helpers";
-import {cleanupImageDirectories, TEST_IMAGE, TEST_IMAGE_DIR} from "../../utils/imageUtils";
-import fs from "fs/promises";
-import path from "path";
+import { createTestRequest, createTestToken } from '../../utils/helpers';
+import { cleanupImageDirectories, TEST_IMAGE, TEST_IMAGE_DIR } from '../../utils/imageUtils';
+import fs from 'fs/promises';
+import path from 'path';
 
 describe('Image Upload Handler', () => {
   // Setup valid auth token
   const validToken = createTestToken({ username: 'admin' });
-  const validAuthHeader = { 'Authorization': `Bearer ${validToken}` };
+  const validAuthHeader = { Authorization: `Bearer ${validToken}` };
 
   beforeEach(async () => {
     // Reset mocks between tests
@@ -35,9 +35,9 @@ describe('Image Upload Handler', () => {
       method: 'POST',
       headers: {
         ...validAuthHeader,
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data',
       },
-      formData
+      formData,
     });
 
     // Call the handler
@@ -63,7 +63,7 @@ describe('Image Upload Handler', () => {
     const request = createTestRequest({
       method: 'POST',
       headers: validAuthHeader,
-      formData
+      formData,
     });
 
     // Mock the formData method to return our form data
@@ -92,7 +92,7 @@ describe('Image Upload Handler', () => {
     const request = createTestRequest({
       method: 'POST',
       headers: validAuthHeader,
-      formData
+      formData,
     });
 
     // Mock the formData method to return our form data

@@ -1,9 +1,19 @@
-import "../../../src/index";
-import {describe, test, expect, beforeEach, beforeAll, afterAll} from 'bun:test';
-import { getGallery, addGalleryImage, deleteGalleryImage, reorderGallery } from '../../../src/handlers/admin/gallery';
-import {closeTestDb, setupTestDb, teardownTestDb} from '../../utils/testDb';
-import {createTestRequest, createTestToken, insertTestGallery, readTestGallery} from "../../utils/helpers";
-import {setupTestEventImage} from "../../utils/imageUtils";
+import '../../../src/index';
+import { describe, test, expect, beforeEach, beforeAll, afterAll } from 'bun:test';
+import {
+  getGallery,
+  addGalleryImage,
+  deleteGalleryImage,
+  reorderGallery,
+} from '../../../src/handlers/admin/gallery';
+import { closeTestDb, setupTestDb, teardownTestDb } from '../../utils/testDb';
+import {
+  createTestRequest,
+  createTestToken,
+  insertTestGallery,
+  readTestGallery,
+} from '../../utils/helpers';
+import { setupTestEventImage } from '../../utils/imageUtils';
 
 describe('Gallery Handler', () => {
   // Sample gallery image data for testing
@@ -11,11 +21,11 @@ describe('Gallery Handler', () => {
     id: 1,
     src: 'gallery/test.webp',
     alt: 'Test Image',
-    order: 1
+    order: 1,
   };
   // Setup valid auth token
   const validToken = createTestToken({ username: 'admin' });
-  const validAuthHeader = { 'Authorization': `Bearer ${validToken}` };
+  const validAuthHeader = { Authorization: `Bearer ${validToken}` };
 
   let testSql: Bun.SQL;
 
@@ -59,13 +69,13 @@ describe('Gallery Handler', () => {
       // Create a request with valid auth and image data
       const newImage = {
         src: 'gallery/new.webp',
-        alt: 'New Image'
+        alt: 'New Image',
       };
 
       const request = createTestRequest({
         method: 'POST',
         headers: validAuthHeader,
-        body: newImage
+        body: newImage,
       });
 
       // Call the handler
@@ -94,7 +104,7 @@ describe('Gallery Handler', () => {
       // Setup existing gallery
       const existingGallery = [sampleImage];
       await insertTestGallery(testSql, existingGallery);
-      await setupTestEventImage("gallery");
+      await setupTestEventImage('gallery');
 
       // Call the handler
       const response = await deleteGalleryImage(1);
@@ -129,7 +139,7 @@ describe('Gallery Handler', () => {
       const existingGallery = [
         { id: 1, src: 'gallery/1.webp', alt: 'Image 1', order: 1 },
         { id: 2, src: 'gallery/2.webp', alt: 'Image 2', order: 2 },
-        { id: 3, src: 'gallery/3.webp', alt: 'Image 3', order: 3 }
+        { id: 3, src: 'gallery/3.webp', alt: 'Image 3', order: 3 },
       ];
       await insertTestGallery(testSql, existingGallery);
 
@@ -138,7 +148,7 @@ describe('Gallery Handler', () => {
       const request = createTestRequest({
         method: 'POST',
         headers: validAuthHeader,
-        body: newOrder
+        body: newOrder,
       });
 
       // Call the handler

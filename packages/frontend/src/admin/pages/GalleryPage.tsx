@@ -6,10 +6,19 @@ import GalleryForm from '../components/GalleryForm';
 import { useAdminGallery } from '../hooks/useAdminGallery';
 import { GalleryImage } from '../../types.ts';
 import { StrictModeDroppable } from '../components/StrictModeDroppable';
-import { DraggableRow } from "../components/DraggableRow.tsx";
+import { DraggableRow } from '../components/DraggableRow.tsx';
 
 const GalleryPage: React.FC = () => {
-  const { gallery, loading, error, fetchGallery, addGalleryImage, deleteGalleryImage, reorderGallery, uploadGalleryImage } = useAdminGallery();
+  const {
+    gallery,
+    loading,
+    error,
+    fetchGallery,
+    addGalleryImage,
+    deleteGalleryImage,
+    reorderGallery,
+    uploadGalleryImage,
+  } = useAdminGallery();
   const [isAddingImage, setIsAddingImage] = useState(false);
 
   // Fetch gallery on component mount
@@ -62,7 +71,7 @@ const GalleryPage: React.FC = () => {
     const success = await reorderGallery(imageIds);
 
     if (!success) {
-      toast.error("Failed to reorder images.");
+      toast.error('Failed to reorder images.');
     }
   };
 
@@ -103,7 +112,9 @@ const GalleryPage: React.FC = () => {
         <>
           {gallery.length === 0 ? (
             <div className="text-center py-8 bg-[#F5F1E9] rounded-lg">
-              <p className="text-[#3E3C3B] font-['Lato'] mb-4">No gallery images found. Add your first image to get started.</p>
+              <p className="text-[#3E3C3B] font-['Lato'] mb-4">
+                No gallery images found. Add your first image to get started.
+              </p>
               <button
                 onClick={() => setIsAddingImage(true)}
                 className="px-4 py-2 bg-[#4A6151] text-white font-['Lato'] rounded-md hover:bg-[#3D5142] transition-colors duration-300"
@@ -115,23 +126,36 @@ const GalleryPage: React.FC = () => {
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="mb-6 bg-[#4A6151]/10 p-4 rounded-lg border border-[#4A6151]/20">
                 <div className="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#4A6151] mr-3 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-[#4A6151] mr-3 flex-shrink-0 mt-0.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                   <div>
-                    <p className="text-[#3E3C3B] font-['Lato'] font-bold mb-1">Gallery Arrangement</p>
+                    <p className="text-[#3E3C3B] font-['Lato'] font-bold mb-1">
+                      Gallery Arrangement
+                    </p>
                     <p className="text-[#3E3C3B] font-['Lato']">
-                      To rearrange images in this list, click and hold anywhere on an image row, then move it up or down to a new position. Release to drop it in place.
+                      To rearrange images in this list, click and hold anywhere on an image row,
+                      then move it up or down to a new position. Release to drop it in place.
                       <br />
-                      The order you set here will be reflected on the public gallery page of your website.
+                      The order you set here will be reflected on the public gallery page of your
+                      website.
                     </p>
                   </div>
                 </div>
               </div>
 
-              <DragDropContext 
-                onDragEnd={handleDragEnd}
-              >
+              <DragDropContext onDragEnd={handleDragEnd}>
                 <StrictModeDroppable droppableId="gallery" type="list">
                   {(provided, snapshot) => (
                     <div

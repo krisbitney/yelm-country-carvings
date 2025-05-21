@@ -4,10 +4,19 @@ import AdminLayout from '../components/AdminLayout';
 import EventForm from '../components/EventForm';
 import { useAdminEvents } from '../hooks/useAdminEvents';
 import { MarketEvent } from '../../types.ts';
-import {formatDateRange} from "../../utils/dateUtils.ts";
+import { formatDateRange } from '../../utils/dateUtils.ts';
 
 const EventsPage: React.FC = () => {
-  const { events, loading, error, fetchEvents, createEvent, updateEvent, deleteEvent, uploadEventImage } = useAdminEvents();
+  const {
+    events,
+    loading,
+    error,
+    fetchEvents,
+    createEvent,
+    updateEvent,
+    deleteEvent,
+    uploadEventImage,
+  } = useAdminEvents();
   const [selectedEvent, setSelectedEvent] = useState<MarketEvent | null>(null);
   const [isAddingEvent, setIsAddingEvent] = useState(false);
   const [isEditingEvent, setIsEditingEvent] = useState(false);
@@ -53,7 +62,7 @@ const EventsPage: React.FC = () => {
     return {
       pastEvents: past,
       upcomingEvents: upcoming,
-      futureEvents: future
+      futureEvents: future,
     };
   }, [events]);
 
@@ -120,10 +129,8 @@ const EventsPage: React.FC = () => {
 
   // Handle bulk selection
   const toggleEventSelection = (id: number) => {
-    setSelectedEventIds(prev => 
-      prev.includes(id) 
-        ? prev.filter(eventId => eventId !== id) 
-        : [...prev, id]
+    setSelectedEventIds(prev =>
+      prev.includes(id) ? prev.filter(eventId => eventId !== id) : [...prev, id]
     );
   };
 
@@ -212,7 +219,9 @@ const EventsPage: React.FC = () => {
         <>
           {events.length === 0 ? (
             <div className="text-center py-8 bg-[#F5F1E9] rounded-lg">
-              <p className="text-[#3E3C3B] font-['Lato'] mb-4">No events found. Add your first event to get started.</p>
+              <p className="text-[#3E3C3B] font-['Lato'] mb-4">
+                No events found. Add your first event to get started.
+              </p>
               <button
                 onClick={() => setIsAddingEvent(true)}
                 className="px-4 py-2 bg-[#4A6151] text-white font-['Lato'] rounded-md hover:bg-[#3D5142] transition-colors duration-300"
@@ -225,35 +234,46 @@ const EventsPage: React.FC = () => {
               {/* Upcoming Events Section (three nearest future events) */}
               <div>
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41]">Upcoming Events</h3>
-                  {upcomingEvents.length > 0 && selectedEventIds.filter(id => upcomingEvents.some(e => e.id === id)).length > 0 && (
-                    <div className="flex items-center space-x-2">
-                      {confirmBulkDelete ? (
-                        <>
-                          <span className="text-sm text-[#3E3C3B]">Delete {selectedEventIds.filter(id => upcomingEvents.some(e => e.id === id)).length} events?</span>
+                  <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41]">
+                    Upcoming Events
+                  </h3>
+                  {upcomingEvents.length > 0 &&
+                    selectedEventIds.filter(id => upcomingEvents.some(e => e.id === id)).length >
+                      0 && (
+                      <div className="flex items-center space-x-2">
+                        {confirmBulkDelete ? (
+                          <>
+                            <span className="text-sm text-[#3E3C3B]">
+                              Delete{' '}
+                              {
+                                selectedEventIds.filter(id => upcomingEvents.some(e => e.id === id))
+                                  .length
+                              }{' '}
+                              events?
+                            </span>
+                            <button
+                              onClick={handleBulkDelete}
+                              className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                            >
+                              Confirm
+                            </button>
+                            <button
+                              onClick={() => setConfirmBulkDelete(false)}
+                              className="px-3 py-1 bg-[#4A6151] text-white text-sm rounded hover:bg-[#3D5142]"
+                            >
+                              Cancel
+                            </button>
+                          </>
+                        ) : (
                           <button
-                            onClick={handleBulkDelete}
+                            onClick={() => setConfirmBulkDelete(true)}
                             className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
                           >
-                            Confirm
+                            Delete Selected
                           </button>
-                          <button
-                            onClick={() => setConfirmBulkDelete(false)}
-                            className="px-3 py-1 bg-[#4A6151] text-white text-sm rounded hover:bg-[#3D5142]"
-                          >
-                            Cancel
-                          </button>
-                        </>
-                      ) : (
-                        <button
-                          onClick={() => setConfirmBulkDelete(true)}
-                          className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
-                        >
-                          Delete Selected
-                        </button>
-                      )}
-                    </div>
-                  )}
+                        )}
+                      </div>
+                    )}
                 </div>
                 {upcomingEvents.length === 0 ? (
                   <div className="text-center py-4 bg-[#F5F1E9] rounded-lg">
@@ -264,13 +284,21 @@ const EventsPage: React.FC = () => {
                     <table className="min-w-full divide-y divide-[#A07E5D]/20">
                       <thead className="bg-[#4A6151]">
                         <tr>
-                          <th scope="col" className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-10">
+                          <th
+                            scope="col"
+                            className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-10"
+                          >
                             <input
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-[#4A6151] focus:ring-[#4A6151]"
-                              checked={upcomingEvents.length > 0 && upcomingEvents.every(event => selectedEventIds.includes(event.id))}
+                              checked={
+                                upcomingEvents.length > 0 &&
+                                upcomingEvents.every(event => selectedEventIds.includes(event.id))
+                              }
                               onChange={() => {
-                                if (upcomingEvents.every(event => selectedEventIds.includes(event.id))) {
+                                if (
+                                  upcomingEvents.every(event => selectedEventIds.includes(event.id))
+                                ) {
                                   deselectAllEvents(upcomingEvents);
                                 } else {
                                   selectAllEvents(upcomingEvents);
@@ -278,22 +306,34 @@ const EventsPage: React.FC = () => {
                               }}
                             />
                           </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                          >
                             Event
                           </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                          >
                             Date
                           </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                          >
                             Location
                           </th>
-                          <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider"
+                          >
                             Actions
                           </th>
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-[#A07E5D]/20">
-                        {upcomingEvents.map((event) => (
+                        {upcomingEvents.map(event => (
                           <tr key={event.id} className="hover:bg-[#F5F1E9]">
                             <td className="px-2 py-4 whitespace-nowrap text-center">
                               <input
@@ -308,18 +348,24 @@ const EventsPage: React.FC = () => {
                                 <div className="h-10 w-10 flex-shrink-0 mr-4">
                                   <img
                                     className="h-10 w-10 rounded-full object-cover"
-                                    src={event.image.startsWith('/') ? event.image : `/${event.image}`}
+                                    src={
+                                      event.image.startsWith('/') ? event.image : `/${event.image}`
+                                    }
                                     alt={event.title}
-                                    loading={"lazy"}
+                                    loading={'lazy'}
                                   />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-[#3E3C3B]">{event.title}</div>
+                                  <div className="text-sm font-medium text-[#3E3C3B]">
+                                    {event.title}
+                                  </div>
                                 </div>
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-[#3E3C3B]">{formatDateRange(event.startDate, event.endDate)}</div>
+                              <div className="text-sm text-[#3E3C3B]">
+                                {formatDateRange(event.startDate, event.endDate)}
+                              </div>
                               <div className="text-xs text-[#6B4F41]">
                                 {event.startDate && `From: ${formatDate(event.startDate)}`}
                               </div>
@@ -375,52 +421,73 @@ const EventsPage: React.FC = () => {
               {/* Future Events Section (beyond the nearest three) */}
               <div>
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41]">Future Events</h3>
-                  {futureEvents.length > 0 && selectedEventIds.filter(id => futureEvents.some(e => e.id === id)).length > 0 && (
-                    <div className="flex items-center space-x-2">
-                      {confirmBulkDelete ? (
-                        <>
-                          <span className="text-sm text-[#3E3C3B]">Delete {selectedEventIds.filter(id => futureEvents.some(e => e.id === id)).length} events?</span>
+                  <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41]">
+                    Future Events
+                  </h3>
+                  {futureEvents.length > 0 &&
+                    selectedEventIds.filter(id => futureEvents.some(e => e.id === id)).length >
+                      0 && (
+                      <div className="flex items-center space-x-2">
+                        {confirmBulkDelete ? (
+                          <>
+                            <span className="text-sm text-[#3E3C3B]">
+                              Delete{' '}
+                              {
+                                selectedEventIds.filter(id => futureEvents.some(e => e.id === id))
+                                  .length
+                              }{' '}
+                              events?
+                            </span>
+                            <button
+                              onClick={handleBulkDelete}
+                              className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                            >
+                              Confirm
+                            </button>
+                            <button
+                              onClick={() => setConfirmBulkDelete(false)}
+                              className="px-3 py-1 bg-[#4A6151] text-white text-sm rounded hover:bg-[#3D5142]"
+                            >
+                              Cancel
+                            </button>
+                          </>
+                        ) : (
                           <button
-                            onClick={handleBulkDelete}
+                            onClick={() => setConfirmBulkDelete(true)}
                             className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
                           >
-                            Confirm
+                            Delete Selected
                           </button>
-                          <button
-                            onClick={() => setConfirmBulkDelete(false)}
-                            className="px-3 py-1 bg-[#4A6151] text-white text-sm rounded hover:bg-[#3D5142]"
-                          >
-                            Cancel
-                          </button>
-                        </>
-                      ) : (
-                        <button
-                          onClick={() => setConfirmBulkDelete(true)}
-                          className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
-                        >
-                          Delete Selected
-                        </button>
-                      )}
-                    </div>
-                  )}
+                        )}
+                      </div>
+                    )}
                 </div>
                 {futureEvents.length === 0 ? (
                   <div className="text-center py-4 bg-[#F5F1E9] rounded-lg">
-                    <p className="text-[#3E3C3B] font-['Lato']">No additional future events scheduled.</p>
+                    <p className="text-[#3E3C3B] font-['Lato']">
+                      No additional future events scheduled.
+                    </p>
                   </div>
                 ) : (
                   <div className="bg-white rounded-lg shadow-md overflow-hidden">
                     <table className="min-w-full divide-y divide-[#A07E5D]/20">
                       <thead className="bg-[#4A6151]">
                         <tr>
-                          <th scope="col" className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-10">
+                          <th
+                            scope="col"
+                            className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-10"
+                          >
                             <input
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-[#4A6151] focus:ring-[#4A6151]"
-                              checked={futureEvents.length > 0 && futureEvents.every(event => selectedEventIds.includes(event.id))}
+                              checked={
+                                futureEvents.length > 0 &&
+                                futureEvents.every(event => selectedEventIds.includes(event.id))
+                              }
                               onChange={() => {
-                                if (futureEvents.every(event => selectedEventIds.includes(event.id))) {
+                                if (
+                                  futureEvents.every(event => selectedEventIds.includes(event.id))
+                                ) {
                                   deselectAllEvents(futureEvents);
                                 } else {
                                   selectAllEvents(futureEvents);
@@ -428,22 +495,34 @@ const EventsPage: React.FC = () => {
                               }}
                             />
                           </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                          >
                             Event
                           </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                          >
                             Date
                           </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                          >
                             Location
                           </th>
-                          <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider"
+                          >
                             Actions
                           </th>
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-[#A07E5D]/20">
-                        {futureEvents.map((event) => (
+                        {futureEvents.map(event => (
                           <tr key={event.id} className="hover:bg-[#F5F1E9]">
                             <td className="px-2 py-4 whitespace-nowrap text-center">
                               <input
@@ -458,18 +537,24 @@ const EventsPage: React.FC = () => {
                                 <div className="h-10 w-10 flex-shrink-0 mr-4">
                                   <img
                                     className="h-10 w-10 rounded-full object-cover"
-                                    src={event.image.startsWith('/') ? event.image : `/${event.image}`}
+                                    src={
+                                      event.image.startsWith('/') ? event.image : `/${event.image}`
+                                    }
                                     alt={event.title}
-                                    loading={"lazy"}
+                                    loading={'lazy'}
                                   />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-[#3E3C3B]">{event.title}</div>
+                                  <div className="text-sm font-medium text-[#3E3C3B]">
+                                    {event.title}
+                                  </div>
                                 </div>
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-[#3E3C3B]">{formatDateRange(event.startDate, event.endDate)}</div>
+                              <div className="text-sm text-[#3E3C3B]">
+                                {formatDateRange(event.startDate, event.endDate)}
+                              </div>
                               <div className="text-xs text-[#6B4F41]">
                                 {event.startDate && `From: ${formatDate(event.startDate)}`}
                               </div>
@@ -526,34 +611,42 @@ const EventsPage: React.FC = () => {
               <div>
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="font-['Cinzel'] text-2xl font-bold text-[#6B4F41]">Past Events</h3>
-                  {pastEvents.length > 0 && selectedEventIds.filter(id => pastEvents.some(e => e.id === id)).length > 0 && (
-                    <div className="flex items-center space-x-2">
-                      {confirmBulkDelete ? (
-                        <>
-                          <span className="text-sm text-[#3E3C3B]">Delete {selectedEventIds.filter(id => pastEvents.some(e => e.id === id)).length} events?</span>
+                  {pastEvents.length > 0 &&
+                    selectedEventIds.filter(id => pastEvents.some(e => e.id === id)).length > 0 && (
+                      <div className="flex items-center space-x-2">
+                        {confirmBulkDelete ? (
+                          <>
+                            <span className="text-sm text-[#3E3C3B]">
+                              Delete{' '}
+                              {
+                                selectedEventIds.filter(id => pastEvents.some(e => e.id === id))
+                                  .length
+                              }{' '}
+                              events?
+                            </span>
+                            <button
+                              onClick={handleBulkDelete}
+                              className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                            >
+                              Confirm
+                            </button>
+                            <button
+                              onClick={() => setConfirmBulkDelete(false)}
+                              className="px-3 py-1 bg-[#4A6151] text-white text-sm rounded hover:bg-[#3D5142]"
+                            >
+                              Cancel
+                            </button>
+                          </>
+                        ) : (
                           <button
-                            onClick={handleBulkDelete}
+                            onClick={() => setConfirmBulkDelete(true)}
                             className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
                           >
-                            Confirm
+                            Delete Selected
                           </button>
-                          <button
-                            onClick={() => setConfirmBulkDelete(false)}
-                            className="px-3 py-1 bg-[#4A6151] text-white text-sm rounded hover:bg-[#3D5142]"
-                          >
-                            Cancel
-                          </button>
-                        </>
-                      ) : (
-                        <button
-                          onClick={() => setConfirmBulkDelete(true)}
-                          className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
-                        >
-                          Delete Selected
-                        </button>
-                      )}
-                    </div>
-                  )}
+                        )}
+                      </div>
+                    )}
                 </div>
                 {pastEvents.length === 0 ? (
                   <div className="text-center py-4 bg-[#F5F1E9] rounded-lg">
@@ -564,13 +657,21 @@ const EventsPage: React.FC = () => {
                     <table className="min-w-full divide-y divide-[#A07E5D]/20">
                       <thead className="bg-[#4A6151]">
                         <tr>
-                          <th scope="col" className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-10">
+                          <th
+                            scope="col"
+                            className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-10"
+                          >
                             <input
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-[#4A6151] focus:ring-[#4A6151]"
-                              checked={pastEvents.length > 0 && pastEvents.every(event => selectedEventIds.includes(event.id))}
+                              checked={
+                                pastEvents.length > 0 &&
+                                pastEvents.every(event => selectedEventIds.includes(event.id))
+                              }
                               onChange={() => {
-                                if (pastEvents.every(event => selectedEventIds.includes(event.id))) {
+                                if (
+                                  pastEvents.every(event => selectedEventIds.includes(event.id))
+                                ) {
                                   deselectAllEvents(pastEvents);
                                 } else {
                                   selectAllEvents(pastEvents);
@@ -578,22 +679,34 @@ const EventsPage: React.FC = () => {
                               }}
                             />
                           </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                          >
                             Event
                           </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                          >
                             Date
                           </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                          >
                             Location
                           </th>
-                          <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider"
+                          >
                             Actions
                           </th>
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-[#A07E5D]/20">
-                        {pastEvents.map((event) => (
+                        {pastEvents.map(event => (
                           <tr key={event.id} className="hover:bg-[#F5F1E9]">
                             <td className="px-2 py-4 whitespace-nowrap text-center">
                               <input
@@ -608,18 +721,24 @@ const EventsPage: React.FC = () => {
                                 <div className="h-10 w-10 flex-shrink-0 mr-4">
                                   <img
                                     className="h-10 w-10 rounded-full object-cover"
-                                    src={event.image.startsWith('/') ? event.image : `/${event.image}`}
+                                    src={
+                                      event.image.startsWith('/') ? event.image : `/${event.image}`
+                                    }
                                     alt={event.title}
-                                    loading={"lazy"}
+                                    loading={'lazy'}
                                   />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-[#3E3C3B]">{event.title}</div>
+                                  <div className="text-sm font-medium text-[#3E3C3B]">
+                                    {event.title}
+                                  </div>
                                 </div>
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-[#3E3C3B]">{formatDateRange(event.startDate, event.endDate)}</div>
+                              <div className="text-sm text-[#3E3C3B]">
+                                {formatDateRange(event.startDate, event.endDate)}
+                              </div>
                               <div className="text-xs text-[#6B4F41]">
                                 {event.startDate && `From: ${formatDate(event.startDate)}`}
                               </div>

@@ -1,13 +1,13 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   /* Color Palette */
-  --color-primary-1: #6B4F41; /* Rich Wood Brown */
-  --color-primary-2: #A07E5D; /* Warm Timber */
-  --color-secondary: #4A6151; /* Forest Canopy Green */
-  --color-accent: #B87351;    /* Muted Terracotta/Clay */
-  --color-neutral-1: #F5F1E9; /* Natural Linen */
-  --color-neutral-2: #3E3C3B; /* Charcoal Ink */
+  --color-primary-1: #6b4f41; /* Rich Wood Brown */
+  --color-primary-2: #a07e5d; /* Warm Timber */
+  --color-secondary: #4a6151; /* Forest Canopy Green */
+  --color-accent: #b87351; /* Muted Terracotta/Clay */
+  --color-neutral-1: #f5f1e9; /* Natural Linen */
+  --color-neutral-2: #3e3c3b; /* Charcoal Ink */
 
   /* Typography */
   --font-heading: 'Cinzel', serif;
@@ -24,7 +24,8 @@
   scroll-behavior: smooth;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   border: 0;
@@ -33,30 +34,44 @@ html, body {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes zoomInOut {
-  from { transform: scale(1); }
-  to { transform: scale(1.1); }
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
 }
 
 @keyframes slideInUp {
-  from { 
+  from {
     transform: translateY(20px);
     opacity: 0;
   }
-  to { 
+  to {
     transform: translateY(0);
     opacity: 1;
   }
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Utility Classes */
@@ -74,11 +89,9 @@ html, body {
 
 /* react-multi-carousel */
 .carousel-container {
-
 }
 
 .carousel-dot-list {
-
 }
 
 .carousel-item-list {

@@ -1,6 +1,6 @@
-import {useEffect, useState} from "react";
-import loadingImage from "../../assets/img/fallback/loading.png";
-import {MarketEvent} from "../../types.ts";
+import { useEffect, useState } from 'react';
+import loadingImage from '../../assets/img/fallback/loading.png';
+import { MarketEvent } from '../../types.ts';
 
 const loadingEvent: MarketEvent = {
   id: 0,
@@ -9,8 +9,8 @@ const loadingEvent: MarketEvent = {
   description: 'Loading...',
   image: loadingImage,
   startDate: '2025-01-01',
-  endDate: '2025-01-01'
-}
+  endDate: '2025-01-01',
+};
 
 export const useEvents = () => {
   // State for events data
@@ -46,4 +46,4 @@ export const useEvents = () => {
   }, []);
 
   return { data, loading, error };
-}
+};

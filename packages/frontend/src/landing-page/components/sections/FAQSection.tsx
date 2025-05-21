@@ -12,28 +12,33 @@ const FAQSection = () => {
     {
       id: 1,
       question: 'How long does it take to complete a custom carving?',
-      answer: 'The timeframe varies depending on the size and complexity of the carving. Small pieces may take 1-2 days, while larger or more detailed carvings can take 1-2 weeks. We\'ll provide you with a specific timeline when you request a quote.'
+      answer:
+        "The timeframe varies depending on the size and complexity of the carving. Small pieces may take 1-2 days, while larger or more detailed carvings can take 1-2 weeks. We'll provide you with a specific timeline when you request a quote.",
     },
     {
       id: 2,
       question: 'Do you offer delivery services?',
-      answer: 'Yes, we offer delivery within a 50-mile radius of Yelm for a small fee. For larger pieces or longer distances, we can arrange shipping or delivery through a third-party service. Contact us for a delivery quote.'
+      answer:
+        'Yes, we offer delivery within a 50-mile radius of Yelm for a small fee. For larger pieces or longer distances, we can arrange shipping or delivery through a third-party service. Contact us for a delivery quote.',
     },
     {
       id: 3,
       question: 'How should I maintain my wood carving?',
-      answer: 'Our carvings are sealed with high-quality finishes to protect them from the elements. For outdoor carvings, we recommend reapplying a clear sealant annually. Keep carvings away from direct water exposure and extreme heat. Dust indoor carvings regularly with a soft cloth.'
+      answer:
+        'Our carvings are sealed with high-quality finishes to protect them from the elements. For outdoor carvings, we recommend reapplying a clear sealant annually. Keep carvings away from direct water exposure and extreme heat. Dust indoor carvings regularly with a soft cloth.',
     },
     {
       id: 4,
       question: 'Can I request a specific type of wood for my carving?',
-      answer: 'We primarily work with cedar and pine, which are excellent for outdoor durability and carving detail. If you have a specific wood type in mind, please ask, and we\'ll let you know if it\'s suitable for your project.'
+      answer:
+        "We primarily work with cedar and pine, which are excellent for outdoor durability and carving detail. If you have a specific wood type in mind, please ask, and we'll let you know if it's suitable for your project.",
     },
     {
       id: 5,
       question: 'Do you offer any warranty on your carvings?',
-      answer: 'Yes, all our carvings come with a 1-year warranty against defects in craftsmanship. This doesn\'t cover natural wood characteristics like checking (small cracks) which can occur as wood adjusts to its environment.'
-    }
+      answer:
+        "Yes, all our carvings come with a 1-year warranty against defects in craftsmanship. This doesn't cover natural wood characteristics like checking (small cracks) which can occur as wood adjusts to its environment.",
+    },
   ];
 
   // State to track which FAQ items are expanded
@@ -41,25 +46,21 @@ const FAQSection = () => {
 
   // Toggle FAQ expansion
   const toggleFAQ = (faqId: number) => {
-    setExpandedFAQs(prev => 
-      prev.includes(faqId) 
-        ? prev.filter(id => id !== faqId) 
-        : [...prev, faqId]
+    setExpandedFAQs(prev =>
+      prev.includes(faqId) ? prev.filter(id => id !== faqId) : [...prev, faqId]
     );
   };
 
-
   return (
     <section id="faq" className="pt-16 pb-16 bg-[#F5F1E9]">
-
       <div className="container mx-auto px-4">
         {/* Section Heading */}
         <div className="text-center mb-12">
           {/* Question Mark Icon */}
-          <svg 
-            className="w-12 h-12 mx-auto mb-4 text-[#6B4F41]" 
-            viewBox="0 0 24 24" 
-            fill="currentColor" 
+          <svg
+            className="w-12 h-12 mx-auto mb-4 text-[#6B4F41]"
+            viewBox="0 0 24 24"
+            fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
             focusable="false"
@@ -73,60 +74,61 @@ const FAQSection = () => {
           </h2>
         </div>
 
-
         {/* FAQ Accordion */}
         <div className="max-w-3xl mx-auto">
           <div className="space-y-4">
-              {faqs.map(faq => (
-                <div 
-                  key={faq.id} 
-                  className="border border-[#A07E5D] rounded-md overflow-hidden"
+            {faqs.map(faq => (
+              <div key={faq.id} className="border border-[#A07E5D] rounded-md overflow-hidden">
+                {/* Question (Header) */}
+                <button
+                  id={`faq-question-${faq.id}`}
+                  className="w-full px-6 py-4 text-left bg-[#F5F1E9] hover:bg-[#A07E5D]/10 hover:cursor-pointer flex justify-between items-center transition-colors duration-300"
+                  onClick={() => toggleFAQ(faq.id)}
+                  aria-expanded={expandedFAQs.includes(faq.id)}
+                  aria-controls={`faq-answer-${faq.id}`}
                 >
-                  {/* Question (Header) */}
-                  <button 
-                    id={`faq-question-${faq.id}`}
-                    className="w-full px-6 py-4 text-left bg-[#F5F1E9] hover:bg-[#A07E5D]/10 hover:cursor-pointer flex justify-between items-center transition-colors duration-300"
-                    onClick={() => toggleFAQ(faq.id)}
-                    aria-expanded={expandedFAQs.includes(faq.id)}
-                    aria-controls={`faq-answer-${faq.id}`}
-                  >
-                    <span className="font-['Cinzel'] font-bold text-[#6B4F41]">{faq.question}</span>
-                    <svg 
-                      className={`w-5 h-5 text-[#4A6151] transform transition-transform duration-300 ${
-                        expandedFAQs.includes(faq.id) ? 'rotate-180' : ''
-                      }`} 
-                      fill="none" 
-                      viewBox="0 0 24 24" 
-                      stroke="currentColor"
-                      aria-hidden="true"
-                      focusable="false"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-
-                  {/* Answer */}
-                  <div 
-                    id={`faq-answer-${faq.id}`}
-                    className={`overflow-hidden transition-all duration-300 ${
-                      expandedFAQs.includes(faq.id) ? 'max-h-96' : 'max-h-0'
+                  <span className="font-['Cinzel'] font-bold text-[#6B4F41]">{faq.question}</span>
+                  <svg
+                    className={`w-5 h-5 text-[#4A6151] transform transition-transform duration-300 ${
+                      expandedFAQs.includes(faq.id) ? 'rotate-180' : ''
                     }`}
-                    role="region"
-                    aria-labelledby={`faq-question-${faq.id}`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                    focusable="false"
                   >
-                    <div className="px-6 py-4 bg-white">
-                      <p className="font-['Lato'] text-[#3E3C3B]">{faq.answer}</p>
-                    </div>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+                {/* Answer */}
+                <div
+                  id={`faq-answer-${faq.id}`}
+                  className={`overflow-hidden transition-all duration-300 ${
+                    expandedFAQs.includes(faq.id) ? 'max-h-96' : 'max-h-0'
+                  }`}
+                  role="region"
+                  aria-labelledby={`faq-question-${faq.id}`}
+                >
+                  <div className="px-6 py-4 bg-white">
+                    <p className="font-['Lato'] text-[#3E3C3B]">{faq.answer}</p>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
+          </div>
 
           {/* "Still Have Questions?" Link */}
           <div className="text-center mt-12">
             <p className="font-['Lato'] text-[#3E3C3B] mb-4">Still have questions?</p>
-            <a 
-              href="#contact" 
+            <a
+              href="#contact"
               className="inline-block px-6 py-3 bg-[#4A6151] text-[#F5F1E9] font-['Lato'] font-bold rounded-md shadow-md hover:bg-[#6B4F41] hover:cursor-pointer transition-colors duration-300"
               aria-label="Contact us with your questions"
             >

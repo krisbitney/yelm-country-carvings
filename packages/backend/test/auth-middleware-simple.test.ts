@@ -1,4 +1,4 @@
-import "../src/index";
+import '../src/index';
 import { describe, test, expect, spyOn } from 'bun:test';
 import { authenticateJWT } from '../src/middleware/auth';
 import * as jwtUtils from '../src/utils/jwt';
@@ -7,13 +7,15 @@ describe('Authentication Middleware - Simple Tests', () => {
   describe('authenticateJWT', () => {
     test('should return undefined for a valid token', () => {
       // Use spyOn to mock the verifyToken function
-      const verifyTokenSpy = spyOn(jwtUtils, 'verifyToken').mockImplementation(() => ({ username: 'admin' }));
+      const verifyTokenSpy = spyOn(jwtUtils, 'verifyToken').mockImplementation(() => ({
+        username: 'admin',
+      }));
 
       // Create a simple request with Authorization header
       const request = new Request('http://localhost', {
         headers: {
-          'Authorization': 'Bearer valid-token'
-        }
+          Authorization: 'Bearer valid-token',
+        },
       });
 
       // Call the middleware
@@ -45,8 +47,8 @@ describe('Authentication Middleware - Simple Tests', () => {
       // Create a simple request with Authorization header
       const request = new Request('http://localhost', {
         headers: {
-          'Authorization': 'Bearer invalid-token'
-        }
+          Authorization: 'Bearer invalid-token',
+        },
       });
 
       // Call the middleware
@@ -64,13 +66,15 @@ describe('Authentication Middleware - Simple Tests', () => {
   describe('authenticateAdmin', () => {
     test('should return undefined for a valid admin token', () => {
       // Use spyOn to mock the verifyToken function to return a valid payload
-      const verifyTokenSpy = spyOn(jwtUtils, 'verifyToken').mockImplementation(() => ({ username: 'admin' }));
+      const verifyTokenSpy = spyOn(jwtUtils, 'verifyToken').mockImplementation(() => ({
+        username: 'admin',
+      }));
 
       // Create a simple request with Authorization header
       const request = new Request('http://localhost', {
         headers: {
-          'Authorization': 'Bearer valid-token'
-        }
+          Authorization: 'Bearer valid-token',
+        },
       });
 
       // Call the middleware

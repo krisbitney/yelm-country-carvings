@@ -23,15 +23,17 @@ const HeroSection: React.FC = () => {
       <style dangerouslySetInnerHTML={{ __html: zoomInOutAnimation }} />
 
       {/* Visually hidden h1 for SEO and accessibility */}
-      <h1 className="sr-only">Yelm Country Carvings - Handcrafted Chainsaw Art in Yelm, Washington</h1>
+      <h1 className="sr-only">
+        Yelm Country Carvings - Handcrafted Chainsaw Art in Yelm, Washington
+      </h1>
 
       {/* Background Slideshow */}
       <div className="absolute inset-0 bg-[#A07E5D]/80 overflow-hidden">
-        <div 
+        <div
           className="absolute inset-0 w-full h-full bg-center bg-cover bg-no-repeat opacity-60"
           style={{
             backgroundImage: `url(${backgroundImage})`,
-            animation: 'zoomInOut 20s infinite alternate ease-in-out'
+            animation: 'zoomInOut 20s infinite alternate ease-in-out',
           }}
           role="img"
           aria-label="Yelm Country Carvings logo with wooden background"
@@ -55,12 +57,12 @@ const HeroSection: React.FC = () => {
 
             {/* Primary CTA Button */}
             <div className="flex justify-center">
-              <a 
-                href="#process" 
+              <a
+                href="#process"
                 className="px-5 py-2 bg-[#B87351] text-[#F5F1E9] text-sm font-['Lato'] font-bold rounded-lg border-2 border-[#F5F1E9] shadow-lg hover:bg-[#A07E5D] hover:scale-105 transition-all duration-300"
-                style={{ 
+                style={{
                   boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
-                  textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)'
+                  textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
                 }}
               >
                 Explore Our Creations
@@ -84,12 +86,12 @@ const HeroSection: React.FC = () => {
 
             {/* Secondary CTA Button */}
             <div className="flex justify-center">
-              <a 
-                href="#contact" 
+              <a
+                href="#contact"
                 className="px-5 py-2 bg-[#A07E5D] text-[#F5F1E9] text-sm font-['Lato'] font-bold rounded-lg border-2 border-[#F5F1E9] shadow-lg hover:bg-[#B87351] hover:scale-105 transition-all duration-300"
-                style={{ 
+                style={{
                   boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
-                  textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)'
+                  textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
                 }}
               >
                 Get a Custom Quote
@@ -118,12 +120,12 @@ const HeroSection: React.FC = () => {
 
             {/* Primary CTA Button */}
             <div className="flex justify-center mt-auto">
-              <a 
-                href="#process" 
+              <a
+                href="#process"
                 className="px-6 py-3 bg-[#B87351] text-[#F5F1E9] text-base lg:text-lg font-['Lato'] font-bold rounded-lg border-2 border-[#F5F1E9] shadow-lg hover:bg-[#A07E5D] hover:scale-105 transition-all duration-300"
-                style={{ 
+                style={{
                   boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
-                  textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)'
+                  textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
                 }}
               >
                 Explore Our Creations
@@ -146,18 +148,19 @@ const HeroSection: React.FC = () => {
 
               {/* Description */}
               <p className="text-[#F5F1E9] text-base lg:text-lg mb-6 font-['Lato'] text-center">
-                Unique wooden sculptures and custom carvings created with passion in Yelm, Washington.
+                Unique wooden sculptures and custom carvings created with passion in Yelm,
+                Washington.
               </p>
             </div>
 
             {/* Secondary CTA Button */}
             <div className="flex justify-center mt-auto">
-              <a 
-                href="#contact" 
+              <a
+                href="#contact"
                 className="px-6 py-3 bg-[#A07E5D] text-[#F5F1E9] text-base lg:text-lg font-['Lato'] font-bold rounded-lg border-2 border-[#F5F1E9] shadow-lg hover:bg-[#B87351] hover:scale-105 transition-all duration-300"
-                style={{ 
+                style={{
                   boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
-                  textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)'
+                  textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
                 }}
               >
                 Get a Quote
@@ -169,23 +172,23 @@ const HeroSection: React.FC = () => {
 
       {/* Scroll Down Indicator - Centered at the bottom */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-        <a 
+        <a
           href="#about"
           className="block animate-bounce hover:text-[#B87351] hover:scale-110 transition-all duration-300 hover:cursor-pointer"
           aria-label="Scroll to About section"
         >
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            className="h-8 w-8 text-[#F5F1E9]" 
-            fill="none" 
-            viewBox="0 0 24 24" 
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-8 w-8 text-[#F5F1E9]"
+            fill="none"
+            viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M19 14l-7 7m0 0l-7-7m7 7V3" 
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
             />
           </svg>
         </a>

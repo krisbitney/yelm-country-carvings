@@ -3,7 +3,8 @@ import { generateToken, verifyToken, extractTokenFromHeader } from '../../utils/
 // Get admin credentials from environment variables
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
 // For testing, defaults to hash for 'secure_password'
-const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH ||
+const ADMIN_PASSWORD_HASH =
+  process.env.ADMIN_PASSWORD_HASH ||
   '$argon2id$v=19$m=65536,t=2,p=1$doboF/ae2w/97TeRbu6tluTTmrf5luSobD/OeiQHZA4$6t2GTpeHAQdgdhjp6wIOyj2JsCVTEQl8NkjOrv7Ky6I';
 
 /**
@@ -18,10 +19,13 @@ export const handleAdminLogin = async (req: Request): Promise<Response> => {
 
     // Check if username is valid
     if (username !== ADMIN_USERNAME) {
-      return Response.json({ 
-        success: false, 
-        message: 'Invalid username or password' 
-      }, { status: 401 });
+      return Response.json(
+        {
+          success: false,
+          message: 'Invalid username or password',
+        },
+        { status: 401 }
+      );
     }
 
     // Validate the password using Bun's native password utilities
@@ -29,10 +33,13 @@ export const handleAdminLogin = async (req: Request): Promise<Response> => {
 
     // Check if credentials are valid
     if (!isPasswordValid) {
-      return Response.json({
-        success: false,
-        message: 'Invalid username or password'
-      }, { status: 401 });
+      return Response.json(
+        {
+          success: false,
+          message: 'Invalid username or password',
+        },
+        { status: 401 }
+      );
     }
 
     // Generate a JWT token
@@ -42,17 +49,19 @@ export const handleAdminLogin = async (req: Request): Promise<Response> => {
     return Response.json({
       success: true,
       token,
-      message: 'Login successful'
+      message: 'Login successful',
     });
-
   } catch (error) {
     console.error('Login error:', error);
 
     // Return a generic error message
-    return Response.json({ 
-      success: false, 
-      message: 'An error occurred during login' 
-    }, { status: 500 });
+    return Response.json(
+      {
+        success: false,
+        message: 'An error occurred during login',
+      },
+      { status: 500 }
+    );
   }
 };
 
@@ -71,10 +80,13 @@ export const handleVerifyToken = (req: Request): Response => {
 
   // This should never happen since the middleware already checked for a valid token
   if (!token) {
-    return Response.json({ 
-      success: false, 
-      message: 'No token provided' 
-    }, { status: 401 });
+    return Response.json(
+      {
+        success: false,
+        message: 'No token provided',
+      },
+      { status: 401 }
+    );
   }
 
   // Get the payload from the token
@@ -82,16 +94,19 @@ export const handleVerifyToken = (req: Request): Response => {
 
   // This should never happen since the middleware already verified the token
   if (!payload) {
-    return Response.json({ 
-      success: false, 
-      message: 'Invalid token' 
-    }, { status: 401 });
+    return Response.json(
+      {
+        success: false,
+        message: 'Invalid token',
+      },
+      { status: 401 }
+    );
   }
 
   // Return success with the username
-  return Response.json({ 
-    success: true, 
+  return Response.json({
+    success: true,
     message: 'Token is valid',
-    username: payload.username
+    username: payload.username,
   });
 };

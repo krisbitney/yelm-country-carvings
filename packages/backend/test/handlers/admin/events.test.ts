@@ -1,9 +1,19 @@
-import "../../../src/index";
-import {describe, test, expect, beforeEach, beforeAll, afterAll} from 'bun:test';
-import { getEvents, createEvent, updateEvent, deleteEvent } from '../../../src/handlers/admin/events';
-import {closeTestDb, setupTestDb, teardownTestDb} from "../../utils/testDb";
-import {createTestRequest, createTestToken, insertTestEvents, readTestEvents} from "../../utils/helpers";
-import {setupTestEventImage} from "../../utils/imageUtils";
+import '../../../src/index';
+import { describe, test, expect, beforeEach, beforeAll, afterAll } from 'bun:test';
+import {
+  getEvents,
+  createEvent,
+  updateEvent,
+  deleteEvent,
+} from '../../../src/handlers/admin/events';
+import { closeTestDb, setupTestDb, teardownTestDb } from '../../utils/testDb';
+import {
+  createTestRequest,
+  createTestToken,
+  insertTestEvents,
+  readTestEvents,
+} from '../../utils/helpers';
+import { setupTestEventImage } from '../../utils/imageUtils';
 
 describe('Events Handler', () => {
   // Sample event data for testing
@@ -13,12 +23,12 @@ describe('Events Handler', () => {
     location: 'Test Location',
     description: 'Test Description',
     image: 'events/test.webp',
-    startDate: "2023-12-25",
-    endDate: "2023-12-25",
+    startDate: '2023-12-25',
+    endDate: '2023-12-25',
   };
   // Setup valid auth token
   const validToken = createTestToken({ username: 'admin' });
-  const validAuthHeader = { 'Authorization': `Bearer ${validToken}` };
+  const validAuthHeader = { Authorization: `Bearer ${validToken}` };
 
   let testSql: Bun.SQL;
 
@@ -38,9 +48,7 @@ describe('Events Handler', () => {
   describe('getEvents', () => {
     test('should return events', async () => {
       // Set up test data
-      const testEvents = [
-        { id: 1, ...sampleEvent }
-      ];
+      const testEvents = [{ id: 1, ...sampleEvent }];
       await insertTestEvents(testSql, testEvents);
 
       // Call the handler
@@ -62,7 +70,7 @@ describe('Events Handler', () => {
       const request = createTestRequest({
         method: 'POST',
         headers: validAuthHeader,
-        body: sampleEvent
+        body: sampleEvent,
       });
 
       // Call the handler
@@ -87,22 +95,20 @@ describe('Events Handler', () => {
   describe('updateEvent', () => {
     test('should update an existing event', async () => {
       // Setup existing events
-      const existingEvents = [
-        { id: 1, ...sampleEvent }
-      ];
+      const existingEvents = [{ id: 1, ...sampleEvent }];
       await insertTestEvents(testSql, existingEvents);
 
       // Create updated event data
       const updatedEvent = {
         ...sampleEvent,
-        name: 'Updated Event Name'
+        name: 'Updated Event Name',
       };
 
       // Create a request with valid auth and updated event data
       const request = createTestRequest({
         method: 'PUT',
         headers: validAuthHeader,
-        body: updatedEvent
+        body: updatedEvent,
       });
 
       // Call the handler
@@ -131,7 +137,7 @@ describe('Events Handler', () => {
       const request = createTestRequest({
         method: 'PUT',
         headers: validAuthHeader,
-        body: sampleEvent
+        body: sampleEvent,
       });
 
       // Call the handler
@@ -151,11 +157,9 @@ describe('Events Handler', () => {
   describe('deleteEvent', () => {
     test('should delete an existing event', async () => {
       // Setup existing events
-      const existingEvents = [
-        { id: 1, ...sampleEvent }
-      ];
+      const existingEvents = [{ id: 1, ...sampleEvent }];
       await insertTestEvents(testSql, existingEvents);
-      await setupTestEventImage("events");
+      await setupTestEventImage('events');
 
       // Call the handler
       const response = await deleteEvent(1);

@@ -16,7 +16,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   onImageUpload,
   onImageChange,
   error,
-  label = 'Image'
+  label = 'Image',
 }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(
     initialImage ? (initialImage.startsWith('/') ? initialImage : `/${initialImage}`) : null
@@ -24,30 +24,33 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const [uploadProgress, setUploadProgress] = useState<boolean>(false);
 
   // Handle image upload
-  const handleImageUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleImageUpload = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
 
-    try {
-      setUploadProgress(true);
-      console.log('Uploading file:', file.name, file.type, file.size);
-      const imagePath = await onImageUpload(file);
-      console.log('Image upload response:', imagePath);
+      try {
+        setUploadProgress(true);
+        console.log('Uploading file:', file.name, file.type, file.size);
+        const imagePath = await onImageUpload(file);
+        console.log('Image upload response:', imagePath);
 
-      if (imagePath) {
-        // Ensure the image path starts with a slash for proper display
-        const formattedPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
-        setImagePreview(formattedPath);
-        onImageChange(imagePath); // Keep the original path for the form value
-      } else {
-        console.error('No image path returned from upload');
+        if (imagePath) {
+          // Ensure the image path starts with a slash for proper display
+          const formattedPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+          setImagePreview(formattedPath);
+          onImageChange(imagePath); // Keep the original path for the form value
+        } else {
+          console.error('No image path returned from upload');
+        }
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      } finally {
+        setUploadProgress(false);
       }
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    } finally {
-      setUploadProgress(false);
-    }
-  }, [onImageUpload, onImageChange]);
+    },
+    [onImageUpload, onImageChange]
+  );
 
   return (
     <div>
@@ -76,9 +79,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         >
           {uploadProgress ? 'Uploading...' : 'Upload Image'}
         </button>
-        {error && (
-          <p className="mt-1 text-red-600 text-sm">{error}</p>
-        )}
+        {error && <p className="mt-1 text-red-600 text-sm">{error}</p>}
       </div>
 
       {/* Image Preview */}
@@ -90,7 +91,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               src={imagePreview}
               alt="Preview"
               className="w-full h-full object-cover"
-              loading={"lazy"}
+              loading={'lazy'}
             />
           </div>
         </div>

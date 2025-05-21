@@ -122,7 +122,7 @@ export const eventRepository = {
         description: event.description || currentEvent.description,
         image: event.image || currentEvent.image,
         start_date: event.startDate || currentEvent.startDate,
-        end_date: event.endDate || currentEvent.endDate
+        end_date: event.endDate || currentEvent.endDate,
       };
 
       const [updatedEvent] = await sql`
@@ -159,5 +159,5 @@ export const eventRepository = {
       console.error(`Database error in delete event(${id}):`, error);
       throw new Error(`Failed to delete event with ID ${id}`);
     }
-  }
+  },
 };

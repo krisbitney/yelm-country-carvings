@@ -1,12 +1,12 @@
-import "../../../src/index";
+import '../../../src/index';
 import { describe, test, expect, mock, beforeEach } from 'bun:test';
 import { handleAdminLogin, handleVerifyToken } from '../../../src/handlers/admin/auth';
-import {createTestRequest, createTestToken} from "../../utils/helpers";
+import { createTestRequest, createTestToken } from '../../utils/helpers';
 
 describe('Auth Handler', () => {
   // Setup valid auth token
   const validToken = createTestToken();
-  const validAuthHeader = { 'Authorization': `Bearer ${validToken}` };
+  const validAuthHeader = { Authorization: `Bearer ${validToken}` };
 
   beforeEach(() => {
     // Reset mocks between tests
@@ -20,8 +20,8 @@ describe('Auth Handler', () => {
         method: 'POST',
         body: {
           username: 'admin',
-          password: 'password'
-        }
+          password: 'password',
+        },
       });
 
       // Call the handler
@@ -40,8 +40,8 @@ describe('Auth Handler', () => {
         method: 'POST',
         body: {
           username: 'invalid',
-          password: 'password'
-        }
+          password: 'password',
+        },
       });
 
       // Call the handler
@@ -54,14 +54,13 @@ describe('Auth Handler', () => {
     });
 
     test('should return 401 when password is invalid', async () => {
-
       // Create a mock request with valid username but invalid password
       const request = createTestRequest({
         method: 'POST',
         body: {
           username: 'admin',
-          password: 'wrongpassword'
-        }
+          password: 'wrongpassword',
+        },
       });
 
       // Call the handler
@@ -79,7 +78,7 @@ describe('Auth Handler', () => {
       // Create a mock request with valid auth header
       const request = createTestRequest({
         method: 'GET',
-        headers: validAuthHeader
+        headers: validAuthHeader,
       });
 
       // Call the handler
@@ -99,7 +98,7 @@ describe('Auth Handler', () => {
       // Create a mock request with invalid token
       const request = createTestRequest({
         method: 'GET',
-        headers: { 'Authorization': 'Bearer invalid.token.here' }
+        headers: { Authorization: 'Bearer invalid.token.here' },
       });
 
       // Call the handler

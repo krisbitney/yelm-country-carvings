@@ -1,22 +1,25 @@
 /**
  * Format a date range from timestamps into a human-readable string
  * Example: "June 13-15, 2025"
- * 
+ *
  * @param _startDate - Start date
  * @param _endDate - End date
  * @returns Formatted date string
  */
-export const formatDateRange = (_startDate: string | number | Date, _endDate: string | number | Date): string => {
+export const formatDateRange = (
+  _startDate: string | number | Date,
+  _endDate: string | number | Date
+): string => {
   const startDate = new Date(_startDate);
   const endDate = new Date(_endDate);
 
   // Format month
   const month = startDate.toLocaleString('en-US', { month: 'long' });
-  
+
   // Get start and end days
   const startDay = startDate.getDate();
   const endDay = endDate.getDate();
-  
+
   // Get year (use end date's year in case the range spans multiple years)
   const year = endDate.getFullYear();
 

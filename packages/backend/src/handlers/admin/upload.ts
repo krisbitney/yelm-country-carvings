@@ -1,6 +1,6 @@
 import path from 'path';
 import sharp from 'sharp';
-import {IMAGES_DIR} from "../../index";
+import { IMAGES_DIR } from '../../index';
 
 /**
  * Process and save an uploaded image
@@ -69,10 +69,13 @@ export const handleImageUpload = async (req: Request): Promise<Response> => {
 
     if (!contentType.includes('multipart/form-data')) {
       console.error('Invalid Content-Type:', contentType);
-      return Response.json({
-        success: false,
-        message: 'Request must be multipart/form-data'
-      }, { status: 400 });
+      return Response.json(
+        {
+          success: false,
+          message: 'Request must be multipart/form-data',
+        },
+        { status: 400 }
+      );
     }
 
     // Parse the form data
@@ -82,17 +85,22 @@ export const handleImageUpload = async (req: Request): Promise<Response> => {
       console.log('FormData parsed successfully');
     } catch (error) {
       console.error('Error parsing FormData:', error);
-      return Response.json({
-        success: false,
-        message: `Error parsing form data: ${error}`
-      }, { status: 400 });
+      return Response.json(
+        {
+          success: false,
+          message: `Error parsing form data: ${error}`,
+        },
+        { status: 400 }
+      );
     }
 
     // Log the form data entries
     console.log('FormData entries:');
     for (const [key, value] of formData.entries()) {
       if (value instanceof File) {
-        console.log(`- ${key}: File (name: ${value.name}, type: ${value.type}, size: ${value.size})`);
+        console.log(
+          `- ${key}: File (name: ${value.name}, type: ${value.type}, size: ${value.size})`
+        );
       } else {
         console.log(`- ${key}: ${value}`);
       }
@@ -102,20 +110,26 @@ export const handleImageUpload = async (req: Request): Promise<Response> => {
     const type = formData.get('type') as 'events' | 'gallery' | null;
     if (!type || (type !== 'events' && type !== 'gallery')) {
       console.error('Invalid or missing image type:', type);
-      return Response.json({
-        success: false,
-        message: 'Invalid or missing image type (must be "events" or "gallery")'
-      }, { status: 400 });
+      return Response.json(
+        {
+          success: false,
+          message: 'Invalid or missing image type (must be "events" or "gallery")',
+        },
+        { status: 400 }
+      );
     }
 
     // Get the image file
     const imageFile = formData.get('image') as File | null;
     if (!imageFile) {
       console.error('No image file provided');
-      return Response.json({
-        success: false,
-        message: 'No image file provided'
-      }, { status: 400 });
+      return Response.json(
+        {
+          success: false,
+          message: 'No image file provided',
+        },
+        { status: 400 }
+      );
     }
 
     console.log(`Processing image: ${imageFile.name} (${imageFile.type}, ${imageFile.size} bytes)`);
@@ -127,10 +141,13 @@ export const handleImageUpload = async (req: Request): Promise<Response> => {
       console.log(`Image buffer created: ${imageBuffer.length} bytes`);
     } catch (error) {
       console.error('Error creating image buffer:', error);
-      return Response.json({
-        success: false,
-        message: `Error processing image file: ${error}`
-      }, { status: 500 });
+      return Response.json(
+        {
+          success: false,
+          message: `Error processing image file: ${error}`,
+        },
+        { status: 500 }
+      );
     }
 
     // Process and save the image
@@ -140,10 +157,13 @@ export const handleImageUpload = async (req: Request): Promise<Response> => {
       console.log(`Image processed and saved: ${imagePath}`);
     } catch (error) {
       console.error('Error in processAndSaveImage:', error);
-      return Response.json({
-        success: false,
-        message: `Error saving image: ${error}`
-      }, { status: 500 });
+      return Response.json(
+        {
+          success: false,
+          message: `Error saving image: ${error}`,
+        },
+        { status: 500 }
+      );
     }
 
     // Return the path to the saved image
@@ -151,13 +171,16 @@ export const handleImageUpload = async (req: Request): Promise<Response> => {
     return Response.json({
       success: true,
       imagePath,
-      message: 'Image uploaded successfully'
+      message: 'Image uploaded successfully',
     });
   } catch (error) {
     console.error('Unhandled error in handleImageUpload:', error);
-    return Response.json({
-      success: false,
-      message: `Failed to upload image: ${error}`
-    }, { status: 500 });
+    return Response.json(
+      {
+        success: false,
+        message: `Failed to upload image: ${error}`,
+      },
+      { status: 500 }
+    );
   }
 };

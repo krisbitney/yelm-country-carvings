@@ -1,6 +1,6 @@
-import "../../src/index";
-import {describe, it, expect, beforeEach, beforeAll, afterAll} from 'bun:test';
-import {closeTestDb, setupTestDb, teardownTestDb} from '../utils/testDb';
+import '../../src/index';
+import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'bun:test';
+import { closeTestDb, setupTestDb, teardownTestDb } from '../utils/testDb';
 
 describe('Event Repository', () => {
   let testSql: Bun.SQL;
@@ -26,7 +26,7 @@ describe('Event Repository', () => {
       description: 'Test Description',
       image: '/img/events/test.jpg',
       start_date: new Date('2023-01-01'),
-      end_date: new Date('2023-01-02')
+      end_date: new Date('2023-01-02'),
     };
 
     // Create event
@@ -59,7 +59,7 @@ describe('Event Repository', () => {
         start_date as "startDate", 
         end_date as "endDate"
     `;
-    
+
     expect(createdEvent).toBeDefined();
     expect(createdEvent.id).toBeDefined();
     expect(createdEvent.title).toBe(testEvent.title);
@@ -77,7 +77,7 @@ describe('Event Repository', () => {
         end_date as "endDate" 
       FROM events
     `;
-    
+
     expect(events).toHaveLength(1);
     expect(events[0].id).toBe(createdEvent.id);
 
@@ -95,7 +95,7 @@ describe('Event Repository', () => {
       FROM events 
       WHERE id = ${createdEvent.id}
     `;
-    
+
     expect(retrievedEvent).toBeDefined();
     expect(retrievedEvent.title).toBe(testEvent.title);
   });

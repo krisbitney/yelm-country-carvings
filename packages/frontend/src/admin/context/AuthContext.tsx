@@ -1,4 +1,12 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+  useMemo,
+} from 'react';
 
 // Define the authentication state interface
 interface AuthState {
@@ -52,7 +60,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // Verify the token with the backend
         const response = await fetch('/api/auth/verify', {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -161,19 +169,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   // Create the context value
-  const contextValue = useMemo<AuthContextType>(() => ({
-    ...authState,
-    login,
-    logout,
-    clearError,
-  }), [authState, login, logout, clearError]);
+  const contextValue = useMemo<AuthContextType>(
+    () => ({
+      ...authState,
+      login,
+      logout,
+      clearError,
+    }),
+    [authState, login, logout, clearError]
+  );
 
   // Provide the context to children
-  return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };
 
 // Create a hook to use the auth context

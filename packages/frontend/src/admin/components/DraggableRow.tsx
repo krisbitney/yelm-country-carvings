@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { DraggableProvided, DraggableStateSnapshot } from '@hello-pangea/dnd';
 import { GalleryImage } from '../../types';
 
@@ -8,9 +8,9 @@ interface DraggableRowProps {
   deleteGalleryImage: (id: number) => Promise<boolean>;
 }
 
-export const DraggableRow: React.FC<DraggableRowProps & { provided: DraggableProvided; snapshot: DraggableStateSnapshot }> = ({
-  provided, snapshot, image, fetchGallery, deleteGalleryImage
-}) => {
+export const DraggableRow: React.FC<
+  DraggableRowProps & { provided: DraggableProvided; snapshot: DraggableStateSnapshot }
+> = ({ provided, snapshot, image, fetchGallery, deleteGalleryImage }) => {
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
   // Handle image deletion
   const handleDeleteImage = async (id: number) => {
@@ -27,7 +27,9 @@ export const DraggableRow: React.FC<DraggableRowProps & { provided: DraggablePro
       {...provided.draggableProps}
       {...provided.dragHandleProps}
       className={`bg-[#F5F1E9] rounded-lg shadow-md transition-all duration-200 flex items-center p-3 ${
-        snapshot.isDragging ? 'shadow-xl ring-2 ring-[#4A6151] scale-[1.02] z-10' : 'hover:shadow-lg'
+        snapshot.isDragging
+          ? 'shadow-xl ring-2 ring-[#4A6151] scale-[1.02] z-10'
+          : 'hover:shadow-lg'
       } cursor-grab`}
       style={{
         ...provided.draggableProps.style,
@@ -75,4 +77,4 @@ export const DraggableRow: React.FC<DraggableRowProps & { provided: DraggablePro
       )}
     </div>
   );
-}
+};

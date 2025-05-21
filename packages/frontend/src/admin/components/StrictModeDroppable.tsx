@@ -22,9 +22,5 @@ export const StrictModeDroppable: React.FC<DroppableProps> = ({ children, ...pro
     return null;
   }
 
-  return (
-    <Droppable {...props}>
-      {(provided, snapshot) => children(provided, snapshot)}
-    </Droppable>
-  );
+  return <Droppable {...props}>{(provided, snapshot) => children(provided, snapshot)}</Droppable>;
 };

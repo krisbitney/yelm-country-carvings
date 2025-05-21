@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { useAdminAuth } from './useAdminAuth';
-import {MarketEvent} from "../../types.ts";
+import { MarketEvent } from '../../types.ts';
 
 interface UseAdminEventsReturn {
   events: MarketEvent[];
@@ -72,7 +72,7 @@ export const useAdminEvents = (): UseAdminEventsReturn => {
         const data = await response.json();
 
         // Update the local state with the new event
-        setEvents((prevEvents) => [...prevEvents, data.event]);
+        setEvents(prevEvents => [...prevEvents, data.event]);
 
         toast.success('Event created successfully');
         return true;
@@ -113,9 +113,7 @@ export const useAdminEvents = (): UseAdminEventsReturn => {
         const data = await response.json();
 
         // Update the local state with the updated event
-        setEvents((prevEvents) =>
-          prevEvents.map((e) => (e.id === id ? data.event : e))
-        );
+        setEvents(prevEvents => prevEvents.map(e => (e.id === id ? data.event : e)));
 
         toast.success('Event updated successfully');
         return true;
@@ -152,7 +150,7 @@ export const useAdminEvents = (): UseAdminEventsReturn => {
         }
 
         // Update the local state by removing the deleted event
-        setEvents((prevEvents) => prevEvents.filter((e) => e.id !== id));
+        setEvents(prevEvents => prevEvents.filter(e => e.id !== id));
 
         toast.success('Event deleted successfully');
         return true;

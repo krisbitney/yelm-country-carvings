@@ -3,32 +3,31 @@ Using `Bun.serve()`'s `routes` option, you can run your frontend and backend in 
 To get started, import HTML files and pass them to the `routes` option in `Bun.serve()`.
 
 ```ts
-import { sql, serve } from "bun";
-import dashboard from "./dashboard.html";
-import homepage from "./index.html";
+import { sql, serve } from 'bun';
+import dashboard from './dashboard.html';
+import homepage from './index.html';
 
 const server = serve({
   routes: {
     // ** HTML imports **
     // Bundle & route index.html to "/". This uses HTMLRewriter to scan the HTML for `<script>` and `<link>` tags, run's Bun's JavaScript & CSS bundler on them, transpiles any TypeScript, JSX, and TSX, downlevels CSS with Bun's CSS parser and serves the result.
-    "/": homepage,
+    '/': homepage,
     // Bundle & route dashboard.html to "/dashboard"
-    "/dashboard": dashboard,
+    '/dashboard': dashboard,
 
     // ** API endpoints ** (Bun v1.2.3+ required)
-    "/api/users": {
+    '/api/users': {
       async GET(req) {
         const users = await sql`SELECT * FROM users`;
         return Response.json(users);
       },
       async POST(req) {
         const { name, email } = await req.json();
-        const [user] =
-          await sql`INSERT INTO users (name, email) VALUES (${name}, ${email})`;
+        const [user] = await sql`INSERT INTO users (name, email) VALUES (${name}, ${email})`;
         return Response.json(user);
       },
     },
-    "/api/users/:id": async req => {
+    '/api/users/:id': async req => {
       const { id } = req.params;
       const [user] = await sql`SELECT * FROM users WHERE id = ${id}`;
       return Response.json(user);
@@ -61,8 +60,8 @@ The web starts with HTML, and so does Bun's fullstack dev server.
 To specify entrypoints to your frontend, import HTML files into your JavaScript/TypeScript/TSX/JSX files.
 
 ```ts
-import dashboard from "./dashboard.html";
-import homepage from "./index.html";
+import dashboard from './dashboard.html';
+import homepage from './index.html';
 ```
 
 These HTML files are used as routes in Bun's dev server you can pass to `Bun.serve()`.
@@ -212,7 +211,7 @@ Bun.serve() supports echoing console logs from the browser to the terminal.
 To enable this, pass `console: true` in the `development` object in `Bun.serve()`.
 
 ```ts
-import homepage from "./index.html";
+import homepage from './index.html';
 
 Bun.serve({
   // development can also be an object.
@@ -225,7 +224,7 @@ Bun.serve({
   },
 
   routes: {
-    "/": homepage,
+    '/': homepage,
   },
 });
 ```
@@ -299,10 +298,10 @@ Bun uses [`HTMLRewriter`](/docs/api/html-rewriter) to scan for `<script>` and `<
 
 1. **`<script>` processing**
 
-    - Transpiles TypeScript, JSX, and TSX in `<script>` tags
-    - Bundles imported dependencies
-    - Generates sourcemaps for debugging
-    - Minifies when `development` is not `true` in `Bun.serve()`
+   - Transpiles TypeScript, JSX, and TSX in `<script>` tags
+   - Bundles imported dependencies
+   - Generates sourcemaps for debugging
+   - Minifies when `development` is not `true` in `Bun.serve()`
 
    ```html
    <script type="module" src="./counter.tsx"></script>
@@ -310,9 +309,9 @@ Bun uses [`HTMLRewriter`](/docs/api/html-rewriter) to scan for `<script>` and `<
 
 2. **`<link>` processing**
 
-    - Processes CSS imports and `<link>` tags
-    - Concatenates CSS files
-    - Rewrites `url` and asset paths to include content-addressable hashes in URLs
+   - Processes CSS imports and `<link>` tags
+   - Concatenates CSS files
+   - Rewrites `url` and asset paths to include content-addressable hashes in URLs
 
    ```html
    <link rel="stylesheet" href="./styles.css" />
@@ -320,18 +319,18 @@ Bun uses [`HTMLRewriter`](/docs/api/html-rewriter) to scan for `<script>` and `<
 
 3. **`<img>` & asset processing**
 
-    - Links to assets are rewritten to include content-addressable hashes in URLs
-    - Small assets in CSS files are inlined into `data:` URLs, reducing the total number of HTTP requests sent over the wire
+   - Links to assets are rewritten to include content-addressable hashes in URLs
+   - Small assets in CSS files are inlined into `data:` URLs, reducing the total number of HTTP requests sent over the wire
 
 4. **Rewrite HTML**
 
-    - Combines all `<script>` tags into a single `<script>` tag with a content-addressable hash in the URL
-    - Combines all `<link>` tags into a single `<link>` tag with a content-addressable hash in the URL
-    - Outputs a new HTML file
+   - Combines all `<script>` tags into a single `<script>` tag with a content-addressable hash in the URL
+   - Combines all `<link>` tags into a single `<link>` tag with a content-addressable hash in the URL
+   - Outputs a new HTML file
 
 5. **Serve**
 
-    - All the output files from the bundler are exposed as static routes, using the same mechanism internally as when you pass a `Response` object to [`static` in `Bun.serve()`](/docs/api/http#static-routes).
+   - All the output files from the bundler are exposed as static routes, using the same mechanism internally as when you pass a `Response` object to [`static` in `Bun.serve()`](/docs/api/http#static-routes).
 
 This works similarly to how [`Bun.build` processes HTML files](/docs/bundler/html).
 

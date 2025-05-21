@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { eventRepository } from '../../repositories/eventRepository';
-import {IMAGES_DIR} from "../../index";
+import { IMAGES_DIR } from '../../index';
 
 /**
  * Get all events
@@ -14,10 +14,13 @@ export const getEvents = async (): Promise<Response> => {
     return Response.json(events);
   } catch (error) {
     console.error('Error getting events:', error);
-    return Response.json({ 
-      success: false, 
-      message: 'Failed to get events' 
-    }, { status: 500 });
+    return Response.json(
+      {
+        success: false,
+        message: 'Failed to get events',
+      },
+      { status: 500 }
+    );
   }
 };
 
@@ -35,27 +38,36 @@ export const createEvent = async (req: Request): Promise<Response> => {
     const requiredFields = ['title', 'date', 'location', 'description', 'image'];
     for (const field of requiredFields) {
       if (!eventData[field]) {
-        return Response.json({
-          success: false,
-          message: `Missing required field: ${field}`
-        }, { status: 400 });
+        return Response.json(
+          {
+            success: false,
+            message: `Missing required field: ${field}`,
+          },
+          { status: 400 }
+        );
       }
     }
 
     // Create the new event
     const newEvent = await eventRepository.create(eventData);
 
-    return Response.json({
-      success: true,
-      event: newEvent,
-      message: 'Event created successfully'
-    }, { status: 201 });
+    return Response.json(
+      {
+        success: true,
+        event: newEvent,
+        message: 'Event created successfully',
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('Error creating event:', error);
-    return Response.json({
-      success: false,
-      message: 'Failed to create event'
-    }, { status: 500 });
+    return Response.json(
+      {
+        success: false,
+        message: 'Failed to create event',
+      },
+      { status: 500 }
+    );
   }
 };
 
@@ -74,23 +86,29 @@ export const updateEvent = async (req: Request, id: number): Promise<Response> =
     const updatedEvent = await eventRepository.update(id, eventData);
 
     if (!updatedEvent) {
-      return Response.json({
-        success: false,
-        message: 'Event not found'
-      }, { status: 404 });
+      return Response.json(
+        {
+          success: false,
+          message: 'Event not found',
+        },
+        { status: 404 }
+      );
     }
 
     return Response.json({
       success: true,
       event: updatedEvent,
-      message: 'Event updated successfully'
+      message: 'Event updated successfully',
     });
   } catch (error) {
     console.error('Error updating event:', error);
-    return Response.json({
-      success: false,
-      message: 'Failed to update event'
-    }, { status: 500 });
+    return Response.json(
+      {
+        success: false,
+        message: 'Failed to update event',
+      },
+      { status: 500 }
+    );
   }
 };
 
@@ -106,20 +124,26 @@ export const deleteEvent = async (id: number): Promise<Response> => {
 
     // If the event doesn't exist, return 404
     if (!eventToDelete) {
-      return Response.json({ 
-        success: false, 
-        message: 'Event not found' 
-      }, { status: 404 });
+      return Response.json(
+        {
+          success: false,
+          message: 'Event not found',
+        },
+        { status: 404 }
+      );
     }
 
     // Delete the event from the database
     const deleted = await eventRepository.delete(id);
 
     if (!deleted) {
-      return Response.json({ 
-        success: false, 
-        message: 'Failed to delete event' 
-      }, { status: 500 });
+      return Response.json(
+        {
+          success: false,
+          message: 'Failed to delete event',
+        },
+        { status: 500 }
+      );
     }
 
     // Try to delete the associated image if it exists
@@ -133,15 +157,18 @@ export const deleteEvent = async (id: number): Promise<Response> => {
       }
     }
 
-    return Response.json({ 
-      success: true, 
-      message: 'Event deleted successfully' 
+    return Response.json({
+      success: true,
+      message: 'Event deleted successfully',
     });
   } catch (error) {
     console.error('Error deleting event:', error);
-    return Response.json({ 
-      success: false, 
-      message: 'Failed to delete event' 
-    }, { status: 500 });
+    return Response.json(
+      {
+        success: false,
+        message: 'Failed to delete event',
+      },
+      { status: 500 }
+    );
   }
 };
