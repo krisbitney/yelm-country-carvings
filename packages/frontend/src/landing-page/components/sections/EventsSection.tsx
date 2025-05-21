@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {useEvents} from "../../hooks/useEvents.tsx";
 import {addToCalendar} from "../../../utils/addToCalendar.ts";
 import {formatDateRange} from "../../../utils/dateUtils.ts";
 
-interface EventsSectionProps {
-  // Add any props if needed
-}
-
-const EventsSection: React.FC<EventsSectionProps> = () => {
+const EventsSection = () => {
   // State to track which event details are expanded
   const [expandedEvents, setExpandedEvents] = useState<number[]>([]);
 

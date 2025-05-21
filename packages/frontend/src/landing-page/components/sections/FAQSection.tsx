@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 interface FAQ {
   id: number;
@@ -6,11 +6,7 @@ interface FAQ {
   answer: string;
 }
 
-interface FAQSectionProps {
-  // Add any props if needed
-}
-
-const FAQSection: React.FC<FAQSectionProps> = () => {
+const FAQSection = () => {
   // Sample FAQ data - in a real implementation, these would come from a CMS or props
   const faqs: FAQ[] = [
     {

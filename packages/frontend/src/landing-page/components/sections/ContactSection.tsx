@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import {organizerEmail} from "../../../constants.ts";
 
-interface ContactSectionProps {
-  // Add any props if needed
-}
-
-const ContactSection: React.FC<ContactSectionProps> = () => {
+const ContactSection = () => {
   // State for form fields
   const [formData, setFormData] = useState({
     name: '',

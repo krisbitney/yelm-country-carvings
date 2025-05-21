@@ -9,11 +9,7 @@ export const StrictModeDroppable: React.FC<DroppableProps> = ({ children, ...pro
   const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
-    let animationFrameId: number;
-    // Ensures the Droppable renders after the initial StrictMode double-render cycle.
-    if (typeof window !== 'undefined') { // Ensure this runs only on the client-side
-        animationFrameId = requestAnimationFrame(() => setEnabled(true));
-    }
+    const animationFrameId: number = requestAnimationFrame(() => setEnabled(true));
 
     return () => {
       if (animationFrameId) {

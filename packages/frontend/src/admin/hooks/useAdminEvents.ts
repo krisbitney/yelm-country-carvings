@@ -206,7 +206,7 @@ export const useAdminEvents = (): UseAdminEventsReturn => {
           try {
             const errorData = JSON.parse(errorText);
             errorMessage = errorData.message || errorMessage;
-          } catch (e) {
+          } catch {
             // If the response is not valid JSON, use the error text
             errorMessage = errorText || errorMessage;
           }

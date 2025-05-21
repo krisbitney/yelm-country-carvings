@@ -1,11 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import logoImage from '../../../assets/logo.png';
 
-interface ProcessSectionProps {
-  // Add any props if needed
-}
-
-const ProcessSection: React.FC<ProcessSectionProps> = () => {
+const ProcessSection = () => {
   // State for lightbox and video modal
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [videoModalOpen, setVideoModalOpen] = useState(false);

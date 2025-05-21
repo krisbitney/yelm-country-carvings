@@ -1,10 +1,4 @@
-import React from 'react';
-
-interface DirectionsSectionProps {
-  // Add any props if needed
-}
-
-const DirectionsSection: React.FC<DirectionsSectionProps> = () => {
+const DirectionsSection = () => {
   // Function to handle "Get Directions" button click
   const handleGetDirections = () => {
     // Open Google Maps with the address pre-filled
