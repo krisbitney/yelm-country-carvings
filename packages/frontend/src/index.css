@@ -24,6 +24,20 @@
   scroll-behavior: smooth;
 }
 
+/* Make all clickable elements have a pointer cursor */
+button, 
+a, 
+[role="button"],
+input[type="checkbox"],
+input[type="radio"],
+input[type="submit"],
+input[type="reset"],
+input[type="file"],
+select,
+.cursor-pointer {
+  cursor: pointer;
+}
+
 html,
 body {
   margin: 0;
