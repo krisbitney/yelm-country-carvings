@@ -47,3 +47,8 @@ export const formatDateRange = (
     return `${month} ${startDay}, ${startYear}-${endMonth} ${endDay}, ${year}`;
   }
 };
+
+export const formatDate = (dateString: string) => {
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+};

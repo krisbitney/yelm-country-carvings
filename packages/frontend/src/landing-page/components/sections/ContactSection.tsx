@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { organizerEmail } from '../../../constants.ts';
+import { Icon, FormInput, FormTextarea } from '../../../components/ui';
 
 const ContactSection = () => {
   // State for form fields
@@ -203,16 +204,7 @@ const ContactSection = () => {
         {/* Section Heading */}
         <div className="text-center mb-12">
           {/* Carved Bear Icon */}
-          <svg
-            className="w-12 h-12 mx-auto mb-4 text-[#6B4F41]"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {/* Placeholder Icon - Replace if you have a specific bear icon SVG */}
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM9.5 16.5l7-4.5-7-4.5v9z" />{' '}
-            {/* Example bear paw or similar */}
-          </svg>
+          <Icon type="play" size="xl" className="mx-auto mb-4 text-[#6B4F41]" />
 
           <h2 className="font-['Cinzel'] text-3xl md:text-4xl font-bold text-[#6B4F41]">
             Contact Us
@@ -232,19 +224,7 @@ const ContactSection = () => {
               {/* Added grow */}
               {/* Hours */}
               <div className="flex items-start">
-                <svg
-                  className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+                <Icon type="clock" className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0" />
                 <div>
                   <h4 className="font-['Lato'] font-bold text-[#3E3C3B]">Hours</h4>
                   <p className="font-['Lato'] text-[#3E3C3B]">Monday - Friday: By Appointment</p>
@@ -254,25 +234,7 @@ const ContactSection = () => {
               </div>
               {/* Address */}
               <div className="flex items-start">
-                <svg
-                  className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
+                <Icon type="location" className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0" />
                 <div>
                   <h4 className="font-['Lato'] font-bold text-[#3E3C3B]">Address</h4>
                   <p className="font-['Lato'] text-[#3E3C3B]">19438 Cook Road Southeast</p>
@@ -282,19 +244,7 @@ const ContactSection = () => {
               </div>
               {/* Phone */}
               <div className="flex items-start">
-                <svg
-                  className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
+                <Icon type="phone" className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0" />
                 <div>
                   <h4 className="font-['Lato'] font-bold text-[#3E3C3B]">Phone</h4>
                   <a
@@ -307,19 +257,7 @@ const ContactSection = () => {
               </div>
               {/* Email */}
               <div className="flex items-start">
-                <svg
-                  className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
+                <Icon type="email" className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0" />
                 <div>
                   <h4 className="font-['Lato'] font-bold text-[#3E3C3B]">Email</h4>
                   <a
@@ -364,68 +302,47 @@ const ContactSection = () => {
             {/* Contact Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name Input */}
-              <div>
-                <label htmlFor="name" className="block font-['Lato'] text-[#3E3C3B] mb-1">
-                  Name <span className="text-red-600">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
-                  required
-                />
-              </div>
+              <FormInput
+                label="Name"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+              />
 
               {/* Email Input */}
-              <div>
-                <label htmlFor="email" className="block font-['Lato'] text-[#3E3C3B] mb-1">
-                  Email <span className="text-red-600">*</span>
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
-                  required
-                />
-              </div>
+              <FormInput
+                type="email"
+                label="Email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+              />
 
               {/* Phone Input (Optional) */}
-              <div>
-                <label htmlFor="phone" className="block font-['Lato'] text-[#3E3C3B] mb-1">
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
-                  placeholder="(xxx) xxx-xxxx"
-                />
-              </div>
+              <FormInput
+                type="tel"
+                label="Phone"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                placeholder="(xxx) xxx-xxxx"
+              />
 
               {/* Message Textarea */}
-              <div>
-                <label htmlFor="message" className="block font-['Lato'] text-[#3E3C3B] mb-1">
-                  Message <span className="text-red-600">*</span>
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151]"
-                  required
-                ></textarea>
-              </div>
+              <FormTextarea
+                label="Message"
+                id="message"
+                name="message"
+                rows={4}
+                value={formData.message}
+                onChange={handleInputChange}
+                required
+              />
 
               {/* File Upload (Optional) */}
               <div>

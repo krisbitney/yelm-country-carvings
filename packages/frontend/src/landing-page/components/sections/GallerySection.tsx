@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useGalleryImages } from '../../hooks/useGalleryImages.tsx';
-import { SectionHeader, Button, ResponsiveImage, Modal, IconButton } from '../../../components/ui';
+import { SectionHeader, Button, ResponsiveImage, Modal, IconButton, Icon } from '../../../components/ui';
 
 const GallerySection: React.FC = () => {
   // State to track the selected image for the modal
@@ -78,22 +78,7 @@ const GallerySection: React.FC = () => {
     <section id="gallery" className="py-16 bg-neutral-light">
       <div className="container mx-auto px-4">
         <SectionHeader
-          icon={
-            <svg
-              className="w-12 h-12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
-            </svg>
-          }
+          icon={<Icon type="gallery" size="xl" />}
           title="Our Gallery"
           description="Browse through our collection of handcrafted chainsaw carvings"
         />
@@ -154,21 +139,7 @@ const GallerySection: React.FC = () => {
       >
         {/* Left Arrow Button */}
         <IconButton
-          icon={
-            <svg
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          }
+          icon={<Icon type="previous" />}
           variant="light"
           className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
           onClick={navigateToPrevImage}
@@ -177,16 +148,7 @@ const GallerySection: React.FC = () => {
 
         {/* Right Arrow Button */}
         <IconButton
-          icon={
-            <svg
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          }
+          icon={<Icon type="next" />}
           variant="light"
           className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10"
           onClick={navigateToNextImage}

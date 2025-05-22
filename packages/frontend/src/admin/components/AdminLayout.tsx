@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Icon } from '../../components/ui';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -38,20 +39,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
               className="mr-4 hover:text-gray-200 transition-all duration-300 cursor-pointer"
               aria-label={isDashboard ? 'Go to website' : 'Go to dashboard'}
             >
-              <svg
+              <Icon
+                type="back"
                 className="w-6 h-6 transform transition-transform duration-300 hover:scale-110"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                />
-              </svg>
+              />
             </button>
             <h1 className="font-['Cinzel'] text-2xl font-bold transition-all duration-300">
               {title}
