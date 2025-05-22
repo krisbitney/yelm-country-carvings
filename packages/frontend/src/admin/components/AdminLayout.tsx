@@ -31,8 +31,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
     <div className="min-h-screen bg-[#F5F1E9] flex flex-col">
       {/* Header */}
       <header className="bg-[#4A6151] text-white shadow-md transition-all duration-300">
-        <div className="container mx-auto px-6 py-5 flex justify-between items-center">
-          <div className="flex items-center">
+        <div className="container mx-auto px-6 py-5 flex flex-col md:flex-row justify-between items-center">
+          <div className="flex items-center mb-4 md:mb-0">
             <button
               onClick={handleBack}
               className="mr-4 hover:text-gray-200 transition-all duration-300 cursor-pointer"
@@ -57,10 +57,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
               {title}
             </h1>
           </div>
-          <div className="flex items-center">
+          <div className="flex flex-wrap items-center justify-center">
             <Link
               to="/admin"
-              className={`px-4 py-2 rounded-md transition-all duration-300 mr-3 ${
+              className={`px-4 py-2 rounded-md transition-all duration-300 mr-3 mb-2 md:mb-0 ${
                 isDashboard
                   ? 'bg-[#3D5142] text-white cursor-default shadow-inner'
                   : 'hover:bg-[#3D5142] text-white cursor-pointer hover:shadow'
@@ -70,7 +70,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
             </Link>
             <Link
               to="/admin/events"
-              className={`px-4 py-2 rounded-md transition-all duration-300 mr-3 ${
+              className={`px-4 py-2 rounded-md transition-all duration-300 mr-3 mb-2 md:mb-0 ${
                 location.pathname.includes('/admin/events')
                   ? 'bg-[#3D5142] text-white cursor-default shadow-inner'
                   : 'hover:bg-[#3D5142] text-white cursor-pointer hover:shadow'
@@ -80,7 +80,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
             </Link>
             <Link
               to="/admin/gallery"
-              className={`px-4 py-2 rounded-md transition-all duration-300 mr-3 ${
+              className={`px-4 py-2 rounded-md transition-all duration-300 mr-3 mb-2 md:mb-0 ${
                 location.pathname.includes('/admin/gallery')
                   ? 'bg-[#3D5142] text-white cursor-default shadow-inner'
                   : 'hover:bg-[#3D5142] text-white cursor-pointer hover:shadow'
@@ -90,7 +90,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
             </Link>
             <button
               onClick={logout}
-              className="px-4 py-2 bg-[#B87351] text-white rounded-md hover:bg-[#A07E5D] transition-all duration-300 cursor-pointer hover:shadow"
+              className="px-4 py-2 bg-[#B87351] text-white rounded-md hover:bg-[#A07E5D] transition-all duration-300 cursor-pointer hover:shadow mb-2 md:mb-0"
             >
               Logout
             </button>

@@ -40,11 +40,10 @@ const Footer: React.FC = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0"
-          style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 overflow-hidden"
         >
           {/* Column 1: Copyright and Info */}
-          <div className="md:w-full px-4 md:pr-8 animate-slideInUp">
+          <div className="w-full px-4 animate-slideInUp">
             <h3 className="font-['Cinzel'] text-2xl font-bold mb-4 text-[#F5F1E9] border-b-2 border-[#B87351] pb-2 inline-block">
               Yelm Country Carvings
             </h3>
@@ -83,7 +82,7 @@ const Footer: React.FC = () => {
 
           {/* Column 2: Quick Links */}
           <div
-            className="md:w-full px-4 md:px-8 animate-slideInUp"
+            className="w-full px-4 animate-slideInUp"
             style={{ animationDelay: '0.1s' }}
           >
             <h3 className="font-['Cinzel'] text-xl font-bold mb-4 text-[#F5F1E9] border-b-2 border-[#B87351] pb-2 inline-block">
@@ -127,7 +126,7 @@ const Footer: React.FC = () => {
 
           {/* Column 3: Social Media */}
           <div
-            className="md:w-full px-4 md:pl-8 animate-slideInUp"
+            className="w-full px-4 animate-slideInUp"
             style={{ animationDelay: '0.2s' }}
           >
             <h3 className="font-['Cinzel'] text-xl font-bold mb-4 text-[#F5F1E9] border-b-2 border-[#B87351] pb-2 inline-block">

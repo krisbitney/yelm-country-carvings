@@ -76,6 +76,6 @@ yelm-country-carvings/
 - Use strong passwords and JWT secrets
 - Validate all user inputs
 
-### Testing
+### Reminders
 
-- Always make sure the project builds successfully before finalizing changes
+- Always execute "bun run build" from the repo root to make sure the project builds successfully (as the last step in your plan, or before testing).
