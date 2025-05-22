@@ -5,7 +5,7 @@ import { useGalleryImages } from '../../hooks/useGalleryImages.tsx';
 
 const GallerySection: React.FC = () => {
   // State to track the selected image for the modal
-  const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
+  const [selectedImage, setSelectedImage] = useState<{ src: string; alt?: string } | null>(null);
 
   const { data: galleryImages } = useGalleryImages();
 

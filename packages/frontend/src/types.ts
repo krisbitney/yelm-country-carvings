@@ -17,5 +17,5 @@ export interface MarketEvent {
 export interface GalleryImage {
   id: number;
   src: string;
-  alt: string;
+  alt?: string;
 }

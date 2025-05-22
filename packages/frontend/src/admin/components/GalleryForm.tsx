@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 // Define the form validation schema
 const galleryImageSchema = z.object({
-  alt: z.string().min(1, 'Alt text is required'),
+  alt: z.string().optional(),
   src: z.string().min(1, 'Image is required'),
 });
 
@@ -32,7 +32,7 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ onSubmit, onCancel, uploadIma
   } = useForm<GalleryFormData>({
     resolver: zodResolver(galleryImageSchema),
     defaultValues: {
-      alt: '',
+      alt: undefined,
       src: '',
     },
     mode: 'onChange', // Enable validation on change

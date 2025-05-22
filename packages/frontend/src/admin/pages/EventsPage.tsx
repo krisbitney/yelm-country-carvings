@@ -60,7 +60,7 @@ const EventsPage: React.FC = () => {
     });
 
     return {
-      pastEvents: past,
+      pastEvents: past.reverse(),
       upcomingEvents: upcoming,
       futureEvents: future,
     };
