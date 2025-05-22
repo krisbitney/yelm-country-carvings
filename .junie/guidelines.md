@@ -75,3 +75,7 @@ yelm-country-carvings/
 - Never commit `.env` files
 - Use strong passwords and JWT secrets
 - Validate all user inputs
+
+### Testing
+
+- Always make sure the project builds successfully before finalizing changes

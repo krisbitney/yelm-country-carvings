@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useGalleryImages } from '../../hooks/useGalleryImages.tsx';
+import { SectionHeader, Button, ResponsiveImage, Modal, IconButton } from '../../../components/ui';
 
 const GallerySection: React.FC = () => {
   // State to track the selected image for the modal
@@ -74,33 +75,28 @@ const GallerySection: React.FC = () => {
   };
 
   return (
-    <section id="gallery" className="py-16 bg-[#F5F1E9]">
+    <section id="gallery" className="py-16 bg-neutral-light">
       <div className="container mx-auto px-4">
-        {/* Section Heading */}
-        <div className="text-center mb-12">
-          {/* Gallery Icon */}
-          <svg
-            className="w-12 h-12 mx-auto mb-4 text-[#6B4F41]"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
-
-          <h2 className="font-['Cinzel'] text-3xl md:text-4xl font-bold text-[#6B4F41]">
-            Our Gallery
-          </h2>
-          <p className="font-['Lato'] text-lg text-[#3E3C3B] mt-3 max-w-2xl mx-auto">
-            Browse through our collection of handcrafted chainsaw carvings
-          </p>
-        </div>
+        <SectionHeader
+          icon={
+            <svg
+              className="w-12 h-12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+          }
+          title="Our Gallery"
+          description="Browse through our collection of handcrafted chainsaw carvings"
+        />
 
         {/* Carousel */}
         <div className="mt-8">
@@ -123,16 +119,16 @@ const GallerySection: React.FC = () => {
             {galleryImages.map(image => (
               <div key={image.id} className="px-2" role="group" aria-roledescription="slide">
                 <div className="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                  <div className="aspect-w-4 aspect-h-3 overflow-hidden rounded-md">
-                    <img
-                      src={image.src.startsWith('/') ? image.src : `/${image.src}`}
-                      alt={image.alt}
-                      className="w-full h-64 object-cover rounded-md cursor-pointer"
-                      loading="lazy"
+                  <div className="rounded-md overflow-hidden">
+                    <ResponsiveImage
+                      src={image.src}
+                      alt={image.alt || 'Gallery image'}
+                      aspectRatio="4:3"
+                      className="h-64 rounded-md cursor-pointer"
                       onClick={() => setSelectedImage(image)}
                     />
                   </div>
-                  <p className="mt-2 text-center font-['Lato'] text-[#3E3C3B]">{image.alt}</p>
+                  <p className="mt-2 text-center font-body text-neutral-dark">{image.alt}</p>
                 </div>
               </div>
             ))}
@@ -141,58 +137,25 @@ const GallerySection: React.FC = () => {
 
         {/* Call to Action */}
         <div className="mt-12 text-center">
-          <p className="font-['Lato'] text-lg text-[#3E3C3B] mb-4">
+          <p className="font-body text-lg text-neutral-dark mb-4">
             Interested in a custom carving? Contact us to discuss your ideas!
           </p>
-          <a
-            href="#contact"
-            className="inline-block px-6 py-3 bg-[#B87351] text-[#F5F1E9] font-['Lato'] font-bold rounded-md shadow-md hover:bg-[#A07E5D] transition-colors duration-300"
-          >
+          <Button href="#contact" variant="accent">
             Get in Touch
-          </a>
+          </Button>
         </div>
       </div>
 
       {/* Full-size Image Modal */}
-      {selectedImage && (
-        <div
-          className="fixed inset-0 bg-black/85 z-1001 flex items-center justify-center p-4 animate-fadeIn"
-          onClick={() => setSelectedImage(null)}
-          aria-modal="true"
-          role="dialog"
-        >
-          <button
-            className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-lg z-10 cursor-pointer"
-            onClick={e => {
-              e.stopPropagation();
-              setSelectedImage(null);
-            }}
-            aria-label="Close modal"
-          >
+      <Modal
+        isOpen={!!selectedImage}
+        onClose={() => setSelectedImage(null)}
+        className="max-w-4xl max-h-[90vh]"
+      >
+        {/* Left Arrow Button */}
+        <IconButton
+          icon={
             <svg
-              className="w-6 h-6 text-[#3E3C3B]"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-
-          {/* Left Arrow Button */}
-          <button
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg z-10 cursor-pointer"
-            onClick={navigateToPrevImage}
-            aria-label="Previous image"
-          >
-            <svg
-              className="w-6 h-6 text-[#3E3C3B]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -205,16 +168,17 @@ const GallerySection: React.FC = () => {
                 d="M15 19l-7-7 7-7"
               />
             </svg>
-          </button>
+          }
+          variant="light"
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+          onClick={navigateToPrevImage}
+          ariaLabel="Previous image"
+        />
 
-          {/* Right Arrow Button */}
-          <button
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg z-10 cursor-pointer"
-            onClick={navigateToNextImage}
-            aria-label="Next image"
-          >
+        {/* Right Arrow Button */}
+        <IconButton
+          icon={
             <svg
-              className="w-6 h-6 text-[#3E3C3B]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -222,19 +186,26 @@ const GallerySection: React.FC = () => {
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
-          </button>
-          <div className="relative max-w-4xl max-h-[90vh] overflow-auto">
-            <img
-              src={selectedImage.src.startsWith('/') ? selectedImage.src : `/${selectedImage.src}`}
-              alt={selectedImage.alt}
-              className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-xl"
-              onClick={e => e.stopPropagation()}
-              loading={'lazy'}
+          }
+          variant="light"
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10"
+          onClick={navigateToNextImage}
+          ariaLabel="Next image"
+        />
+
+        {selectedImage && (
+          <div className="relative overflow-auto">
+            <ResponsiveImage
+              src={selectedImage.src}
+              alt={selectedImage.alt || 'Selected image'}
+              className="max-w-full max-h-[85vh] rounded-lg shadow-xl"
+              objectFit="contain"
+              onClick={(e: React.MouseEvent<HTMLImageElement, MouseEvent>) => e.stopPropagation()}
             />
-            <p className="mt-2 text-center text-white font-['Lato'] text-lg">{selectedImage.alt}</p>
+            <p className="mt-2 text-center text-white font-body text-lg">{selectedImage.alt}</p>
           </div>
-        </div>
-      )}
+        )}
+      </Modal>
     </section>
   );
 };
