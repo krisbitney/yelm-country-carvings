@@ -21,13 +21,9 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
       <div className="p-6">
         <div className="flex items-center mb-4">
           {icon}
-          <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41]">
-            {title}
-          </h3>
+          <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41]">{title}</h3>
         </div>
-        <p className="text-[#3E3C3B] font-['Lato'] mb-6">
-          {description}
-        </p>
+        <p className="text-[#3E3C3B] font-['Lato'] mb-6">{description}</p>
         <Link
           to={linkTo}
           className="inline-block px-6 py-3 bg-[#4A6151] text-white font-['Lato'] font-bold rounded-md hover:bg-[#3D5142] transition-colors duration-300"

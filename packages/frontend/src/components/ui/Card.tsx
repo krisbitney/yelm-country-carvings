@@ -24,39 +24,31 @@ const Card: React.FC<CardProps> = ({
 }) => {
   // Base classes for all cards
   const baseClasses = 'bg-[#F5F1E9] p-6 rounded-lg shadow-md';
-  
+
   // Hover effect classes
-  const hoverClasses = hoverEffect 
-    ? 'hover:shadow-lg transition-shadow duration-300 hover:-translate-y-1' 
+  const hoverClasses = hoverEffect
+    ? 'hover:shadow-lg transition-shadow duration-300 hover:-translate-y-1'
     : '';
-  
+
   // Border classes
-  const borderClasses = bordered 
-    ? 'border-2 border-[#A07E5D]' 
-    : '';
-  
+  const borderClasses = bordered ? 'border-2 border-[#A07E5D]' : '';
+
   return (
-    <div 
+    <div
       className={`${baseClasses} ${hoverClasses} ${borderClasses} ${className}`}
       onClick={onClick}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
     >
-      {image && (
-        <div className="mb-4 flex justify-center">
-          {image}
-        </div>
-      )}
-      
+      {image && <div className="mb-4 flex justify-center">{image}</div>}
+
       {title && (
         <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4 text-center">
           {title}
         </h3>
       )}
-      
-      <div className="font-['Lato'] text-[#3E3C3B]">
-        {children}
-      </div>
+
+      <div className="font-['Lato'] text-[#3E3C3B]">{children}</div>
     </div>
   );
 };

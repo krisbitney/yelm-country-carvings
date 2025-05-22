@@ -206,7 +206,7 @@ const Navbar: React.FC = () => {
               href="#about"
               className="font-['Lato'] text-[#F5F1E9] hover:text-[#B87351] focus:text-[#B87351] focus:outline-none focus:ring-2 focus:ring-[#B87351] transition-colors duration-300 border-l-2 border-transparent hover:border-[#B87351] focus:border-[#B87351] pl-2 rounded-md p-1"
               onClick={() => setMobileMenuOpen(false)}
-              onKeyDown={(e) => {
+              onKeyDown={e => {
                 if (e.key === 'Tab' && e.shiftKey) {
                   e.preventDefault();
                   lastFocusableElementRef.current?.focus();
@@ -268,7 +268,7 @@ const Navbar: React.FC = () => {
               aria-label="Follow us on Facebook"
               title="Follow us on Facebook"
               onClick={() => setMobileMenuOpen(false)}
-              onKeyDown={(e) => {
+              onKeyDown={e => {
                 if (e.key === 'Tab' && !e.shiftKey) {
                   e.preventDefault();
                   firstFocusableElementRef.current?.focus();

@@ -2,7 +2,14 @@ import React, { useState, useCallback } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useGalleryImages } from '../../hooks/useGalleryImages.tsx';
-import { SectionHeader, Button, ResponsiveImage, Modal, IconButton, Icon } from '../../../components/ui';
+import {
+  SectionHeader,
+  Button,
+  ResponsiveImage,
+  Modal,
+  IconButton,
+  Icon,
+} from '../../../components/ui';
 
 const GallerySection: React.FC = () => {
   // State to track the selected image for the modal
@@ -162,7 +169,11 @@ const GallerySection: React.FC = () => {
               alt={selectedImage.alt || 'Selected image'}
               className="max-w-full max-h-[85vh] rounded-lg shadow-xl"
               objectFit="contain"
-              onClick={(e: React.MouseEvent<HTMLImageElement, MouseEvent> | React.KeyboardEvent<HTMLImageElement>) => e.stopPropagation()}
+              onClick={(
+                e:
+                  | React.MouseEvent<HTMLImageElement, MouseEvent>
+                  | React.KeyboardEvent<HTMLImageElement>
+              ) => e.stopPropagation()}
             />
             <p className="mt-2 text-center text-white font-body text-lg">{selectedImage.alt}</p>
           </div>

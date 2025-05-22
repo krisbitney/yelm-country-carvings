@@ -72,8 +72,7 @@ const EventsTable: React.FC<EventsTableProps> = ({
                 <th
                   scope="col"
                   className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-10"
-                >
-                </th>
+                ></th>
                 <th
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"

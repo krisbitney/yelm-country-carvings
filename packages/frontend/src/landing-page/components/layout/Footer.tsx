@@ -39,9 +39,7 @@ const Footer: React.FC = () => {
       ></div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 overflow-hidden"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 overflow-hidden">
           {/* Column 1: Copyright and Info */}
           <div className="w-full px-4 animate-slideInUp">
             <h3 className="font-['Cinzel'] text-2xl font-bold mb-4 text-[#F5F1E9] border-b-2 border-[#B87351] pb-2 inline-block">
@@ -81,10 +79,7 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Column 2: Quick Links */}
-          <div
-            className="w-full px-4 animate-slideInUp"
-            style={{ animationDelay: '0.1s' }}
-          >
+          <div className="w-full px-4 animate-slideInUp" style={{ animationDelay: '0.1s' }}>
             <h3 className="font-['Cinzel'] text-xl font-bold mb-4 text-[#F5F1E9] border-b-2 border-[#B87351] pb-2 inline-block">
               Quick Links
             </h3>
@@ -125,10 +120,7 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Column 3: Social Media */}
-          <div
-            className="w-full px-4 animate-slideInUp"
-            style={{ animationDelay: '0.2s' }}
-          >
+          <div className="w-full px-4 animate-slideInUp" style={{ animationDelay: '0.2s' }}>
             <h3 className="font-['Cinzel'] text-xl font-bold mb-4 text-[#F5F1E9] border-b-2 border-[#B87351] pb-2 inline-block">
               Connect With Us
             </h3>

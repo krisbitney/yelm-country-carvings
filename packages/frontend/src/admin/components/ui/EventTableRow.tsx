@@ -65,16 +65,10 @@ const EventTableRow: React.FC<EventTableRowProps> = ({
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
         {confirmDelete === event.id ? (
-          <DeleteConfirmation
-            onConfirm={() => onDelete(event.id)}
-            onCancel={onCancelDelete}
-          />
+          <DeleteConfirmation onConfirm={() => onDelete(event.id)} onCancel={onCancelDelete} />
         ) : (
           <div className="flex justify-end items-center space-x-4">
-            <button
-              onClick={() => onEdit(event)}
-              className="text-[#4A6151] hover:text-[#3D5142]"
-            >
+            <button onClick={() => onEdit(event)} className="text-[#4A6151] hover:text-[#3D5142]">
               Edit
             </button>
             <button

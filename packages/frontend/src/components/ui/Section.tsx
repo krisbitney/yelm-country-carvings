@@ -42,15 +42,9 @@ const Section: React.FC<SectionProps> = ({
           description={description}
         />
 
-        <div className="mt-8">
-          {children}
-        </div>
+        <div className="mt-8">{children}</div>
 
-        {footer && (
-          <div className="mt-12">
-            {footer}
-          </div>
-        )}
+        {footer && <div className="mt-12">{footer}</div>}
       </div>
     </section>
   );

@@ -55,9 +55,9 @@ const AboutSection: React.FC = () => {
             }
           >
             I love creating pieces that make people smile. I do my own versions of items - bears,
-            sasquatches, turtles, frogs, orcas, sailors, snails, elephants, and more - all sizes
-            and affordable for all budgets. The first carving I did was of a very large Snowman. I
-            think he is adorable.
+            sasquatches, turtles, frogs, orcas, sailors, snails, elephants, and more - all sizes and
+            affordable for all budgets. The first carving I did was of a very large Snowman. I think
+            he is adorable.
           </Card>
 
           {/* Card 3: Meet the Carver */}
@@ -76,9 +76,9 @@ const AboutSection: React.FC = () => {
               </div>
             }
           >
-            At Yelm Country Carvings, my goal is to create chainsaw carvings that are affordable
-            and make people happy. This is a hobby I started with the support of my husband who
-            built me a wonderful workshop. He is my inspiration.
+            At Yelm Country Carvings, my goal is to create chainsaw carvings that are affordable and
+            make people happy. This is a hobby I started with the support of my husband who built me
+            a wonderful workshop. He is my inspiration.
           </Card>
         </div>
 
@@ -91,11 +91,7 @@ const AboutSection: React.FC = () => {
           {/* Replaced aspect-w-16 and aspect-h-9 with aspect-[16/9] */}
           <div className="aspect-[16/9] rounded-lg overflow-hidden bg-[#6B4F41] flex items-center justify-center">
             <div className="text-center p-8">
-              <Icon
-                type="play"
-                size="xl"
-                className="h-16 w-16 mx-auto text-[#F5F1E9] mb-4"
-              />
+              <Icon type="play" size="xl" className="h-16 w-16 mx-auto text-[#F5F1E9] mb-4" />
               <p className="font-['Lato'] text-[#F5F1E9] text-lg">Video coming soon!</p>
               <p className="font-['Lato'] text-[#F5F1E9] text-sm mt-2 opacity-80">
                 Check back later to watch our story

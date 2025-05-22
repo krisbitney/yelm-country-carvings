@@ -128,7 +128,6 @@ const EventsPage: React.FC = () => {
     );
   };
 
-
   // Handle bulk delete
   const handleBulkDelete = async () => {
     let successCount = 0;

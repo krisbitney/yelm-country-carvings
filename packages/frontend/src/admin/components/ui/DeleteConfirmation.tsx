@@ -14,16 +14,10 @@ const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
   return (
     <div className="flex justify-end items-center space-x-2">
       <span className="text-[#3E3C3B]">{message}</span>
-      <button
-        onClick={onConfirm}
-        className="text-red-600 hover:text-red-800"
-      >
+      <button onClick={onConfirm} className="text-red-600 hover:text-red-800">
         Yes
       </button>
-      <button
-        onClick={onCancel}
-        className="text-[#4A6151] hover:text-[#3D5142]"
-      >
+      <button onClick={onCancel} className="text-[#4A6151] hover:text-[#3D5142]">
         No
       </button>
     </div>
