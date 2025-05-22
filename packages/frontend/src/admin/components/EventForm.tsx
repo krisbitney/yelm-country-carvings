@@ -3,7 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { MarketEvent } from '../../types.ts';
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 import ImageUpload from './ImageUpload';
 import { formatDateRange } from '../../utils/dateUtils.ts';
 
@@ -13,9 +13,33 @@ const eventSchema = z.object({
   date: z.string().min(1, 'Date is required'),
   location: z.string().min(1, 'Location is required'),
   description: z.string().min(1, 'Description is required'),
-  startDate: z.string().min(1, 'Start date is required'),
-  endDate: z.string().min(1, 'End date is required'),
+  startDate: z.string()
+    .min(1, 'Start date is required')
+    .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Date must be in MM/DD/YYYY format'),
+  endDate: z.string()
+    .min(1, 'End date is required')
+    .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Date must be in MM/DD/YYYY format'),
   image: z.string().min(1, 'Image is required'),
+}).refine((data) => {
+  // Skip validation if dates are not properly formatted
+  if (!data.startDate || !data.endDate || 
+      data.startDate === '__/__/____' || 
+      data.endDate === '__/__/____' ||
+      !/^\d{2}\/\d{2}\/\d{4}$/.test(data.startDate) ||
+      !/^\d{2}\/\d{2}\/\d{4}$/.test(data.endDate)) {
+    return true;
+  }
+
+  try {
+    const startDate = parse(data.startDate, 'MM/dd/yyyy', new Date());
+    const endDate = parse(data.endDate, 'MM/dd/yyyy', new Date());
+    return startDate <= endDate;
+  } catch (error) {
+    return false;
+  }
+}, {
+  message: "Start date must be before or equal to end date",
+  path: ["endDate"] // Show error on the end date field
 });
 
 // Define the form data type
@@ -31,6 +55,23 @@ interface EventFormProps {
 const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, uploadImage }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Function to format date from yyyy-MM-dd to MM/DD/YYYY
+  const formatDateForInput = (dateStr: string): string => {
+    try {
+      if (!dateStr) return '';
+      // Check if the date is already in MM/DD/YYYY format
+      if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) {
+        return dateStr;
+      }
+      // Parse the date and format it to MM/DD/YYYY
+      const date = new Date(dateStr);
+      return format(date, 'MM/dd/yyyy');
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return '';
+    }
+  };
+
   // Initialize the form with default values or existing event data
   const {
     register,
@@ -44,16 +85,16 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
     defaultValues: event
       ? {
           ...event,
-          // Explicitly set startDate and endDate to ensure they're populated
-          startDate: event.startDate,
-          endDate: event.endDate,
+          // Format dates to MM/DD/YYYY
+          startDate: formatDateForInput(event.startDate),
+          endDate: formatDateForInput(event.endDate),
         }
       : {
           title: '',
           location: '',
           description: '',
-          startDate: format(new Date(), 'yyyy-MM-dd'),
-          endDate: format(new Date(), 'yyyy-MM-dd'),
+          startDate: format(new Date(), 'MM/dd/yyyy'),
+          endDate: format(new Date(), 'MM/dd/yyyy'),
           image: '',
         },
     mode: 'onChange', // Enable validation on change
@@ -76,7 +117,35 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
     async (data: EventFormData) => {
       try {
         setIsSubmitting(true);
-        await onSubmit(data);
+
+        // Validate date formats
+        if (data.startDate === '__/__/____' || data.endDate === '__/__/____') {
+          console.error('Invalid date format');
+          return;
+        }
+
+        // Convert MM/DD/YYYY to ISO format for backend
+        try {
+          const startDateObj = parse(data.startDate, 'MM/dd/yyyy', new Date());
+          const endDateObj = parse(data.endDate, 'MM/dd/yyyy', new Date());
+
+          // Additional validation to ensure start date is before or equal to end date
+          if (startDateObj > endDateObj) {
+            console.error('Start date must be before or equal to end date');
+            return;
+          }
+
+          // Format dates to ISO string for backend
+          const formattedData = {
+            ...data,
+            startDate: format(startDateObj, 'yyyy-MM-dd'),
+            endDate: format(endDateObj, 'yyyy-MM-dd')
+          };
+
+          await onSubmit(formattedData);
+        } catch (error) {
+          console.error('Error parsing dates for submission:', error);
+        }
       } finally {
         setIsSubmitting(false);
       }
@@ -84,11 +153,74 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
     [onSubmit, setIsSubmitting]
   );
 
+  // Function to handle date input with mask
+  const handleDateInput = (e: React.ChangeEvent<HTMLInputElement>, field: any) => {
+    const { value } = e.target;
+
+    // Remove all non-digits
+    let digits = value.replace(/\D/g, '');
+
+    // Validate month (1-12)
+    if (digits.length >= 2) {
+      const month = parseInt(digits.substring(0, 2), 10);
+      if (month > 12) {
+        digits = '12' + digits.substring(2);
+      } else if (month === 0) {
+        digits = '01' + digits.substring(2);
+      }
+    }
+
+    // Validate day (1-31)
+    if (digits.length >= 4) {
+      const day = parseInt(digits.substring(2, 4), 10);
+      if (day > 31) {
+        digits = digits.substring(0, 2) + '31' + digits.substring(4);
+      } else if (day === 0) {
+        digits = digits.substring(0, 2) + '01' + digits.substring(4);
+      }
+    }
+
+    // Limit to 8 digits (MMDDYYYY)
+    digits = digits.substring(0, 8);
+
+    let formattedValue = '';
+
+    // Format with slashes
+    if (digits.length > 0) {
+      // Add first slash after MM
+      formattedValue = digits.substring(0, 2);
+      if (digits.length > 2) {
+        formattedValue += '/' + digits.substring(2, 4);
+      }
+      // Add second slash after DD
+      if (digits.length > 4) {
+        formattedValue += '/' + digits.substring(4, 8);
+      }
+    }
+
+    // If the input is empty, show the placeholder with slashes
+    if (formattedValue === '') {
+      formattedValue = '__/__/____';
+    }
+
+    // Update the field value
+    field.onChange(formattedValue);
+  };
+
   // Update the date string when start or end date changes
   useEffect(() => {
-    if (startDate && endDate) {
-      const dateString = formatDateRange(startDate, endDate);
-      setValue('date', dateString);
+    if (startDate && endDate && startDate !== '__/__/____' && endDate !== '__/__/____') {
+      try {
+        // Parse the MM/DD/YYYY format to Date objects
+        const startDateObj = parse(startDate, 'MM/dd/yyyy', new Date());
+        const endDateObj = parse(endDate, 'MM/dd/yyyy', new Date());
+
+        // Format the date range
+        const dateString = formatDateRange(startDateObj, endDateObj);
+        setValue('date', dateString);
+      } catch (error) {
+        console.error('Error parsing dates:', error);
+      }
     }
   }, [startDate, endDate, setValue]);
 
@@ -122,14 +254,22 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="startDate" className="block text-[#3E3C3B] font-['Lato'] mb-1">
-            Start Date
+            Start Date (MM/DD/YYYY)
           </label>
-          <input
-            id="startDate"
-            type="date"
-            {...register('startDate')}
-            className={`w-full px-4 py-2 border ${errors.startDate ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151] text-[#3E3C3B]`}
-            disabled={isSubmitting}
+          <Controller
+            name="startDate"
+            control={control}
+            render={({ field }) => (
+              <input
+                id="startDate"
+                type="text"
+                placeholder="__/__/____"
+                value={field.value || '__/__/____'}
+                onChange={(e) => handleDateInput(e, field)}
+                className={`w-full px-4 py-2 border ${errors.startDate ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151] text-[#3E3C3B]`}
+                disabled={isSubmitting}
+              />
+            )}
           />
           {errors.startDate && (
             <p className="mt-1 text-red-600 text-sm font-bold">{errors.startDate.message}</p>
@@ -137,14 +277,22 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
         </div>
         <div>
           <label htmlFor="endDate" className="block text-[#3E3C3B] font-['Lato'] mb-1">
-            End Date
+            End Date (MM/DD/YYYY)
           </label>
-          <input
-            id="endDate"
-            type="date"
-            {...register('endDate')}
-            className={`w-full px-4 py-2 border ${errors.endDate ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151] text-[#3E3C3B]`}
-            disabled={isSubmitting}
+          <Controller
+            name="endDate"
+            control={control}
+            render={({ field }) => (
+              <input
+                id="endDate"
+                type="text"
+                placeholder="__/__/____"
+                value={field.value || '__/__/____'}
+                onChange={(e) => handleDateInput(e, field)}
+                className={`w-full px-4 py-2 border ${errors.endDate ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151] text-[#3E3C3B]`}
+                disabled={isSubmitting}
+              />
+            )}
           />
           {errors.endDate && (
             <p className="mt-1 text-red-600 text-sm font-bold">{errors.endDate.message}</p>
