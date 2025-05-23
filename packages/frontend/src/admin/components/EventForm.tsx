@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, ControllerRenderProps } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { MarketEvent } from '../../types.ts';
@@ -8,39 +8,49 @@ import ImageUpload from './ImageUpload';
 import { formatDateRange } from '../../utils/dateUtils.ts';
 
 // Define the form validation schema
-const eventSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  date: z.string().min(1, 'Date is required'),
-  location: z.string().min(1, 'Location is required'),
-  description: z.string().min(1, 'Description is required'),
-  startDate: z.string()
-    .min(1, 'Start date is required')
-    .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Date must be in MM/DD/YYYY format'),
-  endDate: z.string()
-    .min(1, 'End date is required')
-    .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Date must be in MM/DD/YYYY format'),
-  image: z.string().min(1, 'Image is required'),
-}).refine((data) => {
-  // Skip validation if dates are not properly formatted
-  if (!data.startDate || !data.endDate || 
-      data.startDate === '__/__/____' || 
-      data.endDate === '__/__/____' ||
-      !/^\d{2}\/\d{2}\/\d{4}$/.test(data.startDate) ||
-      !/^\d{2}\/\d{2}\/\d{4}$/.test(data.endDate)) {
-    return true;
-  }
+const eventSchema = z
+  .object({
+    title: z.string().min(1, 'Title is required'),
+    date: z.string().min(1, 'Date is required'),
+    location: z.string().min(1, 'Location is required'),
+    description: z.string().min(1, 'Description is required'),
+    startDate: z
+      .string()
+      .min(1, 'Start date is required')
+      .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Date must be in MM/DD/YYYY format'),
+    endDate: z
+      .string()
+      .min(1, 'End date is required')
+      .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Date must be in MM/DD/YYYY format'),
+    image: z.string().min(1, 'Image is required'),
+  })
+  .refine(
+    data => {
+      // Skip validation if dates are not properly formatted
+      if (
+        !data.startDate ||
+        !data.endDate ||
+        data.startDate === '__/__/____' ||
+        data.endDate === '__/__/____' ||
+        !/^\d{2}\/\d{2}\/\d{4}$/.test(data.startDate) ||
+        !/^\d{2}\/\d{2}\/\d{4}$/.test(data.endDate)
+      ) {
+        return true;
+      }
 
-  try {
-    const startDate = parse(data.startDate, 'MM/dd/yyyy', new Date());
-    const endDate = parse(data.endDate, 'MM/dd/yyyy', new Date());
-    return startDate <= endDate;
-  } catch (error) {
-    return false;
-  }
-}, {
-  message: "Start date must be before or equal to end date",
-  path: ["endDate"] // Show error on the end date field
-});
+      try {
+        const startDate = parse(data.startDate, 'MM/dd/yyyy', new Date());
+        const endDate = parse(data.endDate, 'MM/dd/yyyy', new Date());
+        return startDate <= endDate;
+      } catch {
+        return false;
+      }
+    },
+    {
+      message: 'Start date must be before or equal to end date',
+      path: ['endDate'], // Show error on the end date field
+    }
+  );
 
 // Define the form data type
 type EventFormData = z.infer<typeof eventSchema>;
@@ -139,7 +149,7 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
           const formattedData = {
             ...data,
             startDate: format(startDateObj, 'yyyy-MM-dd'),
-            endDate: format(endDateObj, 'yyyy-MM-dd')
+            endDate: format(endDateObj, 'yyyy-MM-dd'),
           };
 
           await onSubmit(formattedData);
@@ -154,7 +164,21 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
   );
 
   // Function to handle date input with mask
-  const handleDateInput = (e: React.ChangeEvent<HTMLInputElement>, field: any) => {
+  const handleDateInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: ControllerRenderProps<
+      {
+        title: string;
+        date: string;
+        location: string;
+        description: string;
+        startDate: string;
+        endDate: string;
+        image: string;
+      },
+      'startDate' | 'endDate'
+    >
+  ) => {
     const { value } = e.target;
 
     // Remove all non-digits
@@ -265,7 +289,7 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
                 type="text"
                 placeholder="__/__/____"
                 value={field.value || '__/__/____'}
-                onChange={(e) => handleDateInput(e, field)}
+                onChange={e => handleDateInput(e, field)}
                 className={`w-full px-4 py-2 border ${errors.startDate ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151] text-[#3E3C3B]`}
                 disabled={isSubmitting}
               />
@@ -288,7 +312,7 @@ const EventForm: React.FC<EventFormProps> = ({ event, onSubmit, onCancel, upload
                 type="text"
                 placeholder="__/__/____"
                 value={field.value || '__/__/____'}
-                onChange={(e) => handleDateInput(e, field)}
+                onChange={e => handleDateInput(e, field)}
                 className={`w-full px-4 py-2 border ${errors.endDate ? 'border-red-500' : 'border-[#A07E5D]'} rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151] text-[#3E3C3B]`}
                 disabled={isSubmitting}
               />

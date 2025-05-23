@@ -4,13 +4,55 @@ import { eventRepository } from '../../repositories/eventRepository';
 import { IMAGES_DIR } from '../../index';
 
 /**
- * Get all events
+ * Get all available years that have events
+ * @returns A Response object with the available years
+ */
+export const getAvailableYears = async (): Promise<Response> => {
+  try {
+    const years = await eventRepository.getAvailableYears();
+    return Response.json(years);
+  } catch (error) {
+    console.error('Error getting available years:', error);
+    return Response.json(
+      {
+        success: false,
+        message: 'Failed to get available years',
+      },
+      { status: 500 }
+    );
+  }
+};
+
+/**
+ * Get all events, optionally filtered by year
  * @param req - The request object
  * @returns A Response object with the events
  */
-export const getEvents = async (): Promise<Response> => {
+export const getEvents = async (req?: Request): Promise<Response> => {
   try {
-    const events = await eventRepository.getAll();
+    let year: number | undefined;
+
+    // Extract year parameter from request URL if present
+    if (req) {
+      const url = new URL(req.url);
+      const yearParam = url.searchParams.get('year');
+      if (yearParam) {
+        year = parseInt(yearParam);
+
+        // Validate that year is a valid number
+        if (isNaN(year)) {
+          return Response.json(
+            {
+              success: false,
+              message: 'Invalid year parameter',
+            },
+            { status: 400 }
+          );
+        }
+      }
+    }
+
+    const events = await eventRepository.getAll(year);
     return Response.json(events);
   } catch (error) {
     console.error('Error getting events:', error);

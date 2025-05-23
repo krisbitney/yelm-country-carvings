@@ -1,6 +1,7 @@
 import '../../src/index';
 import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'bun:test';
 import { closeTestDb, setupTestDb, teardownTestDb } from '../utils/testDb';
+const { eventRepository } = await import('../../src/repositories/eventRepository');
 
 describe('Event Repository', () => {
   let testSql: Bun.SQL;
@@ -98,6 +99,65 @@ describe('Event Repository', () => {
 
     expect(retrievedEvent).toBeDefined();
     expect(retrievedEvent.title).toBe(testEvent.title);
+  });
+
+  it('should filter events by year', async () => {
+    // Create test events with different years
+    const event2022 = {
+      title: 'Event 2022',
+      date: 'January 1, 2022',
+      location: 'Test Location',
+      description: 'Test Description',
+      image: '/img/events/test.jpg',
+      start_date: new Date('2022-01-01'),
+      end_date: new Date('2022-01-02'),
+    };
+
+    const event2023 = {
+      title: 'Event 2023',
+      date: 'January 1, 2023',
+      location: 'Test Location',
+      description: 'Test Description',
+      image: '/img/events/test.jpg',
+      start_date: new Date('2023-01-01'),
+      end_date: new Date('2023-01-02'),
+    };
+
+    const event2024 = {
+      title: 'Event 2024',
+      date: 'January 1, 2024',
+      location: 'Test Location',
+      description: 'Test Description',
+      image: '/img/events/test.jpg',
+      start_date: new Date('2024-01-01'),
+      end_date: new Date('2024-01-02'),
+    };
+
+    // Insert events
+    await testSql`
+      INSERT INTO events (title, date, location, description, image, start_date, end_date)
+      VALUES 
+        (${event2022.title}, ${event2022.date}, ${event2022.location}, ${event2022.description}, 
+         ${event2022.image}, ${event2022.start_date.toISOString()}, ${event2022.end_date.toISOString()}),
+        (${event2023.title}, ${event2023.date}, ${event2023.location}, ${event2023.description}, 
+         ${event2023.image}, ${event2023.start_date.toISOString()}, ${event2023.end_date.toISOString()}),
+        (${event2024.title}, ${event2024.date}, ${event2024.location}, ${event2024.description}, 
+         ${event2024.image}, ${event2024.start_date.toISOString()}, ${event2024.end_date.toISOString()})
+    `;
+
+    // Test filtering by year 2023
+    const events2023 = await eventRepository.getAll(2023);
+    expect(events2023).toHaveLength(1);
+    expect(events2023[0].title).toBe('Event 2023');
+
+    // Test filtering by year 2024
+    const events2024 = await eventRepository.getAll(2024);
+    expect(events2024).toHaveLength(1);
+    expect(events2024[0].title).toBe('Event 2024');
+
+    // Test getting all events (no year filter)
+    const allEvents = await eventRepository.getAll();
+    expect(allEvents).toHaveLength(3);
   });
 
   // TODO: Add more tests for update, delete, etc.

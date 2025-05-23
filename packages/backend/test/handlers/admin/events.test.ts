@@ -62,6 +62,66 @@ describe('Events Handler', () => {
       expect(data[0].id).toBe(1);
       expect(data[0].title).toBe(sampleEvent.title);
     });
+
+    test('should filter events by year', async () => {
+      // Set up test data with different years
+      const event2023 = {
+        id: 1,
+        title: 'Event 2023',
+        date: '2023-01-01',
+        location: 'Test Location',
+        description: 'Test Description',
+        image: 'events/test.webp',
+        startDate: '2023-01-01',
+        endDate: '2023-01-02',
+      };
+
+      const event2024 = {
+        id: 2,
+        title: 'Event 2024',
+        date: '2024-01-01',
+        location: 'Test Location',
+        description: 'Test Description',
+        image: 'events/test.webp',
+        startDate: '2024-01-01',
+        endDate: '2024-01-02',
+      };
+
+      await insertTestEvents(testSql, [event2023, event2024]);
+
+      // Create a request with year parameter
+      const request = createTestRequest({
+        method: 'GET',
+        url: 'http://localhost:3000/api/admin/events?year=2024',
+      });
+
+      // Call the handler with the request
+      const response = await getEvents(request);
+      const data = await response.json();
+
+      // Verify the response
+      expect(response.status).toBe(200);
+      expect(Array.isArray(data)).toBe(true);
+      expect(data.length).toBe(1);
+      expect(data[0].title).toBe('Event 2024');
+    });
+
+    test('should handle invalid year parameter', async () => {
+      // Create a request with invalid year parameter
+      const request = createTestRequest({
+        method: 'GET',
+        url: 'http://localhost:3000/api/admin/events?year=invalid',
+      });
+
+      // Call the handler with the request
+      const response = await getEvents(request);
+      const data = await response.json();
+
+      // Verify the response
+      expect(response.status).toBe(400);
+      expect(data.success).toBe(false);
+      expect(data.message).toBe('Invalid year parameter');
+    });
   });
 
   describe('createEvent', () => {

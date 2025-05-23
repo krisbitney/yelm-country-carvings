@@ -2,22 +2,58 @@ import sql from '../utils/db';
 import { MarketEvent } from '../types';
 
 export const eventRepository = {
-  // Get all events
-  async getAll(): Promise<MarketEvent[]> {
+  // Get all available years that have events
+  async getAvailableYears(): Promise<number[]> {
     try {
-      const events = await sql`
-        SELECT 
-          id, 
-          title, 
-          location, 
-          description, 
-          image, 
-          start_date as "startDate", 
-          end_date as "endDate" 
-        FROM events 
-        ORDER BY start_date
+      const result = await sql`
+        SELECT DISTINCT EXTRACT(YEAR FROM start_date)::integer as year
+        FROM events
+        ORDER BY year DESC
       `;
-      return events;
+      return result.map((row: { year: number }) => row.year);
+    } catch (error) {
+      console.error('Database error in getAvailableYears:', error);
+      throw new Error('Failed to retrieve available years');
+    }
+  },
+
+  // Get all events, optionally filtered by year
+  async getAll(year?: number): Promise<MarketEvent[]> {
+    try {
+      let query;
+
+      if (year) {
+        // Filter events by the year in the start_date
+        query = sql`
+          SELECT 
+            id, 
+            title, 
+            location, 
+            description, 
+            image, 
+            start_date as "startDate", 
+            end_date as "endDate" 
+          FROM events 
+          WHERE EXTRACT(YEAR FROM start_date) = ${year}
+          ORDER BY start_date
+        `;
+      } else {
+        // Get all events without filtering
+        query = sql`
+          SELECT 
+            id, 
+            title, 
+            location, 
+            description, 
+            image, 
+            start_date as "startDate", 
+            end_date as "endDate" 
+          FROM events 
+          ORDER BY start_date
+        `;
+      }
+
+      return await query;
     } catch (error) {
       console.error('Database error in getAll events:', error);
       throw new Error('Failed to retrieve events');
@@ -29,7 +65,7 @@ export const eventRepository = {
     try {
       const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
 
-      const events = await sql`
+      return await sql`
         SELECT 
           id, 
           title, 
@@ -43,7 +79,6 @@ export const eventRepository = {
         ORDER BY start_date ASC
         LIMIT 3
       `;
-      return events;
     } catch (error) {
       console.error('Database error in getUpcoming events:', error);
       throw new Error('Failed to retrieve upcoming events');

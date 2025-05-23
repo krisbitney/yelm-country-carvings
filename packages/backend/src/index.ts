@@ -2,7 +2,13 @@ import path from 'path';
 import fs from 'fs';
 import { handleContactForm } from './handlers/handleContactForm';
 import { handleAdminLogin, handleVerifyToken } from './handlers/admin/auth';
-import { getEvents, createEvent, updateEvent, deleteEvent } from './handlers/admin/events';
+import {
+  getEvents,
+  createEvent,
+  updateEvent,
+  deleteEvent,
+  getAvailableYears,
+} from './handlers/admin/events';
 import {
   getGallery,
   addGalleryImage,
@@ -100,10 +106,16 @@ const server = Bun.serve({
     // Admin events endpoints
     '/api/admin/events': {
       GET: async req => {
-        return authenticateJWT(req) ?? (await getEvents());
+        return authenticateJWT(req) ?? (await getEvents(req));
       },
       POST: async req => {
         return authenticateJWT(req) ?? (await createEvent(req));
+      },
+    },
+
+    '/api/admin/events/years': {
+      GET: async req => {
+        return authenticateJWT(req) ?? (await getAvailableYears());
       },
     },
 

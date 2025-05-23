@@ -26,7 +26,7 @@ const EventTableRow: React.FC<EventTableRowProps> = ({
 }) => {
   return (
     <tr className="hover:bg-[#F5F1E9]">
-      <td className="px-2 py-4 whitespace-nowrap text-center">
+      <td className="px-2 py-4 text-center">
         <input
           type="checkbox"
           className="h-4 w-4 rounded border-gray-300 text-[#4A6151] focus:ring-[#4A6151]"
@@ -34,7 +34,7 @@ const EventTableRow: React.FC<EventTableRowProps> = ({
           onChange={() => onToggleSelection(event.id)}
         />
       </td>
-      <td className="px-6 py-4 whitespace-nowrap">
+      <td className="px-6 py-4">
         <div className="flex items-center">
           <div className="h-10 w-10 flex-shrink-0 mr-4">
             <img
@@ -45,25 +45,25 @@ const EventTableRow: React.FC<EventTableRowProps> = ({
             />
           </div>
           <div>
-            <div className="text-sm font-medium text-[#3E3C3B]">{event.title}</div>
+            <div className="text-sm font-medium text-[#3E3C3B] break-words">{event.title}</div>
           </div>
         </div>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap">
-        <div className="text-sm text-[#3E3C3B]">
+      <td className="px-6 py-4">
+        <div className="text-sm text-[#3E3C3B] break-words">
           {formatDateRange(event.startDate, event.endDate)}
         </div>
-        <div className="text-xs text-[#6B4F41]">
+        <div className="text-xs text-[#6B4F41] break-words">
           {event.startDate && `From: ${formatDate(event.startDate)}`}
         </div>
-        <div className="text-xs text-[#6B4F41]">
+        <div className="text-xs text-[#6B4F41] break-words">
           {event.endDate && `To: ${formatDate(event.endDate)}`}
         </div>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap">
-        <div className="text-sm text-[#3E3C3B]">{event.location}</div>
+      <td className="px-6 py-4">
+        <div className="text-sm text-[#3E3C3B] break-words">{event.location}</div>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+      <td className="px-6 py-4 text-right text-sm font-medium">
         {confirmDelete === event.id ? (
           <DeleteConfirmation onConfirm={() => onDelete(event.id)} onCancel={onCancelDelete} />
         ) : (

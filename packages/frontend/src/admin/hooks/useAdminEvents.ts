@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAdminAuth } from './useAdminAuth';
 import { MarketEvent } from '../../types.ts';
@@ -7,7 +7,8 @@ interface UseAdminEventsReturn {
   events: MarketEvent[];
   loading: boolean;
   error: string | null;
-  fetchEvents: () => Promise<void>;
+  fetchEvents: (year?: number) => Promise<void>;
+  fetchAvailableYears: () => Promise<number[]>;
   createEvent: (event: Omit<MarketEvent, 'id'>) => Promise<boolean>;
   updateEvent: (id: number, event: Partial<MarketEvent>) => Promise<boolean>;
   deleteEvent: (id: number) => Promise<boolean>;
@@ -24,29 +25,39 @@ export const useAdminEvents = (): UseAdminEventsReturn => {
   const { authFetch } = useAdminAuth();
 
   /**
-   * Fetch all events
+   * Fetch all events, optionally filtered by year
+   * @param year - Optional year to filter events by
    */
-  const fetchEvents = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  const fetchEvents = useCallback(
+    async (year?: number) => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      const response = await authFetch('/api/admin/events');
+        // Construct URL with optional year parameter
+        let url = '/api/admin/events';
+        if (year) {
+          url += `?year=${year}`;
+        }
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch events');
+        const response = await authFetch(url);
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch events');
+        }
+
+        const data = await response.json();
+        setEvents(data);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+        setError(error instanceof Error ? error.message : 'An error occurred');
+        toast.error('Failed to load events');
+      } finally {
+        setLoading(false);
       }
-
-      const data = await response.json();
-      setEvents(data);
-    } catch (error) {
-      console.error('Error fetching events:', error);
-      setError(error instanceof Error ? error.message : 'An error occurred');
-      toast.error('Failed to load events');
-    } finally {
-      setLoading(false);
-    }
-  }, [authFetch]);
+    },
+    [authFetch]
+  );
 
   /**
    * Create a new event
@@ -228,11 +239,32 @@ export const useAdminEvents = (): UseAdminEventsReturn => {
     [authFetch]
   );
 
+  /**
+   * Fetch all available years that have events
+   * @returns Array of years
+   */
+  const fetchAvailableYears = useCallback(async (): Promise<number[]> => {
+    try {
+      const response = await authFetch('/api/admin/events/years');
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch available years');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching available years:', error);
+      toast.error('Failed to load available years');
+      return [];
+    }
+  }, [authFetch]);
+
   return {
     events,
     loading,
     error,
     fetchEvents,
+    fetchAvailableYears,
     createEvent,
     updateEvent,
     deleteEvent,

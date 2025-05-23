@@ -12,6 +12,7 @@ const EventsPage: React.FC = () => {
     loading,
     error,
     fetchEvents,
+    fetchAvailableYears,
     createEvent,
     updateEvent,
     deleteEvent,
@@ -23,6 +24,10 @@ const EventsPage: React.FC = () => {
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
   const [selectedEventIds, setSelectedEventIds] = useState<number[]>([]);
   const [confirmBulkDelete, setConfirmBulkDelete] = useState(false);
+  // Set initial year to current year
+  const currentYear = useMemo(() => new Date().getFullYear(), []);
+  const [selectedYear, setSelectedYear] = useState<number | undefined>(currentYear);
+  const [availableYears, setAvailableYears] = useState<number[]>([]);
 
   // Categorize events into past, upcoming, and future
   const { pastEvents, upcomingEvents, futureEvents } = useMemo(() => {
@@ -66,10 +71,28 @@ const EventsPage: React.FC = () => {
     };
   }, [events]);
 
-  // Fetch events on component mount
+  // Fetch available years when component mounts
   useEffect(() => {
-    void fetchEvents();
-  }, [fetchEvents]);
+    const getAvailableYears = async () => {
+      const years = await fetchAvailableYears();
+      // If no years are available, add the current year
+      if (years.length === 0) {
+        setAvailableYears([currentYear]);
+      } else {
+        setAvailableYears(years);
+        // If current year is not in the list, select the most recent year
+        if (!years.includes(currentYear) && selectedYear === currentYear) {
+          setSelectedYear(years[0]);
+        }
+      }
+    };
+    void getAvailableYears();
+  }, [fetchAvailableYears, currentYear, selectedYear]);
+
+  // Fetch events when component mounts or selected year changes
+  useEffect(() => {
+    void fetchEvents(selectedYear);
+  }, [fetchEvents, selectedYear]);
 
   // Handle error from useAdminEvents
   useEffect(() => {
@@ -159,13 +182,33 @@ const EventsPage: React.FC = () => {
     <AdminLayout title="Events Management">
       <div className="mb-6 flex justify-between items-center">
         <h2 className="font-['Cinzel'] text-3xl font-bold text-[#6B4F41]">Events Management</h2>
-        <button
-          onClick={() => setIsAddingEvent(true)}
-          className="px-4 py-2 bg-[#4A6151] text-white font-['Lato'] rounded-md hover:bg-[#3D5142] transition-colors duration-300"
-          disabled={isAddingEvent || isEditingEvent}
-        >
-          Add New Event
-        </button>
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center">
+            <label htmlFor="year-select" className="mr-2 text-[#3E3C3B] font-['Lato']">
+              Filter by Year:
+            </label>
+            <select
+              id="year-select"
+              value={selectedYear || ''}
+              onChange={e => setSelectedYear(e.target.value ? parseInt(e.target.value) : undefined)}
+              className="border border-[#A07E5D] rounded-md px-3 py-1 bg-white text-[#3E3C3B] font-['Lato']"
+            >
+              <option value="">All Years</option>
+              {availableYears.map(year => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            onClick={() => setIsAddingEvent(true)}
+            className="px-4 py-2 bg-[#4A6151] text-white font-['Lato'] rounded-md hover:bg-[#3D5142] transition-colors duration-300"
+            disabled={isAddingEvent || isEditingEvent}
+          >
+            Add New Event
+          </button>
+        </div>
       </div>
 
       {/* Loading State */}
