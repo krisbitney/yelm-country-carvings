@@ -150,7 +150,7 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ onSubmit, onCancel, uploadIma
       {/* Alt Text */}
       <div>
         <label htmlFor="alt" className="block text-[#3E3C3B] font-['Lato'] mb-1">
-          Alt Text (Description)
+          Description
         </label>
         <input
           id="alt"

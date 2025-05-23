@@ -56,7 +56,7 @@ const Modal: React.FC<ModalProps> = ({
             aria-label="Close modal"
           >
             <svg
-              className="w-6 h-6 text-neutral-dark"
+              className="w-6 h-6 text-black"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

@@ -20,6 +20,8 @@ const GalleryPage: React.FC = () => {
     uploadGalleryImage,
   } = useAdminGallery();
   const [isAddingImage, setIsAddingImage] = useState(false);
+  const [selectedImages, setSelectedImages] = useState<Set<number>>(new Set());
+  const [isBulkDeleteConfirmOpen, setIsBulkDeleteConfirmOpen] = useState(false);
 
   // Fetch gallery on component mount
   useEffect(() => {
@@ -75,6 +77,56 @@ const GalleryPage: React.FC = () => {
     }
   };
 
+  // Handle image selection
+  const handleImageSelection = (id: number, selected: boolean) => {
+    setSelectedImages(prev => {
+      const newSet = new Set(prev);
+      if (selected) {
+        newSet.add(id);
+      } else {
+        newSet.delete(id);
+      }
+      return newSet;
+    });
+  };
+
+
+  // Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedImages.size === 0) return;
+
+    let successCount = 0;
+    let failCount = 0;
+
+    // Show loading toast
+    const loadingToastId = toast.loading(`Deleting ${selectedImages.size} images...`);
+
+    // Delete each selected image
+    for (const id of selectedImages) {
+      const success = await deleteGalleryImage(id);
+      if (success) {
+        successCount++;
+      } else {
+        failCount++;
+      }
+    }
+
+    // Update toast with result
+    toast.update(loadingToastId, {
+      render: `Deleted ${successCount} images${failCount > 0 ? `, failed to delete ${failCount} images` : ''}`,
+      type: failCount > 0 ? 'warning' : 'success',
+      isLoading: false,
+      autoClose: 3000,
+    });
+
+    // Clear selection and close confirmation
+    setSelectedImages(new Set());
+    setIsBulkDeleteConfirmOpen(false);
+
+    // Refresh gallery
+    void fetchGallery();
+  };
+
   return (
     <AdminLayout title="Gallery Management">
       <div className="mb-6 flex justify-between items-center">
@@ -124,6 +176,54 @@ const GalleryPage: React.FC = () => {
             </div>
           ) : (
             <div className="bg-white p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
+              {/* Bulk Operations */}
+              <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center">
+                  <span className="text-[#3E3C3B] font-['Lato']">
+                    {selectedImages.size} of {gallery.length} selected
+                  </span>
+                </div>
+
+                {selectedImages.size > 0 && (
+                  <div className="flex items-center">
+                    <button
+                      onClick={() => setIsBulkDeleteConfirmOpen(true)}
+                      className="px-4 py-2 bg-red-500 text-white font-['Lato'] rounded-md hover:bg-red-600 transition-all duration-300"
+                    >
+                      Delete Selected ({selectedImages.size})
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Bulk Delete Confirmation Modal */}
+              {isBulkDeleteConfirmOpen && (
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+                  <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+                    <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4">
+                      Confirm Bulk Delete
+                    </h3>
+                    <p className="text-[#3E3C3B] font-['Lato'] mb-6">
+                      Are you sure you want to delete {selectedImages.size} selected images? This action cannot be undone.
+                    </p>
+                    <div className="flex justify-end space-x-4">
+                      <button
+                        onClick={() => setIsBulkDeleteConfirmOpen(false)}
+                        className="px-4 py-2 border border-[#A07E5D] text-[#A07E5D] font-['Lato'] rounded-md hover:bg-[#A07E5D]/10 transition-all duration-300"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleBulkDelete}
+                        className="px-4 py-2 bg-red-500 text-white font-['Lato'] rounded-md hover:bg-red-600 transition-all duration-300"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="mb-6 bg-[#4A6151]/10 p-5 rounded-lg border border-[#4A6151]/20 transition-all duration-300 hover:bg-[#4A6151]/15">
                 <div className="flex items-start">
                   <svg
@@ -142,7 +242,7 @@ const GalleryPage: React.FC = () => {
                   </svg>
                   <div>
                     <p className="text-[#3E3C3B] font-['Lato'] font-bold mb-2 transition-all duration-300">
-                      Gallery Arrangement
+                      Gallery Management
                     </p>
                     <p className="text-[#3E3C3B] font-['Lato'] transition-all duration-300">
                       To rearrange images in this list, click and hold anywhere on an image row,
@@ -150,6 +250,8 @@ const GalleryPage: React.FC = () => {
                       <br />
                       The order you set here will be reflected on the public gallery page of your
                       website.
+                      <br />
+                      You can also select multiple images using the checkboxes for bulk operations.
                     </p>
                   </div>
                 </div>
@@ -176,6 +278,8 @@ const GalleryPage: React.FC = () => {
                               image={image}
                               fetchGallery={fetchGallery}
                               deleteGalleryImage={deleteGalleryImage}
+                              isSelected={selectedImages.has(image.id)}
+                              onSelect={handleImageSelection}
                             />
                           )}
                         </Draggable>
