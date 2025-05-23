@@ -39,9 +39,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
               className="mr-4 hover:text-gray-200 transition-all duration-300 cursor-pointer"
               aria-label={isDashboard ? 'Go to website' : 'Go to dashboard'}
             >
-              <BackIcon
-                className="w-6 h-6 transform transition-transform duration-300 hover:scale-110"
-              />
+              <BackIcon className="w-6 h-6 transform transition-transform duration-300 hover:scale-110" />
             </button>
             <h1 className="font-['Cinzel'] text-2xl font-bold transition-all duration-300">
               {title}

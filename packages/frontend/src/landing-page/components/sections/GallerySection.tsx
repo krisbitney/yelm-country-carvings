@@ -3,13 +3,7 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useGalleryImages } from '../../hooks/useGalleryImages.tsx';
 import { GalleryIcon, PreviousIcon, NextIcon } from '../../../components/ui/icons';
-import {
-  SectionHeader,
-  Button,
-  ResponsiveImage,
-  Modal,
-  IconButton,
-} from '../../../components/ui';
+import { SectionHeader, Button, ResponsiveImage, Modal, IconButton } from '../../../components/ui';
 
 const GallerySection: React.FC = () => {
   // State to track the selected image for the modal

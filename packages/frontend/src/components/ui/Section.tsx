@@ -36,11 +36,7 @@ const Section: React.FC<SectionProps> = ({
   return (
     <section id={id} className={`py-16 ${backgroundClasses[background]} ${className}`}>
       <div className="container mx-auto px-4">
-        <SectionHeader
-          icon={icon}
-          title={title}
-          description={description}
-        />
+        <SectionHeader icon={icon} title={title} description={description} />
 
         <div className="mt-8">{children}</div>
 

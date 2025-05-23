@@ -10,10 +10,10 @@ interface IconWrapperProps {
  */
 const IconWrapper: React.FC<IconWrapperProps> = ({ className = '', children }) => {
   return (
-    <svg 
+    <svg
       className={className}
-      fill="none" 
-      viewBox="0 0 24 24" 
+      fill="none"
+      viewBox="0 0 24 24"
       stroke="currentColor"
       xmlns="http://www.w3.org/2000/svg"
     >

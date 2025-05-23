@@ -23,12 +23,7 @@ const NextIcon: React.FC<NextIconProps> = ({ className = '', size = 'md' }) => {
 
   return (
     <IconWrapper className={baseClasses}>
-      <path 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-        strokeWidth={2} 
-        d="M9 5l7 7-7 7" 
-      />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
     </IconWrapper>
   );
 };

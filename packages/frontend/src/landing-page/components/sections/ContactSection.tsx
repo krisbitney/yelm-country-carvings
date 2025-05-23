@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { organizerEmail } from '../../../constants.ts';
 import { FormInput, FormTextarea } from '../../../components/ui';
-import { PlayIcon, ClockIcon, LocationIcon, PhoneIcon, EmailIcon } from '../../../components/ui/icons';
+import {
+  PlayIcon,
+  ClockIcon,
+  LocationIcon,
+  PhoneIcon,
+  EmailIcon,
+} from '../../../components/ui/icons';
 
 const ContactSection = () => {
   // State for form fields
