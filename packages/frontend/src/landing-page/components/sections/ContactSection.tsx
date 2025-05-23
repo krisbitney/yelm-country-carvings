@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { organizerEmail } from '../../../constants.ts';
-import { Icon, FormInput, FormTextarea } from '../../../components/ui';
+import { FormInput, FormTextarea } from '../../../components/ui';
+import { PlayIcon, ClockIcon, LocationIcon, PhoneIcon, EmailIcon } from '../../../components/ui/icons';
 
 const ContactSection = () => {
   // State for form fields
@@ -204,7 +205,7 @@ const ContactSection = () => {
         {/* Section Heading */}
         <div className="text-center mb-12">
           {/* Carved Bear Icon */}
-          <Icon type="play" size="xl" className="mx-auto mb-4 text-[#6B4F41]" />
+          <PlayIcon className="w-12 h-12 mx-auto mb-4 text-[#6B4F41]" />
 
           <h2 className="font-['Cinzel'] text-3xl md:text-4xl font-bold text-[#6B4F41]">
             Contact Us
@@ -224,7 +225,7 @@ const ContactSection = () => {
               {/* Added grow */}
               {/* Hours */}
               <div className="flex items-start">
-                <Icon type="clock" className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0" />
+                <ClockIcon className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0" />
                 <div>
                   <h4 className="font-['Lato'] font-bold text-[#3E3C3B]">Hours</h4>
                   <p className="font-['Lato'] text-[#3E3C3B]">Monday - Friday: By Appointment</p>
@@ -234,7 +235,7 @@ const ContactSection = () => {
               </div>
               {/* Address */}
               <div className="flex items-start">
-                <Icon type="location" className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0" />
+                <LocationIcon className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0" />
                 <div>
                   <h4 className="font-['Lato'] font-bold text-[#3E3C3B]">Address</h4>
                   <p className="font-['Lato'] text-[#3E3C3B]">19438 Cook Road Southeast</p>
@@ -244,7 +245,7 @@ const ContactSection = () => {
               </div>
               {/* Phone */}
               <div className="flex items-start">
-                <Icon type="phone" className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0" />
+                <PhoneIcon className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0" />
                 <div>
                   <h4 className="font-['Lato'] font-bold text-[#3E3C3B]">Phone</h4>
                   <a
@@ -257,7 +258,7 @@ const ContactSection = () => {
               </div>
               {/* Email */}
               <div className="flex items-start">
-                <Icon type="email" className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0" />
+                <EmailIcon className="w-6 h-6 text-[#6B4F41] mr-3 mt-1 flex-shrink-0" />
                 <div>
                   <h4 className="font-['Lato'] font-bold text-[#3E3C3B]">Email</h4>
                   <a

@@ -2,13 +2,13 @@ import React, { useState, useCallback } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useGalleryImages } from '../../hooks/useGalleryImages.tsx';
+import { GalleryIcon, PreviousIcon, NextIcon } from '../../../components/ui/icons';
 import {
   SectionHeader,
   Button,
   ResponsiveImage,
   Modal,
   IconButton,
-  Icon,
 } from '../../../components/ui';
 
 const GallerySection: React.FC = () => {
@@ -85,7 +85,7 @@ const GallerySection: React.FC = () => {
     <section id="gallery" className="py-16 bg-neutral-light">
       <div className="container mx-auto px-4">
         <SectionHeader
-          icon={<Icon type="gallery" size="xl" />}
+          icon={<GalleryIcon className="w-12 h-12" />}
           title="Our Gallery"
           description="Browse through our collection of handcrafted chainsaw carvings"
         />
@@ -146,7 +146,7 @@ const GallerySection: React.FC = () => {
       >
         {/* Left Arrow Button */}
         <IconButton
-          icon={<Icon type="previous" />}
+          icon={<PreviousIcon className="w-6 h-6" />}
           variant="light"
           className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
           onClick={navigateToPrevImage}
@@ -155,7 +155,7 @@ const GallerySection: React.FC = () => {
 
         {/* Right Arrow Button */}
         <IconButton
-          icon={<Icon type="next" />}
+          icon={<NextIcon className="w-6 h-6" />}
           variant="light"
           className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10"
           onClick={navigateToNextImage}

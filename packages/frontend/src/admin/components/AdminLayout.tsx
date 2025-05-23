@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Icon } from '../../components/ui';
+import { BackIcon } from '../../components/ui/icons';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -39,8 +39,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
               className="mr-4 hover:text-gray-200 transition-all duration-300 cursor-pointer"
               aria-label={isDashboard ? 'Go to website' : 'Go to dashboard'}
             >
-              <Icon
-                type="back"
+              <BackIcon
                 className="w-6 h-6 transform transition-transform duration-300 hover:scale-110"
               />
             </button>

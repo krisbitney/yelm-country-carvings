@@ -2,7 +2,8 @@ import React from 'react';
 import tracieAndBill from '../../../assets/img/about/tracie_bill.webp';
 import tree from '../../../assets/img/about/tree.webp';
 import snowman from '../../../assets/img/about/snowman.webp';
-import { Icon, Card } from '../../../components/ui';
+import { PlayIcon } from '../../../components/ui/icons';
+import { Card } from '../../../components/ui';
 
 const AboutSection: React.FC = () => {
   return (
@@ -91,7 +92,7 @@ const AboutSection: React.FC = () => {
           {/* Replaced aspect-w-16 and aspect-h-9 with aspect-[16/9] */}
           <div className="aspect-[16/9] rounded-lg overflow-hidden bg-[#6B4F41] flex items-center justify-center">
             <div className="text-center p-8">
-              <Icon type="play" size="xl" className="h-16 w-16 mx-auto text-[#F5F1E9] mb-4" />
+              <PlayIcon className="h-16 w-16 mx-auto text-[#F5F1E9] mb-4" />
               <p className="font-['Lato'] text-[#F5F1E9] text-lg">Video coming soon!</p>
               <p className="font-['Lato'] text-[#F5F1E9] text-sm mt-2 opacity-80">
                 Check back later to watch our story

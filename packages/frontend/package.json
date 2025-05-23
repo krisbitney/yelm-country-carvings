@@ -10,12 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "^18.0.1",
     "@hookform/resolvers": "^5.0.1",
     "@tailwindcss/vite": "^4.1.4",
     "add-to-calendar-button": "^2.8.9",
     "date-fns": "^4.1.0",
     "react": "^19.0.0",
-    "@hello-pangea/dnd": "^18.0.1",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.3",
     "react-multi-carousel": "^2.8.6",
@@ -25,12 +25,14 @@
     "zod": "^3.24.4"
   },
   "devDependencies": {
-    "react-compiler-healthcheck": "19.1.0-rc.2",
-    "babel-plugin-react-compiler": "^19.1.0-rc.2",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
+    "babel-plugin-react-compiler": "^19.1.0-rc.2",
     "eslint-plugin-react-refresh": "^0.4.19",
-    "vite": "^6.2.0"
+    "react-compiler-healthcheck": "19.1.0-rc.2",
+    "vite": "^6.2.0",
+    "vite-plugin-image-optimizer": "^1.1.8",
+    "vite-plugin-svgr": "^4.3.0"
   }
 }

@@ -1,11 +1,11 @@
 import React, { ReactNode } from 'react';
-import { SectionHeader, Icon, IconType } from './index';
+import { SectionHeader } from './index';
 
 interface SectionProps {
   id?: string;
   title: string;
   description?: string;
-  icon?: IconType;
+  icon?: ReactNode;
   className?: string;
   background?: 'light' | 'dark' | 'accent' | 'none';
   children: ReactNode;
@@ -37,7 +37,7 @@ const Section: React.FC<SectionProps> = ({
     <section id={id} className={`py-16 ${backgroundClasses[background]} ${className}`}>
       <div className="container mx-auto px-4">
         <SectionHeader
-          icon={icon && <Icon type={icon} size="xl" className="mx-auto" />}
+          icon={icon}
           title={title}
           description={description}
         />
