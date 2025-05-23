@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { organizerEmail } from '../../../constants.ts';
-import { FormInput, FormTextarea } from '../../../components/ui';
+import { FormInput, FormTextarea, FormSelect } from '../../../components/ui';
 import {
   PlayIcon,
   ClockIcon,
@@ -15,8 +15,9 @@ const ContactSection = () => {
     name: '',
     email: '',
     phone: '',
+    subject: 'general', // Default subject
     message: '',
-    file: null as File | null,
+    files: [] as File[],
   });
 
   // State for form submission status
@@ -36,7 +37,7 @@ const ContactSection = () => {
   const visitBodyTemplate = `Hi ${organizerName},\n\nI'd love to schedule a time to visit Yelm Country Carvings and see your wonderful chainsaw creations!\n\nCould you please suggest some potential dates and times that work for you?\n\nMy general availability is:\n[Please add your preferred dates/times here]\n\nLooking forward to meeting some happy carved friends!\n\nThanks,\n[Your Name]`;
 
   // Handle form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -44,41 +45,58 @@ const ContactSection = () => {
     }));
   };
 
-  // Handle file upload with security validation
+
+  // Handle file upload with security validation for multiple files
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-
-      // Validate file type
+      const newFiles = Array.from(e.target.files);
       const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-      if (!allowedTypes.includes(file.type)) {
-        setFormStatus({
-          submitted: true,
-          success: false,
-          message: 'Please upload only image files (JPEG, PNG, WEBP).',
-        });
-        // Reset the file input
-        e.target.value = '';
-        return;
-      }
-
-      // Validate file size (limit to 5MB)
       const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-      if (file.size > maxSize) {
+      const maxFiles = 3; // Maximum number of files allowed
+
+      // Check if adding new files would exceed the maximum
+      if (formData.files.length + newFiles.length > maxFiles) {
         setFormStatus({
           submitted: true,
           success: false,
-          message: 'File size exceeds 5MB limit. Please upload a smaller image.',
+          message: `You can upload a maximum of ${maxFiles} files.`,
         });
         // Reset the file input
         e.target.value = '';
         return;
       }
 
-      // File passed validation, update state
+      // Validate each file
+      for (const file of newFiles) {
+        // Validate file type
+        if (!allowedTypes.includes(file.type)) {
+          setFormStatus({
+            submitted: true,
+            success: false,
+            message: 'Please upload only image files (JPEG, PNG, WEBP).',
+          });
+          // Reset the file input
+          e.target.value = '';
+          return;
+        }
+
+        // Validate file size
+        if (file.size > maxSize) {
+          setFormStatus({
+            submitted: true,
+            success: false,
+            message: 'File size exceeds 5MB limit. Please upload smaller images.',
+          });
+          // Reset the file input
+          e.target.value = '';
+          return;
+        }
+      }
+
+      // All files passed validation, update state
       setFormData(prev => ({
         ...prev,
-        file: file,
+        files: [...prev.files, ...newFiles],
       }));
 
       // Clear any previous error messages
@@ -90,6 +108,14 @@ const ContactSection = () => {
         });
       }
     }
+  };
+
+  // Remove a file from the list
+  const handleRemoveFile = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      files: prev.files.filter((_, i) => i !== index),
+    }));
   };
 
   // Email validation function
@@ -110,7 +136,7 @@ const ContactSection = () => {
     e.preventDefault();
 
     // Validate form (enhanced validation)
-    if (!formData.name || !formData.email || !formData.message) {
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
       setFormStatus({
         submitted: true,
         success: false,
@@ -152,12 +178,13 @@ const ContactSection = () => {
       emailFormData.append('name', formData.name);
       emailFormData.append('email', formData.email);
       emailFormData.append('phone', formData.phone || 'Not provided');
+      emailFormData.append('subject', formData.subject);
       emailFormData.append('message', formData.message);
 
-      // Append file if exists
-      if (formData.file) {
-        emailFormData.append('file', formData.file);
-      }
+      // Append files if they exist
+      formData.files.forEach((file, index) => {
+        emailFormData.append(`file${index}`, file);
+      });
 
       // Send the form data to the server
       const response = await fetch('/api/contact', {
@@ -183,8 +210,9 @@ const ContactSection = () => {
         name: '',
         email: '',
         phone: '',
+        subject: 'general',
         message: '',
-        file: null,
+        files: [],
       });
 
       // Reset file input visually
@@ -340,6 +368,23 @@ const ContactSection = () => {
                 placeholder="(xxx) xxx-xxxx"
               />
 
+              {/* Subject Select */}
+              <FormSelect
+                label="Subject"
+                id="subject"
+                name="subject"
+                value={formData.subject}
+                onChange={handleInputChange}
+                required
+                options={[
+                  { value: 'general', label: 'General Inquiry' },
+                  { value: 'custom', label: 'Custom Order' },
+                  { value: 'visit', label: 'Schedule a Visit' },
+                  { value: 'feedback', label: 'Feedback' },
+                  { value: 'other', label: 'Other' },
+                ]}
+              />
+
               {/* Message Textarea */}
               <FormTextarea
                 label="Message"
@@ -354,17 +399,43 @@ const ContactSection = () => {
               {/* File Upload (Optional) */}
               <div>
                 <label htmlFor="file-upload" className="block font-['Lato'] text-[#3E3C3B] mb-1">
-                  Attach an Image (Optional, max 5MB)
+                  Attach Images (Optional, max 3 files, 5MB each)
                 </label>
                 <input
                   type="file"
                   id="file-upload"
-                  name="file"
+                  name="files"
                   onChange={handleFileChange}
                   accept="image/jpeg, image/png, image/webp" // Specify accepted types
+                  multiple
                   className="w-full px-4 py-2 border border-[#A07E5D] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6151] text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#A07E5D] file:text-[#F5F1E9] hover:file:bg-[#B87351] file:cursor-pointer"
                 />
+
+                {/* File List */}
+                {formData.files.length > 0 && (
+                  <div className="mt-2 space-y-2">
+                    <p className="text-sm text-gray-600">Attached files:</p>
+                    <ul className="space-y-1">
+                      {formData.files.map((file, index) => (
+                        <li key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                          <span className="text-sm truncate max-w-[200px]">{file.name}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveFile(index)}
+                            className="text-red-500 hover:text-red-700"
+                            aria-label={`Remove ${file.name}`}
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
+
 
               {/* Submit Button */}
               <div>

@@ -28,6 +28,50 @@ class SimpleAttachment {
   }
 }
 
+// Function to send auto-response email to the user
+const sendAutoResponse = async (name: string, email: string, subject: string) => {
+  try {
+    console.log(`Sending auto-response email to ${email}`);
+
+    // Prepare auto-response email content
+    const autoResponseContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #3E3C3B;">
+        <h2 style="color: #6B4F41;">Thank You for Contacting Yelm Country Carvings</h2>
+        <p>Hello ${name},</p>
+        <p>Thank you for reaching out to us. We have received your message regarding "${subject}" and will get back to you as soon as possible.</p>
+        <p>Our typical response time is within 1-2 business days.</p>
+        <p>If you have any urgent matters, please feel free to call us at (253) 278-9814.</p>
+        <p>Warm regards,</p>
+        <p><strong>Yelm Country Carvings Team</strong></p>
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666;">
+          <p>This is an automated response. Please do not reply to this email.</p>
+        </div>
+      </div>
+    `;
+
+    // Create and send the auto-response email
+    const autoResponseMail = smtp2go
+      .mail()
+      .from({
+        name: 'Yelm Country Carvings',
+        email: smtpSenderEmail,
+      })
+      .to({
+        name: name,
+        email: email,
+      })
+      .subject('Thank You for Contacting Yelm Country Carvings')
+      .html(autoResponseContent);
+
+    await smtp2go.client().consume(autoResponseMail);
+    console.log('Auto-response email sent successfully');
+    return true;
+  } catch (error) {
+    console.error('Error sending auto-response email:', error);
+    return false;
+  }
+};
+
 export const handleContactForm = async (req: Request) => {
   try {
     // Parse form data
@@ -35,23 +79,59 @@ export const handleContactForm = async (req: Request) => {
     const name = formData.get('name')?.toString() || '';
     const email = formData.get('email')?.toString() || '';
     const phone = formData.get('phone')?.toString() || 'Not provided';
+    const subject = formData.get('subject')?.toString() || 'General Inquiry';
     const message = formData.get('message')?.toString() || '';
-    const file = formData.get('file') as File | null;
+
+    // Get subject label for display
+    let subjectLabel = 'General Inquiry';
+    switch (subject) {
+      case 'custom':
+        subjectLabel = 'Custom Order';
+        break;
+      case 'visit':
+        subjectLabel = 'Schedule a Visit';
+        break;
+      case 'feedback':
+        subjectLabel = 'Feedback';
+        break;
+      case 'other':
+        subjectLabel = 'Other';
+        break;
+    }
 
     // Validate required fields
-    if (!name || !email || !message) {
+    if (!name || !email || !subject || !message) {
       return Response.json({ success: false, message: 'Missing required fields' }, { status: 400 });
     }
 
-    // Prepare email content
+    // Prepare email content with enhanced formatting
     const emailContent = `
-            <h2>New Contact Form Submission</h2>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Phone:</strong> ${phone}</p>
-            <p><strong>Message:</strong></p>
-            <p>${message}</p>
-          `;
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #3E3C3B;">
+        <h2 style="color: #6B4F41;">New Contact Form Submission</h2>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold; width: 120px;">Name:</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${name}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold;">Email:</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${email}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold;">Phone:</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${phone}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold;">Subject:</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${subjectLabel}</td>
+          </tr>
+        </table>
+        <h3 style="color: #6B4F41;">Message:</h3>
+        <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+          ${message.replace(/\n/g, '<br>')}
+        </div>
+      </div>
+    `;
 
     // Send email using SMTP2GO
     console.log('Preparing to send email from:', smtpSenderEmail, 'to:', organizerEmail);
@@ -66,21 +146,30 @@ export const handleContactForm = async (req: Request) => {
         name: 'Yelm Country Carvings',
         email: organizerEmail,
       })
-      .subject(`Contact Form Submission from ${name}`)
+      .subject(`Contact Form: ${subjectLabel} from ${name}`)
       .html(emailContent);
 
-    // Handle potential file attachment
-    if (file && file instanceof File && file.size > 0) {
-      try {
-        const filename = file.name;
-        const mimetype = file.type;
-        const arrayBuffer = await file.arrayBuffer();
-        // Convert ArrayBuffer to base64 string
-        const fileblob = Buffer.from(arrayBuffer).toString('base64');
-        // Add attachment to the mail service
-        mailService.attach(new SimpleAttachment(filename, fileblob, mimetype));
-      } catch (attachError) {
-        console.error('Error processing attachment:', attachError);
+    // Handle multiple file attachments
+    const fileKeys = Array.from(formData.keys()).filter(key => key.startsWith('file'));
+
+    if (fileKeys.length > 0) {
+      for (const key of fileKeys) {
+        const file = formData.get(key) as File | null;
+
+        if (file && file instanceof File && file.size > 0) {
+          try {
+            const filename = file.name;
+            const mimetype = file.type;
+            const arrayBuffer = await file.arrayBuffer();
+            // Convert ArrayBuffer to base64 string
+            const fileblob = Buffer.from(arrayBuffer).toString('base64');
+            // Add attachment to the mail service
+            mailService.attach(new SimpleAttachment(filename, fileblob, mimetype));
+            console.log(`Attached file: ${filename}`);
+          } catch (attachError) {
+            console.error(`Error processing attachment ${key}:`, attachError);
+          }
+        }
       }
     }
 
@@ -93,9 +182,20 @@ export const handleContactForm = async (req: Request) => {
       // Log the result for debugging
       console.log('Email sent successfully. SMTP2GO response:', JSON.stringify(result));
 
+      // Send auto-response email to the user
+      let autoResponseSent = false;
+      try {
+        autoResponseSent = await sendAutoResponse(name, email, subjectLabel);
+      } catch (autoResponseError) {
+        console.error('Error in auto-response:', autoResponseError);
+        // Don't fail the whole process if auto-response fails
+      }
+
+
       return Response.json({
         success: true,
         message: 'Your message has been sent successfully!',
+        autoResponseSent,
       });
     } catch (e) {
       const sendError = e as Error;
