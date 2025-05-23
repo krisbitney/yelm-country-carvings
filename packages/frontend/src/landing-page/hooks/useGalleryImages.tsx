@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { GalleryImage } from '../../types.ts';
 
-// TODO: replace loading.png with high quality loading and error indicator images
 // Import gallery images for fallback
 import loadingIndicator from '../../assets/img/fallback/loading.png';
-import errorIndicator from '../../assets/img/fallback/loading.png';
+// Use the same image for error indicator until a proper error.png is created
+const errorIndicator = loadingIndicator;
 
 export const useGalleryImages = () => {
   // State for gallery images
@@ -31,7 +31,7 @@ export const useGalleryImages = () => {
       } catch (err) {
         console.error('Error fetching gallery images:', err);
         setError('Failed to load gallery images. Please try again later.');
-        setData([{ id: 0, src: errorIndicator, alt: 'Loading indicator' }]);
+        setData([{ id: 0, src: errorIndicator, alt: 'Error loading gallery images' }]);
       } finally {
         setLoading(false);
       }

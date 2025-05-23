@@ -9,7 +9,7 @@ const GallerySection: React.FC = () => {
   // State to track the selected image for the modal
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt?: string } | null>(null);
 
-  const { data: galleryImages } = useGalleryImages();
+  const { data: galleryImages, loading, error } = useGalleryImages();
 
   // Function to navigate to the next image
   const navigateToNextImage = useCallback(
@@ -86,39 +86,57 @@ const GallerySection: React.FC = () => {
 
         {/* Carousel */}
         <div className="mt-8">
-          <Carousel
-            responsive={responsive}
-            infinite={true}
-            autoPlay={true}
-            autoPlaySpeed={3000}
-            keyBoardControl={true}
-            pauseOnHover={true}
-            customTransition="all .5s"
-            transitionDuration={500}
-            removeArrowOnDeviceType={['tablet', 'mobile']}
-            containerClass={'carousel-container'}
-            dotListClass="carousel-dot-list"
-            itemClass="carousel-item-list"
-            showDots={true}
-            aria-label="Gallery of chainsaw carvings"
-          >
-            {galleryImages.map(image => (
-              <div key={image.id} className="px-2" role="group" aria-roledescription="slide">
-                <div className="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                  <div className="rounded-md overflow-hidden">
-                    <ResponsiveImage
-                      src={image.src}
-                      alt={image.alt || 'Gallery image'}
-                      aspectRatio="4:3"
-                      className="h-64 rounded-md cursor-pointer"
-                      onClick={() => setSelectedImage(image)}
-                    />
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-4" role="alert">
+              <p className="font-medium">Error</p>
+              <p>{error}</p>
+            </div>
+          )}
+
+          {loading && !error ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            </div>
+          ) : (
+            <Carousel
+              responsive={responsive}
+              infinite={galleryImages.length > 1}
+              autoPlay={galleryImages.length > 1}
+              autoPlaySpeed={5000}
+              keyBoardControl={true}
+              pauseOnHover={true}
+              customTransition="all .5s"
+              transitionDuration={500}
+              removeArrowOnDeviceType={['tablet', 'mobile']}
+              containerClass="carousel-container"
+              dotListClass="carousel-dot-list"
+              itemClass="carousel-item-list"
+              showDots={galleryImages.length > 1}
+              aria-label="Gallery of chainsaw carvings"
+              ssr={true} // Server-side rendering support
+              partialVisible={false}
+            >
+              {galleryImages.map(image => (
+                <div key={image.id} className="px-2" role="group" aria-roledescription="slide">
+                  <div className="bg-white p-3 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div className="rounded-md overflow-hidden">
+                      <ResponsiveImage
+                        src={image.src}
+                        alt={image.alt || 'Gallery image'}
+                        aspectRatio="4:3"
+                        className="h-64 rounded-md cursor-pointer"
+                        onClick={() => setSelectedImage(image)}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      />
+                    </div>
+                    {image.alt && (
+                      <p className="mt-3 text-center font-body text-neutral-dark">{image.alt}</p>
+                    )}
                   </div>
-                  <p className="mt-2 text-center font-body text-neutral-dark">{image.alt}</p>
                 </div>
-              </div>
-            ))}
-          </Carousel>
+              ))}
+            </Carousel>
+          )}
         </div>
 
         {/* Call to Action */}
@@ -136,40 +154,55 @@ const GallerySection: React.FC = () => {
       <Modal
         isOpen={!!selectedImage}
         onClose={() => setSelectedImage(null)}
-        className="max-w-4xl max-h-[90vh]"
+        className="max-w-5xl max-h-[90vh]"
       >
-        {/* Left Arrow Button */}
-        <IconButton
-          icon={<PreviousIcon className="w-6 h-6" />}
-          variant="light"
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-          onClick={navigateToPrevImage}
-          ariaLabel="Previous image"
-        />
+        {galleryImages.length > 1 && (
+          <>
+            {/* Left Arrow Button */}
+            <IconButton
+              icon={<PreviousIcon className="w-6 h-6" />}
+              variant="light"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 hover:bg-white/20 transition-colors"
+              onClick={navigateToPrevImage}
+              ariaLabel="Previous image"
+            />
 
-        {/* Right Arrow Button */}
-        <IconButton
-          icon={<NextIcon className="w-6 h-6" />}
-          variant="light"
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10"
-          onClick={navigateToNextImage}
-          ariaLabel="Next image"
-        />
+            {/* Right Arrow Button */}
+            <IconButton
+              icon={<NextIcon className="w-6 h-6" />}
+              variant="light"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 hover:bg-white/20 transition-colors"
+              onClick={navigateToNextImage}
+              ariaLabel="Next image"
+            />
+          </>
+        )}
 
         {selectedImage && (
-          <div className="relative overflow-auto">
-            <ResponsiveImage
-              src={selectedImage.src}
-              alt={selectedImage.alt || 'Selected image'}
-              className="max-w-full max-h-[85vh] rounded-lg shadow-xl"
-              objectFit="contain"
-              onClick={(
-                e:
-                  | React.MouseEvent<HTMLImageElement, MouseEvent>
-                  | React.KeyboardEvent<HTMLImageElement>
-              ) => e.stopPropagation()}
-            />
-            <p className="mt-2 text-center text-white font-body text-lg">{selectedImage.alt}</p>
+          <div className="relative overflow-auto p-2">
+            <div className="flex flex-col items-center w-full">
+              <ResponsiveImage
+                src={selectedImage.src}
+                alt={selectedImage.alt || 'Selected image'}
+                className="w-auto h-auto max-w-full max-h-[80vh] rounded-lg shadow-xl"
+                objectFit="contain"
+                aspectRatio="auto"
+                onClick={(
+                  e:
+                    | React.MouseEvent<HTMLImageElement, MouseEvent>
+                    | React.KeyboardEvent<HTMLImageElement>
+                ) => e.stopPropagation()}
+              />
+              {selectedImage.alt && (
+                <p className="mt-4 text-center text-white font-body text-lg px-4">{selectedImage.alt}</p>
+              )}
+
+              {galleryImages.length > 1 && (
+                <div className="mt-4 text-white text-sm">
+                  Image {galleryImages.findIndex(img => img.src === selectedImage.src) + 1} of {galleryImages.length}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </Modal>

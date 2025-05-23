@@ -37,10 +37,12 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
   const [hasError, setHasError] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Normalize the src path
-  const normalizedSrc = src.startsWith('/') ? src : `/${src}`;
-  const normalizedLowResSrc =
-    lowResSrc && (lowResSrc.startsWith('/') ? lowResSrc : `/${lowResSrc}`);
+  // Normalize the src path - only prepend '/' if it's a relative path and doesn't start with '/'
+  const isAbsoluteUrl = (url: string) => /^(https?:\/\/|data:|blob:)/i.test(url);
+  const normalizedSrc = isAbsoluteUrl(src) ? src : (src.startsWith('/') ? src : `/${src}`);
+  const normalizedLowResSrc = lowResSrc 
+    ? (isAbsoluteUrl(lowResSrc) ? lowResSrc : (lowResSrc.startsWith('/') ? lowResSrc : `/${lowResSrc}`))
+    : undefined;
 
   // Define aspect ratio classes
   const aspectRatioClasses = {
