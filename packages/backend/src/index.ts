@@ -205,7 +205,7 @@ const server = Bun.serve({
     if (response) return response;
 
     // 4. Return 404 if nothing matched
-    return new Response('Not Found', { status: 404 });
+    return new Response(`Not Found: ${requestPath}`, { status: 404 });
   },
 });
 
