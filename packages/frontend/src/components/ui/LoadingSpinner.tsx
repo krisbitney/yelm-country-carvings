@@ -20,14 +20,15 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     md: 'h-12 w-12',
     lg: 'h-16 w-16',
   }[size];
-  
+
   // Determine color class
-  const colorClass = {
-    primary: 'border-[#6B4F41]',
-    secondary: 'border-[#4A6151]',
-    accent: 'border-[#B87351]',
-  }[color as 'primary' | 'secondary' | 'accent'] || `border-${color}`;
-  
+  const colorClass =
+    {
+      primary: 'border-[#6B4F41]',
+      secondary: 'border-[#4A6151]',
+      accent: 'border-[#B87351]',
+    }[color as 'primary' | 'secondary' | 'accent'] || `border-${color}`;
+
   return (
     <div className={`flex flex-col items-center justify-center ${className}`}>
       <div

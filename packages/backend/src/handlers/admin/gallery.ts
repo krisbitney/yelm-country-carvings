@@ -49,11 +49,14 @@ export const addGalleryImage = async (req: Request): Promise<Response> => {
       order: nextOrder,
     });
 
-    return await createAPIResponse({
-      success: true,
-      image: newImage,
-      message: 'Gallery image added successfully',
-    }, 201);
+    return await createAPIResponse(
+      {
+        success: true,
+        image: newImage,
+        message: 'Gallery image added successfully',
+      },
+      201
+    );
   } catch (error) {
     console.error('Error adding gallery image:', error);
     return await createErrorResponse('Failed to add gallery image', 500);

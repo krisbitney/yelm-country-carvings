@@ -19,33 +19,33 @@ const Notification: React.FC<NotificationProps> = ({
   show,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  
+
   // Control visibility based on the show prop
   useEffect(() => {
     if (show) {
       setIsVisible(true);
-      
+
       // Auto-hide after duration
       if (duration > 0) {
         const timer = setTimeout(() => {
           setIsVisible(false);
           if (onClose) onClose();
         }, duration);
-        
+
         return () => clearTimeout(timer);
       }
     } else {
       setIsVisible(false);
     }
   }, [show, duration, onClose]);
-  
+
   // Handle animation end
   const handleAnimationEnd = () => {
     if (!isVisible && onClose) {
       onClose();
     }
   };
-  
+
   // Determine styles based on notification type
   const getTypeStyles = () => {
     switch (type) {
@@ -58,13 +58,11 @@ const Notification: React.FC<NotificationProps> = ({
         return 'bg-blue-50 border-blue-200 text-blue-700';
     }
   };
-  
+
   return (
     <div
       className={`fixed bottom-4 right-4 z-50 max-w-md border rounded-md shadow-md transition-all duration-500 ${getTypeStyles()} ${
-        isVisible 
-          ? 'opacity-100 translate-y-0 animate-slideInUp' 
-          : 'opacity-0 translate-y-4'
+        isVisible ? 'opacity-100 translate-y-0 animate-slideInUp' : 'opacity-0 translate-y-4'
       }`}
       role="alert"
       aria-live="assertive"

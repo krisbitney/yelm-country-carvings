@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { organizerEmail } from '../../../constants.ts';
-import { FormInput, FormTextarea, FormSelect, Notification, RippleButton } from '../../../components/ui';
+import {
+  FormInput,
+  FormTextarea,
+  FormSelect,
+  Notification,
+  RippleButton,
+} from '../../../components/ui';
 import {
   PlayIcon,
   ClockIcon,
@@ -250,9 +256,10 @@ const ContactSection = () => {
       setNotification({
         show: true,
         type: 'error',
-        message: error instanceof Error
-          ? error.message
-          : 'There was an error sending your message. Please try again later.',
+        message:
+          error instanceof Error
+            ? error.message
+            : 'There was an error sending your message. Please try again later.',
       });
     }
   };
