@@ -191,7 +191,6 @@ export const handleContactForm = async (req: Request) => {
         // Don't fail the whole process if auto-response fails
       }
 
-
       return Response.json({
         success: true,
         message: 'Your message has been sent successfully!',

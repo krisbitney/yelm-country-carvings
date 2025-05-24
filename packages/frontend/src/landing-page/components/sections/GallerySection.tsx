@@ -87,7 +87,10 @@ const GallerySection: React.FC = () => {
         {/* Carousel */}
         <div className="mt-8">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-4" role="alert">
+            <div
+              className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-4"
+              role="alert"
+            >
               <p className="font-medium">Error</p>
               <p>{error}</p>
             </div>
@@ -194,12 +197,15 @@ const GallerySection: React.FC = () => {
                 ) => e.stopPropagation()}
               />
               {selectedImage.alt && (
-                <p className="mt-4 text-center text-white font-body text-lg px-4">{selectedImage.alt}</p>
+                <p className="mt-4 text-center text-white font-body text-lg px-4">
+                  {selectedImage.alt}
+                </p>
               )}
 
               {galleryImages.length > 1 && (
                 <div className="mt-4 text-white text-sm">
-                  Image {galleryImages.findIndex(img => img.src === selectedImage.src) + 1} of {galleryImages.length}
+                  Image {galleryImages.findIndex(img => img.src === selectedImage.src) + 1} of{' '}
+                  {galleryImages.length}
                 </div>
               )}
             </div>

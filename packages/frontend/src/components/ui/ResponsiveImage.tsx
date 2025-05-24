@@ -50,9 +50,13 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
 
   // Normalize the src path - only prepend '/' if it's a relative path and doesn't start with '/'
   const isAbsoluteUrl = (url: string) => /^(https?:\/\/|data:|blob:)/i.test(url);
-  const normalizedSrc = isAbsoluteUrl(src) ? src : (src.startsWith('/') ? src : `/${src}`);
-  const normalizedLowResSrc = lowResSrc 
-    ? (isAbsoluteUrl(lowResSrc) ? lowResSrc : (lowResSrc.startsWith('/') ? lowResSrc : `/${lowResSrc}`))
+  const normalizedSrc = isAbsoluteUrl(src) ? src : src.startsWith('/') ? src : `/${src}`;
+  const normalizedLowResSrc = lowResSrc
+    ? isAbsoluteUrl(lowResSrc)
+      ? lowResSrc
+      : lowResSrc.startsWith('/')
+        ? lowResSrc
+        : `/${lowResSrc}`
     : undefined;
 
   // Generate unique ID for accessibility
@@ -128,7 +132,7 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
     className: `w-full h-full ${objectFitClasses[objectFit]} ${
       onClick ? 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent' : ''
     } transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`,
-    loading: "lazy" as const,
+    loading: 'lazy' as const,
     onClick: onClick ? (e: React.MouseEvent<HTMLImageElement>) => onClick(e) : undefined,
     onKeyDown: onClick ? handleKeyDown : undefined,
     onLoad: handleImageLoad,
@@ -138,7 +142,7 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
     role: onClick ? 'button' : undefined,
     'aria-label': onClick ? `View ${alt}` : undefined,
     'aria-describedby': descriptionId,
-    ...props
+    ...props,
   };
 
   return (
@@ -148,19 +152,14 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
     >
       {/* Loading skeleton */}
       {isLoading && (
-        <div
-          className="absolute inset-0 bg-gray-200 animate-pulse rounded-md"
-          aria-hidden="true"
-        >
+        <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-md" aria-hidden="true">
           <span className="sr-only">Loading image</span>
         </div>
       )}
 
       {/* Error state */}
       {hasError && (
-        <div
-          className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-500"
-        >
+        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-500">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-12 w-12"
@@ -191,32 +190,17 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
       {isVisible ? (
         <picture>
           {/* WebP format for browsers that support it */}
-          {webpSrcSet && (
-            <source
-              type="image/webp"
-              srcSet={webpSrcSet}
-              sizes={sizes}
-            />
-          )}
+          {webpSrcSet && <source type="image/webp" srcSet={webpSrcSet} sizes={sizes} />}
 
           {/* Original format as fallback */}
-          <source
-            srcSet={srcSet}
-            sizes={sizes}
-          />
+          <source srcSet={srcSet} sizes={sizes} />
 
           {/* Fallback image */}
-          <img
-            src={normalizedSrc}
-            {...imageProps}
-          />
+          <img src={normalizedSrc} {...imageProps} />
         </picture>
       ) : (
         // Placeholder or low-res image before intersection
-        <img
-          src={normalizedLowResSrc || undefined}
-          {...imageProps}
-        />
+        <img src={normalizedLowResSrc || undefined} {...imageProps} />
       )}
     </div>
   );

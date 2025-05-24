@@ -37,14 +37,15 @@ const ContactSection = () => {
   const visitBodyTemplate = `Hi ${organizerName},\n\nI'd love to schedule a time to visit Yelm Country Carvings and see your wonderful chainsaw creations!\n\nCould you please suggest some potential dates and times that work for you?\n\nMy general availability is:\n[Please add your preferred dates/times here]\n\nLooking forward to meeting some happy carved friends!\n\nThanks,\n[Your Name]`;
 
   // Handle form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value,
     }));
   };
-
 
   // Handle file upload with security validation for multiple files
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -417,7 +418,10 @@ const ContactSection = () => {
                     <p className="text-sm text-gray-600">Attached files:</p>
                     <ul className="space-y-1">
                       {formData.files.map((file, index) => (
-                        <li key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                        <li
+                          key={index}
+                          className="flex items-center justify-between bg-gray-100 p-2 rounded"
+                        >
                           <span className="text-sm truncate max-w-[200px]">{file.name}</span>
                           <button
                             type="button"
@@ -425,8 +429,18 @@ const ContactSection = () => {
                             className="text-red-500 hover:text-red-700"
                             aria-label={`Remove ${file.name}`}
                           >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            <svg
+                              className="w-5 h-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M6 18L18 6M6 6l12 12"
+                              />
                             </svg>
                           </button>
                         </li>
@@ -435,7 +449,6 @@ const ContactSection = () => {
                   </div>
                 )}
               </div>
-
 
               {/* Submit Button */}
               <div>

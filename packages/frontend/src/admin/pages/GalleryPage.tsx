@@ -90,7 +90,6 @@ const GalleryPage: React.FC = () => {
     });
   };
 
-
   // Handle bulk delete
   const handleBulkDelete = async () => {
     if (selectedImages.size === 0) return;
@@ -204,7 +203,8 @@ const GalleryPage: React.FC = () => {
                       Confirm Bulk Delete
                     </h3>
                     <p className="text-[#3E3C3B] font-['Lato'] mb-6">
-                      Are you sure you want to delete {selectedImages.size} selected images? This action cannot be undone.
+                      Are you sure you want to delete {selectedImages.size} selected images? This
+                      action cannot be undone.
                     </p>
                     <div className="flex justify-end space-x-4">
                       <button

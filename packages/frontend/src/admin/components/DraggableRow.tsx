@@ -13,7 +13,15 @@ interface DraggableRowProps {
 
 export const DraggableRow: React.FC<
   DraggableRowProps & { provided: DraggableProvided; snapshot: DraggableStateSnapshot }
-> = ({ provided, snapshot, image, fetchGallery, deleteGalleryImage, isSelected = false, onSelect }) => {
+> = ({
+  provided,
+  snapshot,
+  image,
+  fetchGallery,
+  deleteGalleryImage,
+  isSelected = false,
+  onSelect,
+}) => {
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState<boolean>(false);
   // Handle image deletion
@@ -42,9 +50,9 @@ export const DraggableRow: React.FC<
     >
       {/* Selection Checkbox */}
       {onSelect && (
-        <div 
-          className="mr-3 flex-shrink-0" 
-          onClick={(e) => {
+        <div
+          className="mr-3 flex-shrink-0"
+          onClick={e => {
             e.stopPropagation();
             onSelect(image.id, !isSelected);
           }}
@@ -119,9 +127,7 @@ export const DraggableRow: React.FC<
         className="max-w-4xl max-h-[90vh]"
       >
         <div className="p-4">
-          <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4">
-            Image Preview
-          </h3>
+          <h3 className="font-['Cinzel'] text-xl font-bold text-[#6B4F41] mb-4">Image Preview</h3>
           <div className="bg-[#F5F1E9] p-2 rounded-lg shadow-md">
             <img
               src={image.src.startsWith('/') ? image.src : `/${image.src}`}

@@ -60,7 +60,7 @@ const FormField: React.FC<FormFieldProps> = ({
 
       {/* Validation icons */}
       {effectiveValidationState === 'success' && showSuccessIcon && (
-        <div 
+        <div
           className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
           aria-hidden="true"
         >
@@ -77,7 +77,7 @@ const FormField: React.FC<FormFieldProps> = ({
       )}
 
       {effectiveValidationState === 'error' && (
-        <div 
+        <div
           className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none animate-pulse"
           aria-hidden="true"
         >
@@ -99,7 +99,7 @@ const FormField: React.FC<FormFieldProps> = ({
       )}
 
       {effectiveValidationState === 'warning' && (
-        <div 
+        <div
           className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
           aria-hidden="true"
         >
@@ -121,7 +121,7 @@ const FormField: React.FC<FormFieldProps> = ({
       )}
 
       {isLoading && (
-        <div 
+        <div
           className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
           aria-hidden="true"
         >

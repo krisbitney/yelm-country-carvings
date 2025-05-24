@@ -20,6 +20,12 @@ import { authenticateJWT } from './middleware/auth';
 import { eventRepository } from './repositories/eventRepository';
 import { galleryRepository } from './repositories/galleryRepository';
 import { safeJoin, serveCompressed } from './utils/serve';
+import {
+  createAPIResponse,
+  createErrorResponse,
+  getCORSHeaders,
+  applyHeaders,
+} from './utils/headers';
 
 const FRONTEND_DIR = path.join(import.meta.dir, '../../frontend/dist');
 // Check if the frontend build directory exists
@@ -55,33 +61,30 @@ const server = Bun.serve({
     '/api/events': async () => {
       try {
         const events = await eventRepository.getAll();
-        return Response.json(events);
+        return await createAPIResponse(events);
       } catch (error) {
         console.error('Error getting events:', error);
-        return Response.json({ success: false, message: 'Failed to get events' }, { status: 500 });
+        return await createErrorResponse('Failed to get events', 500);
       }
     },
 
     '/api/upcoming-events': async () => {
       try {
         const upcomingEvents = await eventRepository.getUpcoming();
-        return Response.json(upcomingEvents);
+        return await createAPIResponse(upcomingEvents);
       } catch (error) {
         console.error('Error getting upcoming events:', error);
-        return Response.json(
-          { success: false, message: 'Failed to get upcoming events' },
-          { status: 500 }
-        );
+        return await createErrorResponse('Failed to get upcoming events', 500);
       }
     },
 
     '/api/gallery': async () => {
       try {
         const gallery = await galleryRepository.getAll();
-        return Response.json(gallery);
+        return await createAPIResponse(gallery);
       } catch (error) {
         console.error('Error getting gallery:', error);
-        return Response.json({ success: false, message: 'Failed to get gallery' }, { status: 500 });
+        return await createErrorResponse('Failed to get gallery', 500);
       }
     },
 
@@ -99,24 +102,28 @@ const server = Bun.serve({
     },
 
     '/api/auth/verify': {
-      GET: req => {
-        return authenticateJWT(req) ?? handleVerifyToken(req);
+      GET: async req => {
+        const authResult = await authenticateJWT(req);
+        return authResult ?? handleVerifyToken(req);
       },
     },
 
     // Admin events endpoints
     '/api/admin/events': {
       GET: async req => {
-        return authenticateJWT(req) ?? (await getEvents(req));
+        const authResult = await authenticateJWT(req);
+        return authResult ?? (await getEvents(req));
       },
       POST: async req => {
-        return authenticateJWT(req) ?? (await createEvent(req));
+        const authResult = await authenticateJWT(req);
+        return authResult ?? (await createEvent(req));
       },
     },
 
     '/api/admin/events/years': {
       GET: async req => {
-        return authenticateJWT(req) ?? (await getAvailableYears());
+        const authResult = await authenticateJWT(req);
+        return authResult ?? (await getAvailableYears());
       },
     },
 
@@ -125,27 +132,31 @@ const server = Bun.serve({
         const raw = req.params.id;
         const id = Number(raw);
         if (!Number.isInteger(id)) {
-          return new Response('Invalid ID', { status: 400 });
+          return await createErrorResponse('Invalid ID', 400);
         }
-        return authenticateJWT(req) ?? (await updateEvent(req, id));
+        const authResult = await authenticateJWT(req);
+        return authResult ?? (await updateEvent(req, id));
       },
       DELETE: async req => {
         const raw = req.params.id;
         const id = Number(raw);
         if (!Number.isInteger(id)) {
-          return new Response('Invalid ID', { status: 400 });
+          return await createErrorResponse('Invalid ID', 400);
         }
-        return authenticateJWT(req) ?? (await deleteEvent(id));
+        const authResult = await authenticateJWT(req);
+        return authResult ?? (await deleteEvent(id));
       },
     },
 
     // Admin gallery endpoints
     '/api/admin/gallery': {
       GET: async req => {
-        return authenticateJWT(req) ?? (await getGallery());
+        const authResult = await authenticateJWT(req);
+        return authResult ?? (await getGallery());
       },
       POST: async req => {
-        return authenticateJWT(req) ?? (await addGalleryImage(req));
+        const authResult = await authenticateJWT(req);
+        return authResult ?? (await addGalleryImage(req));
       },
     },
 
@@ -154,22 +165,25 @@ const server = Bun.serve({
         const raw = req.params.id;
         const id = Number(raw);
         if (!Number.isInteger(id)) {
-          return new Response('Invalid ID', { status: 400 });
+          return await createErrorResponse('Invalid ID', 400);
         }
-        return authenticateJWT(req) ?? (await deleteGalleryImage(id));
+        const authResult = await authenticateJWT(req);
+        return authResult ?? (await deleteGalleryImage(id));
       },
     },
 
     '/api/admin/gallery/reorder': {
       POST: async req => {
-        return authenticateJWT(req) ?? (await reorderGallery(req));
+        const authResult = await authenticateJWT(req);
+        return authResult ?? (await reorderGallery(req));
       },
     },
 
     // Admin image upload endpoint
     '/api/admin/upload': {
       POST: async req => {
-        return authenticateJWT(req) ?? (await handleImageUpload(req));
+        const authResult = await authenticateJWT(req);
+        return authResult ?? (await handleImageUpload(req));
       },
     },
   },
@@ -178,6 +192,16 @@ const server = Bun.serve({
   async fetch(req: Request): Promise<Response> {
     const url = new URL(req.url);
     const requestPath = url.pathname;
+    const origin = req.headers.get('origin');
+
+    // Handle CORS preflight requests
+    if (req.method === 'OPTIONS') {
+      return new Response(null, {
+        status: 204,
+        headers: getCORSHeaders(origin),
+      });
+    }
+
     const requestedFileName = path.basename(requestPath);
     const requestedExt = path.extname(requestedFileName).toLowerCase();
     const acceptEncoding = req.headers.get('accept-encoding') || '';
@@ -202,10 +226,28 @@ const server = Bun.serve({
     }
 
     const response = await serveCompressed(filePath, acceptEncoding);
-    if (response) return response;
+
+    if (response) {
+      // Add specific CSP for HTML documents if this is index.html
+      if (
+        requestPath === '/' ||
+        requestPath.startsWith('/admin') ||
+        requestPath.indexOf('.') === -1
+      ) {
+        const htmlHeaders = {
+          'Content-Security-Policy':
+            "default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self';",
+          ...getCORSHeaders(origin),
+        };
+        return await applyHeaders(response, htmlHeaders);
+      }
+
+      // Apply CORS headers to all other responses
+      return await applyHeaders(response, getCORSHeaders(origin));
+    }
 
     // 4. Return 404 if nothing matched
-    return new Response(`Not Found: ${requestPath}`, { status: 404 });
+    return await createErrorResponse(`Not Found: ${requestPath}`, 404);
   },
 });
 

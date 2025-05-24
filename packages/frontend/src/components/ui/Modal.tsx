@@ -57,7 +57,7 @@ const Modal: React.FC<ModalProps> = ({
         if (e.shiftKey && document.activeElement === firstElement) {
           e.preventDefault();
           lastElement.focus();
-        } 
+        }
         // If tab and on last element, move to first element
         else if (!e.shiftKey && document.activeElement === lastElement) {
           e.preventDefault();
@@ -118,11 +118,7 @@ const Modal: React.FC<ModalProps> = ({
       aria-describedby={descriptionId}
       id={modalId}
     >
-      <div 
-        ref={modalRef}
-        className={`relative ${className}`} 
-        onClick={e => e.stopPropagation()}
-      >
+      <div ref={modalRef} className={`relative ${className}`} onClick={e => e.stopPropagation()}>
         {title && (
           <h2 id={titleId} className="sr-only">
             {title}
