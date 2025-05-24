@@ -19,6 +19,7 @@ import { handleImageUpload } from './handlers/admin/upload';
 import { authenticateJWT } from './middleware/auth';
 import { eventRepository } from './repositories/eventRepository';
 import { galleryRepository } from './repositories/galleryRepository';
+import { safeJoin, serveCompressed } from './utils/serve';
 
 const FRONTEND_DIR = path.join(import.meta.dir, '../../frontend/dist');
 // Check if the frontend build directory exists
@@ -121,11 +122,19 @@ const server = Bun.serve({
 
     '/api/admin/events/:id': {
       PUT: async req => {
-        const id = parseInt(req.params.id);
+        const raw = req.params.id;
+        const id = Number(raw);
+        if (!Number.isInteger(id)) {
+          return new Response('Invalid ID', { status: 400 });
+        }
         return authenticateJWT(req) ?? (await updateEvent(req, id));
       },
       DELETE: async req => {
-        const id = parseInt(req.params.id);
+        const raw = req.params.id;
+        const id = Number(raw);
+        if (!Number.isInteger(id)) {
+          return new Response('Invalid ID', { status: 400 });
+        }
         return authenticateJWT(req) ?? (await deleteEvent(id));
       },
     },
@@ -142,7 +151,11 @@ const server = Bun.serve({
 
     '/api/admin/gallery/:id': {
       DELETE: async req => {
-        const id = parseInt(req.params.id);
+        const raw = req.params.id;
+        const id = Number(raw);
+        if (!Number.isInteger(id)) {
+          return new Response('Invalid ID', { status: 400 });
+        }
         return authenticateJWT(req) ?? (await deleteGalleryImage(id));
       },
     },
@@ -162,79 +175,36 @@ const server = Bun.serve({
   },
 
   // Fallback handler for non-API routes
-  fetch(req) {
+  async fetch(req: Request): Promise<Response> {
     const url = new URL(req.url);
     const requestPath = url.pathname;
-
-    // Default to index.html for the root or admin paths
-    if (requestPath === '/' || requestPath.startsWith('/admin')) {
-      return new Response(Bun.file(path.join(FRONTEND_DIR, 'index.html')));
-    }
-
-    // Try to serve images from IMAGES_DIR
     const requestedFileName = path.basename(requestPath);
     const requestedExt = path.extname(requestedFileName).toLowerCase();
-    if (imageExtensions.includes(requestedExt)) {
-      // Check if the image is in a subdirectory (events or gallery)
-      let imagePath;
-      if (requestPath.includes('/')) {
-        // Extract the relative path from the request
-        const relativePath = requestPath.startsWith('/') ? requestPath.substring(1) : requestPath;
+    const acceptEncoding = req.headers.get('accept-encoding') || '';
 
-        imagePath = path.join(IMAGES_DIR, relativePath);
+    let filePath: string | null;
+
+    // 1. Serve index.html for root, admin paths, or SPA-style routes (no extension)
+    if (
+      requestPath === '/' ||
+      requestPath.startsWith('/admin') ||
+      requestPath.indexOf('.') === -1
+    ) {
+      filePath = path.join(FRONTEND_DIR, 'index.html');
+    } else {
+      // 2. Try to serve images from backend
+      if (imageExtensions.includes(requestedExt)) {
+        filePath = safeJoin(IMAGES_DIR, requestPath);
+        // 3. Try to serve other static files from the frontend build directory
       } else {
-        // Just a filename, look in the root images directory
-        imagePath = path.join(IMAGES_DIR, requestedFileName);
-      }
-
-      if (fs.existsSync(imagePath) && fs.statSync(imagePath).isFile()) {
-        const file = Bun.file(imagePath);
-        return new Response(file, {
-          headers: {
-            'Cache-Control': 'public, max-age=31536000, immutable',
-          },
-        });
-      } else {
-        // If not found in IMAGES_DIR, try to serve from frontend build directory
-        const filePath = path.join(FRONTEND_DIR, requestPath);
-        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-          const file = Bun.file(filePath);
-          return new Response(file, {
-            headers: {
-              'Cache-Control': 'public, max-age=31536000, immutable',
-            },
-          });
-        }
-
-        // Also check in the assets directory for hashed filenames
-        if (requestPath.startsWith('/assets/')) {
-          const assetsPath = path.join(FRONTEND_DIR, requestPath);
-          if (fs.existsSync(assetsPath) && fs.statSync(assetsPath).isFile()) {
-            const file = Bun.file(assetsPath);
-            return new Response(file, {
-              headers: {
-                'Cache-Control': 'public, max-age=31536000, immutable',
-              },
-            });
-          }
-        }
-
-        return new Response('Not Found', { status: 404 });
+        filePath = safeJoin(FRONTEND_DIR, requestPath);
       }
     }
 
-    // For SPA routing, serve index.html for any path that doesn't match a file
-    if (requestPath.indexOf('.') === -1) {
-      return new Response(Bun.file(path.join(FRONTEND_DIR, 'index.html')));
-    }
+    const response = await serveCompressed(filePath, acceptEncoding);
+    if (response) return response;
 
-    // Try to serve static files from the frontend build directory
-    const filePath = path.join(FRONTEND_DIR, requestPath);
-    if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-      return new Response(Bun.file(filePath));
-    }
-
-    // Return 404 for files that don't exist
+    // 4. Return 404 if nothing matched
     return new Response('Not Found', { status: 404 });
   },
 });
