@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { organizerEmail } from '../../../constants.ts';
-import { FormInput, FormTextarea, FormSelect } from '../../../components/ui';
+import { FormInput, FormTextarea, FormSelect, Notification, RippleButton } from '../../../components/ui';
 import {
   PlayIcon,
   ClockIcon,
@@ -24,6 +24,13 @@ const ContactSection = () => {
   const [formStatus, setFormStatus] = useState({
     submitted: false,
     success: false,
+    message: '',
+  });
+
+  // State for notification
+  const [notification, setNotification] = useState({
+    show: false,
+    type: 'info' as 'success' | 'error' | 'info',
     message: '',
   });
 
@@ -206,6 +213,13 @@ const ContactSection = () => {
         message: result.message || "Thank you for your message! We'll get back to you soon.",
       });
 
+      // Show success notification
+      setNotification({
+        show: true,
+        type: 'success',
+        message: result.message || "Thank you for your message! We'll get back to you soon.",
+      });
+
       // Reset form after successful submission
       setFormData({
         name: '',
@@ -230,6 +244,15 @@ const ContactSection = () => {
           error instanceof Error
             ? error.message
             : 'There was an error sending your message. Please try again later.',
+      });
+
+      // Show error notification
+      setNotification({
+        show: true,
+        type: 'error',
+        message: error instanceof Error
+          ? error.message
+          : 'There was an error sending your message. Please try again later.',
       });
     }
   };
@@ -450,19 +473,27 @@ const ContactSection = () => {
                 )}
               </div>
 
-              {/* Submit Button */}
+              {/* Submit Button with Ripple Effect */}
               <div>
-                <button
+                <RippleButton
                   type="submit"
                   className="w-full px-6 py-3 bg-[#B87351] text-[#F5F1E9] font-['Lato'] font-bold rounded-md hover:bg-[#A07E5D] hover:cursor-pointer transition-colors duration-300"
                 >
                   Send Message
-                </button>
+                </RippleButton>
               </div>
             </form>
           </div>
         </div>
       </div>
+
+      {/* Notification for form submission feedback */}
+      <Notification
+        show={notification.show}
+        type={notification.type}
+        message={notification.message}
+        onClose={() => setNotification(prev => ({ ...prev, show: false }))}
+      />
     </section>
   );
 };

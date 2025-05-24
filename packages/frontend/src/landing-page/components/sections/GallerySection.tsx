@@ -3,7 +3,7 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useGalleryImages } from '../../hooks/useGalleryImages.tsx';
 import { GalleryIcon, PreviousIcon, NextIcon } from '../../../components/ui/icons';
-import { SectionHeader, Button, ResponsiveImage, Modal, IconButton } from '../../../components/ui';
+import { SectionHeader, Button, ResponsiveImage, Modal, IconButton, LoadingSpinner } from '../../../components/ui';
 
 const GallerySection: React.FC = () => {
   // State to track the selected image for the modal
@@ -98,7 +98,7 @@ const GallerySection: React.FC = () => {
 
           {loading && !error ? (
             <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+              <LoadingSpinner size="lg" color="primary" />
             </div>
           ) : (
             <Carousel
