@@ -78,5 +78,4 @@ yelm-country-carvings/
 
 ### Reminders
 
-- If you edit the frontend, always execute "bun run build" from the repo root to make sure the project builds successfully (as the last step in your plan).
-- If you are editing the backend, always execute "bun run test" from the repo root to make sure all tests pass successfully (as the last step in your plan).
+- Always execute "bun run build" from the repo root to make sure the project builds successfully (as the last step in your plan).

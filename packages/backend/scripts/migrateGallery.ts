@@ -44,6 +44,10 @@ async function migrateGallery() {
             ${image.alt}, 
             ${order}
           )
+          ON CONFLICT (id) DO UPDATE SET
+            src = ${image.src},
+            alt = ${image.alt},
+            order_position = ${order}
         `;
         console.log(`Migrated gallery image: ${image.alt}`);
       }
