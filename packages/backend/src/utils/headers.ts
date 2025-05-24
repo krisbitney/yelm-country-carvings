@@ -29,25 +29,11 @@ export const getStaticFileHeaders = (contentType: string, immutable = false) => 
 
 // Helper to apply headers to a Response object
 export const applyHeaders = async (response: Response, headers: Record<string, string>) => {
-  // Clone the response to ensure we can read the body
-  const clonedResponse = response.clone();
-
-  // Get the response body as JSON
-  let body;
-  try {
-    body = await clonedResponse.json();
-  } catch (error) {
-    // If the body is not JSON, use the original body
-    body = response.body;
-  }
-
   const newHeaders = new Headers(response.headers);
   Object.entries(headers).forEach(([key, value]) => {
     newHeaders.set(key, value);
   });
-
-  // Create a new response with the same body and status, but with updated headers
-  return new Response(JSON.stringify(body), {
+  return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
     headers: newHeaders,
@@ -55,7 +41,7 @@ export const applyHeaders = async (response: Response, headers: Record<string, s
 };
 
 // API response creation helpers
-export const createAPIResponse = async (data: any, status = 200) => {
+export const createAPIResponse = async (data: unknown, status = 200) => {
   const response = Response.json(data, { status });
   return await applyHeaders(response, {
     ...getAPIResponseHeaders(),
