@@ -1,5 +1,5 @@
 import React from 'react';
-import backgroundImage from '../../../assets/img/logo_with_wood_background_wide.jpg';
+import backgroundImage from '../../../assets/img/logo_with_wood_background_wide.webp';
 
 // Define the CSS animation
 const zoomInOutAnimation = `

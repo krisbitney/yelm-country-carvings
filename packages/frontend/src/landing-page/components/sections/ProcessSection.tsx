@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import logoImage from '../../../assets/img/logo.png';
+import logoImage from '../../../assets/img/logo.webp';
 
 const ProcessSection = () => {
   // State for lightbox and video modal

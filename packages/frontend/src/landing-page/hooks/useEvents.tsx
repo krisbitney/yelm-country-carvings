@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import loadingImage from '../../assets/img/fallback/loading.png';
+import loadingImage from '../../assets/img/fallback/loading.webp';
 import { MarketEvent } from '../../types.ts';
 
 const loadingEvent: MarketEvent = {

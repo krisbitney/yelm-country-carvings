@@ -60,12 +60,16 @@ const FormField: React.FC<FormFieldProps> = ({
 
       {/* Validation icons */}
       {effectiveValidationState === 'success' && showSuccessIcon && (
-        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+        <div 
+          className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+          aria-hidden="true"
+        >
           <svg
             className="h-5 w-5 text-green-500"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
+            aria-hidden="true"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
@@ -73,12 +77,16 @@ const FormField: React.FC<FormFieldProps> = ({
       )}
 
       {effectiveValidationState === 'error' && (
-        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none animate-pulse">
+        <div 
+          className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none animate-pulse"
+          aria-hidden="true"
+        >
           <svg
             className="h-5 w-5 text-red-500"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -91,12 +99,16 @@ const FormField: React.FC<FormFieldProps> = ({
       )}
 
       {effectiveValidationState === 'warning' && (
-        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+        <div 
+          className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+          aria-hidden="true"
+        >
           <svg
             className="h-5 w-5 text-yellow-500"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -109,12 +121,17 @@ const FormField: React.FC<FormFieldProps> = ({
       )}
 
       {isLoading && (
-        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+        <div 
+          className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+          aria-hidden="true"
+        >
+          <span className="sr-only">Loading</span>
           <svg
             className="animate-spin h-5 w-5 text-blue-500"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <circle
               className="opacity-25"

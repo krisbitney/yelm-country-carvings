@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { GalleryImage } from '../../types.ts';
 
 // Import gallery images for fallback
-import loadingIndicator from '../../assets/img/fallback/loading.png';
+import loadingIndicator from '../../assets/img/fallback/loading.webp';
 // Use the same image for error indicator until a proper error.png is created
 const errorIndicator = loadingIndicator;
 

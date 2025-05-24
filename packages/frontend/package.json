@@ -31,7 +31,10 @@
     "babel-plugin-react-compiler": "^19.1.0-rc.2",
     "eslint-plugin-react-refresh": "^0.4.19",
     "react-compiler-healthcheck": "19.1.0-rc.2",
+    "terser": "^5.29.2",
     "vite": "^6.2.0",
+    "vite-plugin-compression2": "^0.11.0",
+    "vite-plugin-html": "^3.2.2",
     "vite-plugin-image-optimizer": "^1.1.8",
     "vite-plugin-svgr": "^4.3.0"
   }
