@@ -42,8 +42,6 @@ COPY --from=install /temp/prod/packages/*/node_modules ./packages/
 # Copy built backend files
 COPY --from=build /app/packages/backend/dist ./dist
 COPY --from=build /app/packages/backend/package.json ./
-# Copy backend scripts needed for runtime commands (e.g., migrations)
-COPY --from=build /app/packages/backend/scripts ./scripts
 
 # Copy frontend build files to the location expected by the backend
 COPY --from=build /app/packages/frontend/dist ./packages/frontend/dist
