@@ -27,11 +27,14 @@ import {
   applyHeaders,
 } from './utils/headers';
 
-const FRONTEND_DIR = path.join(import.meta.dir, 'packages/frontend/dist');
+const FRONTEND_DIR =
+  process.env.NODE_ENV !== 'production'
+    ? path.join(import.meta.dir, '../../frontend/dist')
+    : path.resolve(process.cwd(), 'packages/frontend/dist');
 // Check if the frontend build directory exists
 if (!fs.existsSync(FRONTEND_DIR)) {
   console.error(
-    'Frontend build directory not found. Please run "bun run build" in the frontend workspace first.'
+    `Frontend build directory not found at ${FRONTEND_DIR}. Please run "bun run build" in the frontend workspace first.`
   );
   process.exit(1);
 }
