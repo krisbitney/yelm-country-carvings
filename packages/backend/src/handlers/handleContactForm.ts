@@ -4,12 +4,6 @@ import { organizerEmail, smtpSenderEmail } from 'frontend/src/constants';
 // Initialize SMTP2GO with API key
 const smtp2go = SMTP2GOApi(process.env.SMTP2GO_API_KEY || '');
 
-// Log API key for debugging (redacted for security)
-console.log(
-  'SMTP2GO API Key configured:',
-  process.env.SMTP2GO_API_KEY ? 'API key is set' : 'API key is missing'
-);
-
 // Class for handling file attachments
 class SimpleAttachment {
   filename: string;
