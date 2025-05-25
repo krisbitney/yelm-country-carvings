@@ -30,7 +30,7 @@ import {
 const FRONTEND_DIR =
   process.env.NODE_ENV !== 'production'
     ? path.join(import.meta.dir, '../../frontend/dist')
-    : path.resolve('packages/frontend/dist');
+    : path.resolve('/app/packages/frontend/dist');
 // Check if the frontend build directory exists
 if (!fs.existsSync(FRONTEND_DIR)) {
   console.error(
