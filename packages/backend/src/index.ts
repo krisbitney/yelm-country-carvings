@@ -27,7 +27,7 @@ import {
   applyHeaders,
 } from './utils/headers';
 
-const FRONTEND_DIR = path.join(import.meta.dir, '../../frontend/dist');
+const FRONTEND_DIR = path.join(import.meta.dir, 'packages/frontend/dist');
 // Check if the frontend build directory exists
 if (!fs.existsSync(FRONTEND_DIR)) {
   console.error(
@@ -38,9 +38,9 @@ if (!fs.existsSync(FRONTEND_DIR)) {
 
 // Get the appropriate file paths based on environment
 export const IMAGES_DIR: string =
-  process.env.NODE_ENV === 'test'
+  process.env.NODE_ENV !== 'production'
     ? path.join(import.meta.dir, '../test/test-images')
-    : path.join(import.meta.dir, '../img');
+    : path.join(import.meta.dir, 'img');
 // Ensure the gallery images directory exists
 try {
   fs.mkdirSync(path.join(IMAGES_DIR, 'gallery'), { recursive: true });
