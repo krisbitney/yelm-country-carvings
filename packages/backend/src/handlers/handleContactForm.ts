@@ -1,8 +1,8 @@
-import SMTP2GOApi from 'smtp2go-nodejs';
+import * as SMTP2GOApi from 'smtp2go-nodejs';
 import { organizerEmail, smtpSenderEmail } from 'frontend/src/constants';
 
 // Initialize SMTP2GO with API key
-const smtp2go = SMTP2GOApi(process.env.SMTP2GO_API_KEY || '');
+const smtp2go = SMTP2GOApi.default(process.env.SMTP2GO_API_KEY || '');
 
 // Class for handling file attachments
 class SimpleAttachment {
