@@ -25,6 +25,8 @@ COPY --from=install /temp/dev/packages/*/node_modules ./packages/
 COPY packages/frontend ./packages/frontend
 COPY packages/backend ./packages/backend
 
+ENV NODE_ENV=production
+
 # Build frontend
 RUN bun run --cwd packages/frontend build
 
@@ -54,9 +56,6 @@ EXPOSE 3000
 
 # Set environment variables
 ENV NODE_ENV=production
-
-# Use non-root user for security
-USER bun
 
 # Start the application
 CMD ["bun", "run", "start"]

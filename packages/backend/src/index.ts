@@ -25,12 +25,16 @@ import {
   createErrorResponse,
   getCORSHeaders,
   applyHeaders,
+  getIndexHtmlHeaders,
 } from './utils/headers';
 
 const FRONTEND_DIR =
   process.env.NODE_ENV !== 'production'
     ? path.join(import.meta.dir, '../../frontend/dist')
-    : '/app/packages/frontend/dist';
+    : path.resolve('packages/frontend/dist');
+
+console.log(`Using frontend build directory: ${FRONTEND_DIR}`);
+
 // Check if the frontend build directory exists
 if (!fs.existsSync(FRONTEND_DIR)) {
   console.error(
@@ -237,12 +241,7 @@ const server = Bun.serve({
         requestPath.startsWith('/admin') ||
         requestPath.indexOf('.') === -1
       ) {
-        const htmlHeaders = {
-          'Content-Security-Policy':
-            "default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self';",
-          ...getCORSHeaders(origin),
-        };
-        return await applyHeaders(response, htmlHeaders);
+        return await applyHeaders(response, getIndexHtmlHeaders(origin));
       }
 
       // Apply CORS headers to all other responses

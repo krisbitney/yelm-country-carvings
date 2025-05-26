@@ -27,6 +27,27 @@ export const getStaticFileHeaders = (contentType: string, immutable = false) => 
   ...getSecurityHeaders(),
 });
 
+// Add specific CSP for HTML documents if this is index.html
+export const getIndexHtmlHeaders = (origin?: string | null) => {
+  const csp = [
+    `default-src 'self'`,
+    `img-src     'self' data:`,
+    `script-src  'self' 'unsafe-inline'`,
+    `style-src   'self' 'unsafe-inline' https://fonts.googleapis.com`,
+    `font-src    'self' https://fonts.gstatic.com`,
+    `connect-src 'self'`,
+    // allow any frame from google.com or its /maps/embed endpoint
+    `frame-src   https://www.google.com https://www.google.com/maps/embed`,
+    // older browsers use child-src as the fallback for <iframe>
+    `child-src   https://www.google.com`,
+  ].join('; ');
+
+  return {
+    'Content-Security-Policy': csp,
+    ...getCORSHeaders(origin),
+  };
+};
+
 // Helper to apply headers to a Response object
 export const applyHeaders = async (response: Response, headers: Record<string, string>) => {
   const newHeaders = new Headers(response.headers);
