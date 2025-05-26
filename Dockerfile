@@ -44,12 +44,20 @@ COPY --from=install /temp/prod/packages/*/node_modules ./packages/
 # Copy built backend files
 COPY --from=build /app/packages/backend/dist ./dist
 COPY --from=build /app/packages/backend/package.json ./
+# Copy scripts and dependent files
+COPY --from=build /app/packages/backend/scripts ./scripts
+COPY --from=build /app/packages/backend/schema.sql ./
+COPY --from=build /app/packages/backend/tsconfig.json ./
+# Copy base data and images
+COPY --from=build /app/packages/backend/data ./data
+COPY --from=build /app/packages/backend/img ./img
+# Copy src needed for scripts
+RUN mkdir -p ./src ./src/utils
+COPY --from=build /app/packages/backend/src/types.ts ./src
+COPY --from=build /app/packages/backend/src/utils/db.ts ./src/utils
 
 # Copy frontend build files to the location expected by the backend
 COPY --from=build /app/packages/frontend/dist ./packages/frontend/dist
-
-# Create directories for images
-RUN mkdir -p img/gallery img/events
 
 # Expose the port the app runs on
 EXPOSE 3000
