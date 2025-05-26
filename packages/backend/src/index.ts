@@ -48,6 +48,9 @@ export const IMAGES_DIR: string =
   process.env.NODE_ENV !== 'production'
     ? path.join(import.meta.dir, '../test/test-images')
     : path.resolve('img');
+
+console.log(`Using images directory: ${FRONTEND_DIR}`);
+
 // Ensure the gallery images directory exists
 try {
   fs.mkdirSync(path.join(IMAGES_DIR, 'gallery'), { recursive: true });
@@ -222,10 +225,13 @@ const server = Bun.serve({
       requestPath.indexOf('.') === -1
     ) {
       filePath = path.join(FRONTEND_DIR, 'index.html');
-      // 2. Try to serve images from backend
+      // 2. Try to serve other static files from the frontend build directory
+    } else if (requestPath.startsWith('/assets')) {
+      filePath = safeJoin(FRONTEND_DIR, requestPath);
+      // 3. Try to serve images from backend
     } else if (imageExtensions.includes(requestedExt)) {
       filePath = safeJoin(IMAGES_DIR, requestPath);
-      // 3. Try to serve other static files from the frontend build directory
+      // 4. fallback to frontend build directory
     } else {
       filePath = safeJoin(FRONTEND_DIR, requestPath);
     }
