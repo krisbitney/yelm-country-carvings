@@ -49,7 +49,7 @@ export const IMAGES_DIR: string =
     ? path.join(import.meta.dir, '../test/test-images')
     : path.resolve('img');
 
-console.log(`Using images directory: ${FRONTEND_DIR}`);
+console.log(`Using images directory: ${IMAGES_DIR}`);
 
 // Ensure the gallery images directory exists
 try {

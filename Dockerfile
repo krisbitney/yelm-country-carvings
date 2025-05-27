@@ -50,7 +50,6 @@ COPY --from=build /app/packages/backend/schema.sql ./
 COPY --from=build /app/packages/backend/tsconfig.json ./
 # Copy base data and images
 COPY --from=build /app/packages/backend/data ./data
-COPY --from=build /app/packages/backend/img ./img
 # Copy src needed for scripts
 RUN mkdir -p ./src ./src/utils
 COPY --from=build /app/packages/backend/src/types.ts ./src
@@ -65,5 +64,17 @@ EXPOSE 3000
 # Set environment variables
 ENV NODE_ENV=production
 
+# Copy over images if dir is empty
+# copy your build-time assets into a “side‐folder”
+COPY --from=build /app/packages/backend/img /img-default
+# make sure /app/img exists so the bind‐mount is happy
+RUN mkdir -p /app/img
+# copy in your entrypoint
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+# use the entrypoint
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
 # Start the application
-CMD ["bun", "run", "start"]
+CMD ["bun","run","start"]
+
