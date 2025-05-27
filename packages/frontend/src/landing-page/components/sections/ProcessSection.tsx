@@ -129,52 +129,54 @@ const ProcessSection = () => {
             </div>
 
             {/* Navigation Arrows */}
-            <button
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#3E3C3B]/50 text-[#F5F1E9] p-2 rounded-full hover:bg-[#4A6151] hover:cursor-pointer transition-colors duration-300"
-              onClick={e => {
-                e.stopPropagation();
-                prevStep();
-              }}
-              aria-label="Previous step"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+            <div className="absolute inset-0 flex items-center justify-between pointer-events-none">
+              <button
+                className="z-10 ml-4 bg-[#3E3C3B]/50 text-[#F5F1E9] p-2 rounded-full hover:bg-[#4A6151] hover:cursor-pointer transition-colors duration-300 pointer-events-auto"
+                onClick={e => {
+                  e.stopPropagation();
+                  prevStep();
+                }}
+                aria-label="Previous step"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-            <button
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#3E3C3B]/50 text-[#F5F1E9] p-2 rounded-full hover:bg-[#4A6151] hover:cursor-pointer transition-colors duration-300"
-              onClick={e => {
-                e.stopPropagation();
-                nextStep();
-              }}
-              aria-label="Next step"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <button
+                className="z-10 mr-4 bg-[#3E3C3B]/50 text-[#F5F1E9] p-2 rounded-full hover:bg-[#4A6151] hover:cursor-pointer transition-colors duration-300 pointer-events-auto"
+                onClick={e => {
+                  e.stopPropagation();
+                  nextStep();
+                }}
+                aria-label="Next step"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
 
           {/* Step Indicators */}

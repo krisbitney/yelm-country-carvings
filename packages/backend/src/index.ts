@@ -45,9 +45,11 @@ if (!fs.existsSync(FRONTEND_DIR)) {
 
 // Get the appropriate file paths based on environment
 export const IMAGES_DIR: string =
-  process.env.NODE_ENV !== 'production'
-    ? path.join(import.meta.dir, '../test/test-images')
-    : path.resolve('img');
+  process.env.NODE_ENV === 'production'
+    ? path.resolve('img')
+    : process.env.NODE_ENV === 'test'
+      ? path.join(import.meta.dir, '../test/test-images')
+      : path.resolve(import.meta.dir, '../img');
 
 console.log(`Using images directory: ${IMAGES_DIR}`);
 
