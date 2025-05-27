@@ -68,7 +68,7 @@ ENV NODE_ENV=production
 # copy your build-time assets into a “side‐folder”
 COPY --from=build /app/packages/backend/img /img-default
 # make sure /app/img exists so the bind‐mount is happy
-RUN mkdir -p /app/img
+RUN mkdir -p /app/img /app/img/events /app/img/gallery
 # copy in your entrypoint
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
