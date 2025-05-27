@@ -167,12 +167,12 @@ const GallerySection: React.FC = () => {
         className="max-w-5xl max-h-[90vh]"
       >
         {galleryImages.length > 1 && (
-          <>
+          <div className="absolute inset-0 flex items-center justify-between pointer-events-none">
             {/* Left Arrow Button */}
             <IconButton
               icon={<PreviousIcon className="w-6 h-6" />}
               variant="light"
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 hover:bg-white/20 transition-colors"
+              className="ml-4 z-10 hover:bg-white/20 transition-colors pointer-events-auto"
               onClick={navigateToPrevImage}
               ariaLabel="Previous image"
             />
@@ -181,11 +181,11 @@ const GallerySection: React.FC = () => {
             <IconButton
               icon={<NextIcon className="w-6 h-6" />}
               variant="light"
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 hover:bg-white/20 transition-colors"
+              className="mr-4 z-10 hover:bg-white/20 transition-colors pointer-events-auto"
               onClick={navigateToNextImage}
               ariaLabel="Next image"
             />
-          </>
+          </div>
         )}
 
         {selectedImage && (

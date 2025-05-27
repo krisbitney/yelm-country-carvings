@@ -163,13 +163,30 @@ body {
 
 /* react-multi-carousel */
 .carousel-container {
+  position: relative;
 }
 
 .carousel-dot-list {
+  position: relative;
+  z-index: 10;
 }
 
 .carousel-item-list {
   padding-bottom: 2.5rem;
+}
+
+/* Fix for react-multi-carousel navigation buttons */
+.react-multi-carousel-list .react-multiple-carousel__arrow {
+  position: absolute;
+  z-index: 10;
+}
+
+.react-multi-carousel-list .react-multiple-carousel__arrow--left {
+  left: 0;
+}
+
+.react-multi-carousel-list .react-multiple-carousel__arrow--right {
+  right: 0;
 }
 
 /* Drag and drop placeholder styles for @hello-pangea/dnd */
