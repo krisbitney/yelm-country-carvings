@@ -112,7 +112,7 @@ const GallerySection: React.FC = () => {
               responsive={responsive}
               infinite={galleryImages.length > 1}
               autoPlay={galleryImages.length > 1}
-              autoPlaySpeed={5000}
+              autoPlaySpeed={2000}
               keyBoardControl={true}
               pauseOnHover={true}
               customTransition="all .5s"
