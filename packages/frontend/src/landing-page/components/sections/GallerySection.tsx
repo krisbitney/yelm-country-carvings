@@ -195,7 +195,7 @@ const GallerySection: React.FC = () => {
                 src={selectedImage.src}
                 alt={selectedImage.alt || 'Selected image'}
                 className="w-auto h-auto max-w-full max-h-[80vh] rounded-lg shadow-xl"
-                objectFit="contain"
+                objectFit="scale-down"
                 aspectRatio="auto"
                 onClick={(
                   e:
