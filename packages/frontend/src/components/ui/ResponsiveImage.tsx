@@ -1,4 +1,4 @@
-import React, { ImgHTMLAttributes, useState, useEffect } from 'react';
+import React, { ImgHTMLAttributes, useState } from 'react';
 
 interface ResponsiveImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
   src: string;
@@ -7,9 +7,6 @@ interface ResponsiveImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>,
   aspectRatio?: 'square' | '4:3' | '16:9' | 'auto';
   objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
   sizes?: string;
-  srcSet?: string;
-  webpSrcSet?: string;
-  lowResSrc?: string;
   onClick?: (
     event: React.MouseEvent<HTMLImageElement> | React.KeyboardEvent<HTMLImageElement>
   ) => void;
@@ -35,29 +32,16 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
   aspectRatio = 'auto',
   objectFit = 'cover',
   sizes = '100vw',
-  srcSet,
-  webpSrcSet,
-  lowResSrc,
   onClick,
-  onLoad,
   onError,
   longDescription,
   ...props
 }) => {
-  const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
 
   // Normalize the src path - only prepend '/' if it's a relative path and doesn't start with '/'
   const isAbsoluteUrl = (url: string) => /^(https?:\/\/|data:|blob:)/i.test(url);
   const normalizedSrc = isAbsoluteUrl(src) ? src : src.startsWith('/') ? src : `/${src}`;
-  const normalizedLowResSrc = lowResSrc
-    ? isAbsoluteUrl(lowResSrc)
-      ? lowResSrc
-      : lowResSrc.startsWith('/')
-        ? lowResSrc
-        : `/${lowResSrc}`
-    : undefined;
 
   // Generate unique ID for accessibility
   const imageId = `img-${normalizedSrc.replace(/[^a-zA-Z0-9]/g, '-')}`;
@@ -80,40 +64,8 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
     'scale-down': 'object-scale-down',
   };
 
-  // Set up intersection observer to detect when image is in viewport
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '200px' } // Start loading when image is 200px from viewport
-    );
-
-    const currentElement = document.getElementById(imageId);
-    if (currentElement) {
-      observer.observe(currentElement);
-    }
-
-    return () => {
-      if (currentElement) {
-        observer.unobserve(currentElement);
-      }
-      observer.disconnect();
-    };
-  }, [imageId]);
-
-  // Handle image load
-  const handleImageLoad = () => {
-    setIsLoading(false);
-    if (onLoad) onLoad();
-  };
-
   // Handle image error
   const handleImageError = () => {
-    setIsLoading(false);
     setHasError(true);
     if (onError) onError();
   };
@@ -131,11 +83,10 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
     alt,
     className: `w-full h-full ${objectFitClasses[objectFit]} ${
       onClick ? 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent' : ''
-    } transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`,
+    } transition-opacity duration-300`,
     loading: 'lazy' as const,
     onClick: onClick ? (e: React.MouseEvent<HTMLImageElement>) => onClick(e) : undefined,
     onKeyDown: onClick ? handleKeyDown : undefined,
-    onLoad: handleImageLoad,
     onError: handleImageError,
     sizes,
     tabIndex: onClick ? 0 : undefined,
@@ -150,13 +101,6 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
       className={`${aspectRatioClasses[aspectRatio]} overflow-hidden relative ${className}`}
       id={imageId}
     >
-      {/* Loading skeleton */}
-      {isLoading && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-md" aria-hidden="true">
-          <span className="sr-only">Loading image</span>
-        </div>
-      )}
-
       {/* Error state */}
       {hasError && (
         <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-500">
@@ -187,21 +131,7 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
       )}
 
       {/* Use picture element for better format support */}
-      {isVisible ? (
-        <picture>
-          {/* WebP format for browsers that support it */}
-          {webpSrcSet && <source type="image/webp" srcSet={webpSrcSet} sizes={sizes} />}
-
-          {/* Original format as fallback */}
-          <source srcSet={srcSet} sizes={sizes} />
-
-          {/* Fallback image */}
-          <img src={normalizedSrc} {...imageProps} />
-        </picture>
-      ) : (
-        // Placeholder or low-res image before intersection
-        <img src={normalizedLowResSrc || undefined} {...imageProps} />
-      )}
+      <img src={normalizedSrc} {...imageProps} />
     </div>
   );
 };
