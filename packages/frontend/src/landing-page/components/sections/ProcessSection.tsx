@@ -198,7 +198,7 @@ const ProcessSection = () => {
             {processSteps.map((step, index) => (
               <div
                 key={step.id}
-                className={`aspect-w-1 aspect-h-1 rounded-md overflow-hidden cursor-pointer ${
+                className={`aspect-w-1 aspect-h-1 rounded-md overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 ${
                   index === activeStep ? 'ring-2 ring-[#4A6151]' : ''
                 }`}
                 onClick={() => handleThumbnailClick(index)}
